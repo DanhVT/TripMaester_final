@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+	
+    <RelativeLayout 
+        android:id="@+id/layout_tool"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/backgroudtrip">
+
+       
+        <ImageButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_action_cancel"
+            android:background="@color/blue_facebook"/>
+        
+        
+        
+         <TextView
+             android:id="@+id/lbl_trip"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_centerHorizontal="true"
+             android:layout_centerVertical="true"
+             android:text="@string/new_trip_title"
+             android:textColor="#FFFFFF" />
+        
+         <ImageButton
+            android:id="@+id/btn_okie"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_action_accept"
+            android:background="@color/blue_facebook"
+            android:contentDescription="@string/description"/>
+
+</RelativeLayout>
+    <LinearLayout 
+        android:id="@+id/layout_trip_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/layout_tool">
+ 
+	    <EditText
+	        android:id="@+id/txtnametrip"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:ems="10" 
+	        android:hint="@string/enter_name_trip">
+	
+	        <requestFocus />
+	    </EditText>
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/layout_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_trip_name"
+        android:layout_marginTop="@dimen/split_size_vertical" 
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true" >
+
+        <!-- layout for start date -->
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView 
+                android:id="@+id/txtstartdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start_trip_date"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_horizontal"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:paddingTop="5dp">
+                
+                <TextView 
+                android:id="@+id/txtday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MONDAY"
+                android:gravity="center_vertical"/>
+            <TextView 
+                android:id="@+id/txtnumberofday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textSize="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"/>
+             <TextView 
+                android:id="@+id/txtmonthofyear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="April 2015"
+                android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+        <!-- spilit layout -->
+        <LinearLayout  
+            android:layout_width="100dp" 
+            android:layout_height="5dp"/>
+        
+        <!-- layout for finish date -->
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView 
+                android:id="@+id/txtfinishdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/finish_trip_date"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:paddingTop="5dp">
+                
+                <TextView 
+                android:id="@+id/txtday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SATURDAY"
+                android:gravity="center_vertical"/>
+            <TextView 
+                android:id="@+id/txtnumberofday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02"
+                android:textSize="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"/>
+             <TextView 
+                android:id="@+id/txtmonthofyear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="May 2015"
+                android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+       
+    </LinearLayout>
+	
+    <LinearLayout
+	    	android:id="@+id/layout_map_wrapper"
+	        android:layout_width="match_parent"
+	        android:layout_height="250dp"
+	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp"
+	        android:orientation="vertical"
+	        android:layout_below="@+id/layout_date">
+		 <TextView 
+                android:id="@+id/txtposition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choise location"/>
+        <org.osmdroid.views.MapView
+        	android:id="@+id/openmapview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/layout_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/layout_map_wrapper">
+        
+	  <EditText
+		android:id="@+id/txtdescription"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    android:paddingTop="10dp"
+	    
+		android:lines="3"
+		android:ems="10" 
+		android:hint="@string/enter_description"/>
+        
+    </LinearLayout>
+    
+	
+
+    
+</RelativeLayout>

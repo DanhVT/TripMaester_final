@@ -1,0 +1,110 @@
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout_main_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.MainActivity">
+     
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+	
+        <RelativeLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:padding="5dp"
+            android:background="@color/white">
+            
+            <ImageButton
+                android:id="@+id/img_lef_tmenu"
+            	android:layout_height="40dp"
+            	android:layout_width="40dp"
+                android:onClick="onClickLeftMenu"
+            	android:layout_alignParentLeft="true"
+            	android:layout_alignParentTop="true"
+            	android:paddingLeft="20dp"
+                android:src="@drawable/ic_menu"
+                android:background="@color/white"
+                android:contentDescription="@string/description"/>
+             
+             <TextView
+	             android:id="@+id/lbl_title"
+	             android:layout_width="wrap_content"
+	             android:layout_height="wrap_content"
+	             android:layout_centerHorizontal="true"
+	             android:layout_centerVertical="true"
+	             android:background="@color/white"
+	             android:text="@string/app_name"
+	             android:textColor="#4a4a4a" />
+        
+	         <ImageButton
+		            android:id="@+id/img_right_menu"
+                    android:onClick="onClickRightMenu"
+		            android:layout_width="25dp"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentTop="true"
+		            android:src="@drawable/ic_setting"
+		            android:background="@color/white"
+				 	android:layout_centerHorizontal="true"
+				 	android:adjustViewBounds="true"
+				 	android:scaleType="fitXY"
+				 	android:paddingTop="10dp"
+				 	android:layout_height="32dp" />
+            
+        </RelativeLayout>
+        
+		<!-- The map content view -->
+		<FrameLayout
+			android:id="@+id/frame_contener"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingTop="42dp"/>
+
+		<com.faizmalkani.floatingactionbutton.FloatingActionButton
+			android:id="@+id/fab_btn_capture"
+			android:layout_width="72dp"
+			android:layout_height="72dp"
+			android:layout_alignParentBottom="true"
+			android:layout_alignParentRight="true"
+			android:layout_marginBottom="5dp"
+			android:layout_marginRight="5dp" />
+    </RelativeLayout>
+     
+    <!-- The left menu --> 
+    <ListView
+        android:id="@+id/left_drawer_menu"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"        
+        android:choiceMode="singleChoice"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"       
+        android:layout_gravity="left" 
+        android:listSelector="@drawable/list_selector"
+        android:background="@color/list_background"/>
+        
+    <!-- The right menu -->
+    <ListView
+		 android:id="@+id/right_drawer_menu"
+		 android:layout_width="240dp"
+		 android:layout_height="wrap_content"
+		 android:layout_marginTop="32dp"
+		 android:layout_gravity="right"
+		 android:background="@color/white"
+		 android:choiceMode="singleChoice"
+		 android:dividerHeight="1dp"  
+		 android:divider="@color/list_divider_dark" />
+    
+    <!-- Listview to display right map menu -->
+    <ExpandableListView
+        android:id="@+id/right_map_menu_expand_items"
+        android:layout_width="300dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="#111"
+        android:choiceMode="singleChoice"
+        android:dividerHeight="1dp"        
+        android:groupIndicator="@null" />
+    
+</android.support.v4.widget.DrawerLayout>

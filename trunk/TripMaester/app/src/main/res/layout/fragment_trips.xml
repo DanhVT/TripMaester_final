@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical" >
+	
+	<ListView
+		android:id="@+id/list_trips_infor"
+		android:layout_width="match_parent"
+		android:layout_height="fill_parent" 
+		android:background="@color/backgroudtrip"
+		android:cacheColorHint="@android:color/transparent"
+		android:divider="@android:color/transparent"
+		android:dividerHeight="@dimen/trip_spacing_normal"
+		android:listSelector="@android:color/transparent"
+		android:paddingLeft="@dimen/trip_spacing_normal"
+		android:paddingRight="@dimen/trip_spacing_normal"
+		android:paddingTop="@dimen/trip_spacing_top"
+		android:paddingBottom="@dimen/trip_spacing_bottom"
+		android:scrollbarStyle="outsideOverlay"
+		android:descendantFocusability="blocksDescendants">
+	</ListView>
+</LinearLayout>

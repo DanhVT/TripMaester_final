@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    <ListView
+        android:id="@+id/context_menu_comment"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="match_parent" 
+        android:layout_above="@+id/footer"/>
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <EditText
+            android:id="@+id/txt_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:ellipsize="end"
+            android:ems="10"
+            android:hint="@string/hint_comment"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/btn_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/btn_comment"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</RelativeLayout>

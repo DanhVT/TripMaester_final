@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="vn.edu.hcmut.its.tripmaester"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="1"
-          android:versionName="1.0">
-    <!--package="group.traffic.nhn.followtrip"-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="vn.edu.hcmut.its.tripmaester">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -16,39 +13,25 @@
     <application
         android:name=".TMApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-        <activity
-            android:name="vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan">
-
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="group.traffic.nhn.trip.NewTripActivity"/>
-        <activity android:name="group.traffic.nhn.trip.EditTripActivity"/>
-
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
-
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <service
-            android:name="group.traffice.nhn.common.DetectLocationService"
-            android:enabled="true"
-            android:process=":detectlocation"/>
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="6f7c7703627cf256cc2288f9641e64e6233c8990" />

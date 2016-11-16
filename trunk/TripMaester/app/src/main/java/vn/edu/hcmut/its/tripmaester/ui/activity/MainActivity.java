@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.ui.wiget.SlidingTabLayout;
+import vn.edu.hcmut.its.tripmaester.ui.wiget.ViewPagerAdapter;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -18,8 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView mDrawerList;
     ViewPager pager;
     private Toolbar toolbar;
-    private String[] titles = new String[]{"Sample Tab 1", "Sample Tab 2", "Sample Tab 3", "Sample Tab 4"
-            , "Sample Tab 5", "Sample Tab 6", "Sample Tab 7", "Sample Tab 8"};
+    private String[] titles = new String[]{"Sample Tab 1", "Sample Tab 2", "Sample Tab 3", "Sample Tab 4"};
     SlidingTabLayout slidingTabLayout;
 
     @Override

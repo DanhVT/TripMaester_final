@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import vn.edu.hcmut.its.tripmaester.ui.fragment.SampleFragment;
+
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    final int PAGE_COUNT =8;
+    final int PAGE_COUNT =4;
     private String[] titles;
 
     public ViewPagerAdapter(FragmentManager fm, String[] titles2) {
@@ -30,15 +32,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return SampleFragment.newInstance(position);
             case 3:
                 return SampleFragment.newInstance(position);
-            case 4:
-                return SampleFragment.newInstance(position);
-            case 5:
-                return SampleFragment.newInstance(position);
-            case 6:
-                return SampleFragment.newInstance(position);
-            case 7:
-                return SampleFragment.newInstance(position);
-
         }
         return null;
     }

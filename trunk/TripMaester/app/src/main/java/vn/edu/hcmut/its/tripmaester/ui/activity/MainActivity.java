@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager pager;
     private Toolbar toolbar;
     private String[] titles = new String[]{"MAP", "TRIP", "FRIEND", "USER"};
+
     SlidingTabLayout slidingTabLayout;
 
     @Override

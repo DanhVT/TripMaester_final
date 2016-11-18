@@ -27,11 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import group.traffic.nhn.message.MessageItem;
-import group.traffic.nhn.trip.PointItem;
-import group.traffic.nhn.user.FriendItem;
-import group.traffic.nhn.user.User;
-import group.traffice.nhn.common.Utilities;
 import okhttp3.OkHttpClient;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;

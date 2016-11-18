@@ -140,21 +140,24 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
 		TextView tv_itle = (TextView) convertView.findViewById(R.id.title);
 		ImageView iv_icon = (ImageView) convertView.findViewById(R.id.icon);
-		ImageView iv_check = (ImageView) convertView.findViewById((R.id.iv_check));
+		ImageView iv_check = (ImageView) convertView.findViewById(R.id.iv_check);
 		
 		iv_check.setVisibility(View.INVISIBLE);
+
 		//Set up check box for menu items
 		if(groupPosition > 2){
 			iv_check.setVisibility(View.VISIBLE);
 			if(group.check)
 				iv_check.setImageResource(R.drawable.ic_check);
-			else 	iv_check.setImageResource(R.drawable.ic_uncheck);
+			else
+				iv_check.setImageResource(R.drawable.ic_uncheck);
 		}
 		if (groupPosition < 3) {	
 			convertView.setActivated(false);
 			if(isExpanded)
 				iv_icon.setImageResource(R.drawable.ic_up);
-			else iv_icon.setImageResource(R.drawable.ic_down);
+			else
+				iv_icon.setImageResource(R.drawable.ic_down);
 		}
 		switch(groupPosition){
 			case 3:
@@ -170,7 +173,6 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 				iv_icon.setImageResource(R.drawable.ic_warning);
 				break;
 		}
-		
 
 		tv_itle.setText(group.text);
 

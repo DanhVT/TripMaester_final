@@ -7,12 +7,21 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +36,7 @@ import okhttp3.OkHttpClient;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
-import vn.edu.hcmut.its.tripmaester.helper.Apicall;
+
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.helper.GraphicUtils;
 
@@ -205,7 +214,7 @@ public class HttpManager {
             for (int i = 0; i < response_json.length(); i++) {
                 JSONObject jObj = new JSONObject(response_json.getString(i));
                 if (null != jObj) {
-                    MessageItem item = new MessageItem(jObj.getString("content"), R.drawable.user1, true, 10, jObj.getString("userId"), jObj.getString("dateTime"));
+                    MessageItem item = new MessageItem(jObj.getString("content"), R.drawable.user, true, 10, jObj.getString("userId"), jObj.getString("dateTime"));
                     lstMessages.add(item);
                 }
             }
@@ -230,12 +239,6 @@ public class HttpManager {
         return lstMessages;
     }
 
-    //get list friend
-    /*
-	 * + url:
-	   + IRequest data:
-	   + Response data:
-	 */
     public static JSONArray getListFriend() {
         JSONArray response_json = new JSONArray();
         try {
@@ -728,14 +731,55 @@ public class HttpManager {
         return in;
     }
 
+    @Deprecated
+    public static InputStream sendJson_HttpPost(List<BasicNameValuePair> nameValuePairs, String URL) {
+        // Thread t = new Thread() {
+        InputStream in = null;
+        // public void run() {
+        // Looper.prepare(); //For Preparing Message Pool for the child Thread
+        HttpClient client = new DefaultHttpClient();
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
+        // Limit
+        HttpResponse response;
+
+        try {
+            HttpPost post = new HttpPost(URL);
+
+            post.setHeader(new BasicHeader(HTTP.CONTENT_TYPE,
+                    "application/x-www-form-urlencoded"));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            response = client.execute(post);
+
+			/* Checking response */
+            if (response != null) {
+                in = response.getEntity().getContent(); // Get the data in the
+                // entity
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("Error_HttpPost", e.getMessage());
+        }
+
+        // Looper.loop(); //Loop in the message queue
+        // }
+        // };
+
+        // t.start();
+        return in;
+    }
+
     public static JSONObject uploadImage(String filePath) {
         String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
         String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
-        File file = new File(filePath);
-        JSONObject responseJson = new JSONObject();
-        String responseString = null;
 
-        responseString = Apicall.POST(client, URL_UPLOAD, RequestBuilder.uploadRequestBody(filePath, MIME, POINT_ID, file));
+        JSONObject responseJson = new JSONObject();
+
+        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("filename", filePath));
+        nameValuePairs.add(new BasicNameValuePair("pointId", POINT_ID));
+        nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
+        nameValuePairs.add(new BasicNameValuePair("dataImage", GraphicUtils.convertImage2Base64(filePath)));
+
 
         InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_UPLOAD);
         String str_response = Utilities.readStringFromInputStream(response_stream);

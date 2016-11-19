@@ -6,10 +6,11 @@
 	
     <RelativeLayout 
         android:id="@+id/layout_tool"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:orientation="vertical"
-        android:background="@color/backgroudtrip">
+        android:background="@color/blue_zalo"
+		android:gravity="center_vertical|center_horizontal">
 
        
         <ImageButton
@@ -18,28 +19,27 @@
             android:layout_height="32dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_action_cancel"
-            android:background="@color/blue_facebook"/>
+            android:src="@drawable/cancel"
+            android:background="@color/blue_zalo"/>
+
+		<TextView
+		 	android:id="@+id/lbl_trip"
+		 	android:layout_width="wrap_content"
+		 	android:layout_height="wrap_content"
+		 	android:layout_centerHorizontal="true"
+		 	android:layout_centerVertical="true"
+		 	android:text="@string/new_trip_title"
+			android:textStyle="normal|bold"
+		 	android:textColor="#FFFFFF" />
         
-        
-        
-         <TextView
-             android:id="@+id/lbl_trip"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerHorizontal="true"
-             android:layout_centerVertical="true"
-             android:text="@string/new_trip_title"
-             android:textColor="#FFFFFF" />
-        
-         <ImageButton
+		<ImageButton
             android:id="@+id/btn_okie"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_action_accept"
-            android:background="@color/blue_facebook"
+           	android:src="@drawable/accept"
+            android:background="@color/blue_zalo"
             android:contentDescription="@string/description"/>
 
 </RelativeLayout>
@@ -51,9 +51,17 @@
         android:paddingTop="10dp"
         android:orientation="vertical"
         android:layout_below="@+id/layout_tool">
- 
-	    <EditText
-	        android:id="@+id/txtnametrip"
+
+		<TextView
+			android:id="@+id/textViewYourTrip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Your Trip"
+			android:textStyle="normal|bold"/>
+
+
+		<EditText
+	        android:id="@+id/editTextTripName"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
@@ -78,89 +86,96 @@
         <LinearLayout 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView 
-                android:id="@+id/txtstartdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start_trip_date"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_horizontal"
-                />
+			android:layout_marginTop="10dp"
+            android:orientation="vertical"
+			android:gravity="center_vertical|center_horizontal" >
+
+			<Button
+				android:id="@+id/buttonStartDate"
+				android:layout_width="100dp"
+				android:layout_height="40dp"
+				android:text="Start Date"
+				android:textSize="13sp"
+				android:textStyle="normal|bold" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:orientation="vertical"
-	            android:paddingTop="5dp">
+	            android:paddingTop="5dp"
+				android:gravity="center_vertical|center_horizontal" >
                 
-                <TextView 
-                android:id="@+id/txtday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MONDAY"
-                android:gravity="center_vertical"/>
-            <TextView 
-                android:id="@+id/txtnumberofday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20"
-                android:textSize="25dp"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"/>
-             <TextView 
-                android:id="@+id/txtmonthofyear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="April 2015"
-                android:layout_gravity="center_horizontal"/>
+				<TextView
+					android:id="@+id/textViewMonthStart"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="NOVEMBER" />
+
+				<TextView
+					android:id="@+id/textViewDayStart"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="17"
+					android:textSize="25dp" />
+
+				<TextView
+					android:id="@+id/textViewYearStart"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="2016" />
             </LinearLayout>
             
         </LinearLayout>
         
         <!-- spilit layout -->
-        <LinearLayout  
-            android:layout_width="100dp" 
+        <LinearLayout
+            android:layout_width="100dp"
             android:layout_height="5dp"/>
+		<!---->
         
         <!-- layout for finish date -->
         <LinearLayout 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView 
-                android:id="@+id/txtfinishdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/finish_trip_date"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                />
+			android:layout_marginTop="10dp"
+            android:orientation="vertical"
+			android:gravity="center_vertical|center_horizontal">
+
+			<Button
+				android:id="@+id/buttonFinishDate"
+				android:layout_width="100dp"
+				android:layout_height="40dp"
+				android:text="Finish Date"
+				android:textSize="13sp"
+				android:textStyle="normal|bold"
+				/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:orientation="vertical"
-	            android:paddingTop="5dp">
+	            android:paddingTop="5dp"
+				android:gravity="center_vertical|center_horizontal" >
                 
                 <TextView 
-                android:id="@+id/txtday"
+                android:id="@+id/textViewMonthFinish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SATURDAY"
-                android:gravity="center_vertical"/>
-            <TextView 
-                android:id="@+id/txtnumberofday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="02"
-                android:textSize="25dp"
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"/>
-             <TextView 
-                android:id="@+id/txtmonthofyear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="May 2015"
-                android:layout_gravity="center_horizontal"/>
+                android:text="NOVEMBER" />
+
+				<TextView
+					android:id="@+id/textViewDayFinish"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="02"
+					android:textSize="25dp" />
+
+			 	<TextView
+					android:id="@+id/textViewYearFinish"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="2015" />
+
             </LinearLayout>
             
         </LinearLayout>
@@ -169,49 +184,57 @@
     </LinearLayout>
 	
     <LinearLayout
-	    	android:id="@+id/layout_map_wrapper"
-	        android:layout_width="match_parent"
-	        android:layout_height="250dp"
-	        android:paddingLeft="10dp"
-	        android:paddingRight="10dp"
-	        android:orientation="vertical"
-	        android:layout_below="@+id/layout_date">
-		 <TextView 
-                android:id="@+id/txtposition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Choise location"/>
+		android:id="@+id/layout_map_wrapper"
+		android:layout_width="match_parent"
+		android:layout_height="200dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:layout_marginTop="10dp"
+		android:orientation="vertical"
+		android:layout_below="@+id/layout_date">
+
+		<TextView
+			android:id="@+id/textViewPosition"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Choose location"
+			android:textStyle="normal|bold"/>
+
         <org.osmdroid.views.MapView
         	android:id="@+id/openmapview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
-    
-    <LinearLayout 
+
+	<LinearLayout
         android:id="@+id/layout_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:orientation="vertical"
-        android:layout_below="@+id/layout_map_wrapper">
-        
-	  <EditText
-		android:id="@+id/txtdescription"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="1"
-		android:paddingLeft="10dp"
-	    android:paddingRight="10dp"
-	    android:paddingTop="10dp"
-	    
-		android:lines="3"
-		android:ems="10" 
-		android:hint="@string/enter_description"/>
-        
-    </LinearLayout>
-    
-	
+		android:orientation="vertical"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:layout_below="@+id/layout_map_wrapper"
+		android:layout_centerHorizontal="true">
 
-    
+        <TextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textStyle="normal|bold"/>
+
+        <EditText
+              android:id="@+id/editTextDescription"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:lines="3"
+              android:ems="10"
+              android:hint="@string/enter_description"/>
+
+    </LinearLayout>
+
+
 </RelativeLayout>

@@ -1,10 +1,5 @@
 package group.traffic.nhn.leftmenu;
 
-import vn.edu.hcmut.its.tripmaester.R;
-
-import java.util.ArrayList;
-
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.view.LayoutInflater;
@@ -13,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import vn.edu.hcmut.its.tripmaester.R;
 
 public class LeftMenuListAdapter extends BaseAdapter{
 	private LayoutInflater mInflater;

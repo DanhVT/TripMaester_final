@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_card"
+    android:layout_marginRight="20px"
+    android:layout_marginLeft="20px"
     android:orientation="vertical">
 
     <!-- view user create trip and date create -->
@@ -27,7 +29,7 @@
                 android:id="@+id/txtUserNameCreateTrip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hong Nam"
+                android:text="Hoàng Dũng"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/map_item_trip_blue" />
 

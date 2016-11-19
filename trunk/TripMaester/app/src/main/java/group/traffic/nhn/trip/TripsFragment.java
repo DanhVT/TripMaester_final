@@ -39,8 +39,7 @@ public class TripsFragment extends Fragment {
     UpdateCommentAsync updateCommentAsync;
 
     // Async task to update comment
-    class UpdateCommentAsync extends
-            AsyncTask<String, Void, ArrayList<MessageItem>> {
+    class UpdateCommentAsync extends AsyncTask<String, Void, ArrayList<MessageItem>> {
 
         private MessageListAdapter lstMessageAdapter;
         private int pos;
@@ -51,8 +50,6 @@ public class TripsFragment extends Fragment {
         }
 
         protected ArrayList<MessageItem> doInBackground(String... params) {
-
-
             ArrayList<MessageItem> lstMessageTemp = HttpManager
                     .getListCommentTrip(TripManager.lst_user_trip
                             .get(pos)
@@ -82,14 +79,13 @@ public class TripsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_trips, container,
-                false);
-        lstTripsInfor = (ListView) rootView
-                .findViewById(R.id.list_trips_infor);
+        View rootView = inflater.inflate(R.layout.fragment_trips, container, false);
+        lstTripsInfor = (ListView) rootView.findViewById(R.id.list_trips_infor);
 
         // create trip adapter
         TripArrayAdapter tripAdapter = new TripArrayAdapter(getActivity()
-                .getApplicationContext(), R.id.list_trips_infor,
+                .getApplicationContext(),
+                R.id.list_trips_infor,
                 TripManager.lst_user_trip);
         tripAdapter.mainActivity = (MainActivity) this.getActivity();
         tripAdapter.tripsFragment = this;

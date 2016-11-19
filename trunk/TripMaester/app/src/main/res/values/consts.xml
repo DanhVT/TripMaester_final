@@ -61,16 +61,15 @@
         <item>Map</item>
         <item>Trips</item>
         <item>Friends</item>
-        <!--         <item>Message</item> -->
         <item>Login/Logout</item>
     </string-array>
 
     <array name="left_menu_icons">
-        <item>@drawable/ic_user</item>
-        <item>@drawable/ic_map</item>
-        <item>@drawable/ic_trip</item>
-        <item>@drawable/ic_group</item>
-        <item>@drawable/ic_login</item>
+        <item>@drawable/user</item>
+        <item>@drawable/world_map</item>
+        <item>@drawable/line_chart</item>
+        <item>@drawable/group_user</item>
+        <item>@drawable/login</item>
     </array>
 
     <array name="map_pop_icons">
@@ -82,22 +81,22 @@
         <item>@drawable/ic_police</item>
     </array>
     <array name="msg_menu_icons">
-        <item>@drawable/ic_add</item>
-        <item>@drawable/ic_new_msg</item>
+        <item>@drawable/add</item>
+        <item>@drawable/message</item>
     </array>
 
     <array name="friend_menu_icons">
-        <item>@drawable/ic_list</item>
-        <item>@drawable/ic_add</item>
-        <item>@drawable/ic_share</item>
-        <item>@drawable/ic_invite</item>
+        <item>@drawable/list</item>
+        <item>@drawable/add</item>
+        <item>@drawable/share</item>
+        <item>@drawable/invite</item>
     </array>
 
 
     <array name="trip_menu_icons">
-        <item>@drawable/ic_add</item>
-        <item>@drawable/ic_edit</item>
-        <item>@drawable/ic_share</item>
-        <item>@drawable/ic_invite</item>
+        <item>@drawable/add</item>
+        <item>@drawable/edit</item>
+        <item>@drawable/share</item>
+        <item>@drawable/invite</item>
     </array>
 </resources>

@@ -143,12 +143,10 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         }
         switch (position) {
             case LEFT_MENU__USER:
-                //KenK11
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 fragment = new UserFragment();
                 break;
             case LEFT_MENU__MAP:
-                // fragment = new MapFragment();
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 if (mapFragment == null) {
                     mapFragment = new MapFragment();
@@ -164,8 +162,6 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 fragment = new FriendsFragment();
                 break;
             case LEFT_MENU__LOGOUT:
-                // fragment = new MessageFragment();
-                // break;
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 fragment = new LoginFragment();
                 break;

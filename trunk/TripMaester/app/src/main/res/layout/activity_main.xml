@@ -15,43 +15,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 			android:padding="5dp"
-            android:background="@color/white">
+            android:background="#008fe5">
             
             <ImageButton
-                android:id="@+id/img_lef_tmenu"
+                android:id="@+id/img_left_menu"
             	android:layout_height="40dp"
             	android:layout_width="40dp"
                 android:onClick="onClickLeftMenu"
-            	android:layout_alignParentLeft="true"
-            	android:layout_alignParentTop="true"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentTop="true"
             	android:paddingLeft="20dp"
-                android:src="@drawable/ic_menu"
-                android:background="@color/white"
-                android:contentDescription="@string/description"/>
+                android:src="@drawable/menu_left"
+				android:background="@color/blue_zalo" />
              
-             <TextView
-	             android:id="@+id/lbl_title"
-	             android:layout_width="wrap_content"
-	             android:layout_height="wrap_content"
-	             android:layout_centerHorizontal="true"
-	             android:layout_centerVertical="true"
-	             android:background="@color/white"
-	             android:text="@string/app_name"
-	             android:textColor="#4a4a4a" />
-        
-	         <ImageButton
-		            android:id="@+id/img_right_menu"
-                    android:onClick="onClickRightMenu"
-		            android:layout_width="25dp"
-		            android:layout_alignParentRight="true"
-		            android:layout_alignParentTop="true"
-		            android:src="@drawable/ic_setting"
-		            android:background="@color/white"
-				 	android:layout_centerHorizontal="true"
-				 	android:adjustViewBounds="true"
-				 	android:scaleType="fitXY"
-				 	android:paddingTop="10dp"
-				 	android:layout_height="32dp" />
+			<TextView
+				android:id="@+id/lbl_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_centerVertical="true"
+				android:background="@color/blue_zalo"
+				android:text="TRIP MAESTER"
+				android:textStyle="bold|italic"
+				android:textColor="#FFFFFF" />
+
+			<ImageButton
+				android:id="@+id/img_right_menu"
+				android:layout_height="40dp"
+				android:layout_width="40dp"
+				android:onClick="onClickRightMenu"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:src="@drawable/menu_right"
+				android:background="@color/blue_zalo"/>
             
         </RelativeLayout>
         
@@ -59,7 +55,7 @@
 		<FrameLayout
 			android:id="@+id/frame_contener"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			android:layout_height="fill_parent"
 			android:paddingTop="42dp"/>
 
 		<com.faizmalkani.floatingactionbutton.FloatingActionButton
@@ -75,14 +71,14 @@
     <!-- The left menu --> 
     <ListView
         android:id="@+id/left_drawer_menu"
-        android:layout_width="240dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"        
         android:choiceMode="singleChoice"
         android:divider="@color/list_divider"
         android:dividerHeight="1dp"       
         android:layout_gravity="left" 
         android:listSelector="@drawable/list_selector"
-        android:background="@color/list_background"/>
+        android:background="@color/white"/>
         
     <!-- The right menu -->
     <ListView

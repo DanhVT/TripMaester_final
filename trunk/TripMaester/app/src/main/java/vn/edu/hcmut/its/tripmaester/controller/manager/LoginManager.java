@@ -13,7 +13,6 @@ public class LoginManager {
     private AccessToken mUserToken;
 
     private LoginManager() {
-
     }
 
     public static LoginManager getInstance() {

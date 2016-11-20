@@ -22,8 +22,8 @@
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="5dp"
 	        android:text="@string/btn_cancel_caption"/>
-          <Button
-	        android:id="@+id/btn_msg_okie"
+		<Button
+		  	android:id="@+id/btn_msg_okie"
 	        android:layout_width="200px"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="5dp"

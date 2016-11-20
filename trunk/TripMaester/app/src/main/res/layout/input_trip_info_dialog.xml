@@ -6,48 +6,71 @@
     android:orientation="vertical"
     android:padding="10dp" >
 
-    <TextView
-        android:id="@+id/lblStartPlace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_start_place"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/txtStartPlace"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <requestFocus />
-    </EditText>
-
-    <TextView
-        android:id="@+id/lblEndPlace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enter_end_place"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/txtEndPlace"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <requestFocus />
-    </EditText>
-
-    <TextView
-        android:id="@+id/lblTripPrivacy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/trip_privacy"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Spinner
-        android:id="@+id/spinner_trip_privacy"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/trip_privacy_arrays"
-        android:prompt="@string/trip_privacy_prompt" />
+        android:orientation="vertical"
+        android:layout_margin="15dp">
+
+        <TextView
+            android:id="@+id/lblStartPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Place: "
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/txtStartPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <requestFocus />
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/lblEndPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_end_place"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/txtEndPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="15dp" >
+
+        <TextView
+            android:id="@+id/lblTripPrivacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_privacy"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <Spinner
+            android:id="@+id/spinner_trip_privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:entries="@array/trip_privacy_arrays"
+            android:prompt="@string/trip_privacy_prompt" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -25,7 +25,7 @@
     </LinearLayout> -->
 
     <ListView
-        android:id="@+id/dlg_priority_lvw "
+        android:id="@+id/dlg_priority_lvw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dlg_priority_titlebar" >

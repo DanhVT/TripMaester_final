@@ -24,28 +24,27 @@ public class UserFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
 
-        TextView lblBirthday = (TextView) rootView.findViewById(R.id.txtbirthday);
-        TextView lblFirstLastName = (TextView) rootView.findViewById(R.id.txtFirstLastName);
-        TextView lblEmail = (TextView) rootView.findViewById(R.id.txtEmail);
-        TextView lblGender = (TextView) rootView.findViewById(R.id.txtGender);
-        ImageView user_image = (ImageView) rootView.findViewById(R.id.imguser);
+        TextView textViewBirthday = (TextView) rootView.findViewById(R.id.txtbirthday);
+        TextView textViewNameUser = (TextView) rootView.findViewById(R.id.txtFirstLastName);
+        TextView textViewEmail = (TextView) rootView.findViewById(R.id.txtEmail);
+        TextView textViewGender = (TextView) rootView.findViewById(R.id.txtGender);
+        ImageView imageViewAvartaUser = (ImageView) rootView.findViewById(R.id.imguser);
+
         if (LoginManager.getInstance().isLogin()) {
-            lblBirthday.setText(LoginManager.getInstance().getUser().getBirthday());
-            lblEmail.setText(LoginManager.getInstance().getUser().getEmail());
-            lblFirstLastName.setText(LoginManager.getInstance().getUser().getFirst_name() + LoginManager.getInstance().getUser().getLast_name());
-            lblGender.setText(LoginManager.getInstance().getUser().gender);
+            textViewBirthday.setText(LoginManager.getInstance().getUser().getBirthday());
+            textViewEmail.setText(LoginManager.getInstance().getUser().getEmail());
+            textViewNameUser.setText(LoginManager.getInstance().getUser().getFirst_name() + LoginManager.getInstance().getUser().getLast_name());
+            textViewGender.setText(LoginManager.getInstance().getUser().gender);
             try {
                 if (LoginManager.getInstance().isLogin()) {
                     URL image_value = new URL(GRAPH_FB_URL + LoginManager.getInstance().getUser().getId() + "/picture");
-                    InputStream input_stream = (InputStream) image_value
-                            .getContent();
+                    InputStream input_stream = (InputStream) image_value.getContent();
                     Bitmap user_fb_icon = BitmapFactory.decodeStream(input_stream);
-                    user_image.setImageBitmap(user_fb_icon);
+                    imageViewAvartaUser.setImageBitmap(user_fb_icon);
                 }
             } catch (Exception ex) {
                 Log.i("User Info image", ex.getMessage());

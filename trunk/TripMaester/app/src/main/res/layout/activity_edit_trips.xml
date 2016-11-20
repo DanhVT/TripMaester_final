@@ -2,43 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:orientation="vertical" >
-	
-	<RelativeLayout 
-        android:id="@+id/layout_tool"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:id="@+id/layout_tool"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/blue_facebook">
+		android:padding="5dp"
+        android:background="@color/blue_zalo">
 
         <ImageButton
             android:id="@+id/btn_edit_cancel"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_action_cancel"
-            android:background="@color/blue_facebook"/>
+			android:layout_height="40dp"
+			android:layout_width="40dp"
+			android:onClick="onClickLeftMenu"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:layout_marginLeft="5dp"
+            android:src="@drawable/cancel"
+            android:background="@color/blue_zalo" />
         
+		<TextView
+			android:id="@+id/lbl_trip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true"
+			android:text="LIST TRIP"
+			android:textColor="#FFFFFF"
+			android:textStyle="bold|italic" />
         
-        
-         <TextView
-             android:id="@+id/lbl_trip"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerHorizontal="true"
-             android:layout_centerVertical="true"
-             android:text="@string/edit_trip_title"
-             android:textColor="#FFFFFF" />
-        
-         <ImageButton
+		<ImageButton
             android:id="@+id/btn_edit_okie"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+			android:onClick="onClickRightMenu"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_action_accept"
-            android:background="@color/blue_facebook"
+            android:src="@drawable/accept"
+            android:background="@color/blue_zalo"
             android:contentDescription="@string/description"/>
 
 	</RelativeLayout>
@@ -52,21 +54,19 @@
 	  -->
 	  
 	 <ListView
-		android:id="@+id/edit_list_trips"
-		android:layout_width="match_parent"
-		android:layout_height="fill_parent" 
-		android:layout_below="@+id/layout_tool"
-		android:background="@color/backgroudtrip"
-		android:cacheColorHint="@android:color/transparent"
-		android:divider="@android:color/transparent"
-		android:dividerHeight="@dimen/trip_spacing_normal"
-		android:listSelector="@android:color/holo_blue_light"
-		android:paddingLeft="@dimen/trip_spacing_normal"
-		android:paddingRight="@dimen/trip_spacing_normal"
-		android:paddingTop="@dimen/trip_spacing_top"
-		android:paddingBottom="@dimen/trip_spacing_bottom"
-		android:scrollbarStyle="outsideOverlay"
-		android:descendantFocusability="blocksDescendants">
+		 android:id="@+id/edit_list_trips"
+		 android:layout_width="match_parent"
+		 android:layout_height="fill_parent"
+		 android:layout_below="@+id/layout_tool"
+		 android:background="@color/white"
+		 android:cacheColorHint="@android:color/transparent"
+		 android:divider="#EEEEEE"
+		 android:dividerHeight="@dimen/trip_spacing_normal"
+		 android:listSelector="@android:color/holo_blue_light"
+		 android:paddingTop="@dimen/trip_spacing_top"
+		 android:paddingBottom="@dimen/trip_spacing_bottom"
+		 android:scrollbarStyle="outsideOverlay"
+		 android:descendantFocusability="blocksDescendants">
 	</ListView>
 	
 </RelativeLayout>

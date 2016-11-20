@@ -1350,28 +1350,22 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         iv_transportation = (ImageView) root
                 .findViewById(R.id.iv_transportation);
 
-        StaticVariable.TV_TIME_DESTANCE = (TextView) root
-                .findViewById(R.id.tv_time_distance);
+        StaticVariable.TV_TIME_DESTANCE = (TextView) root.findViewById(R.id.tv_time_distance);
         StaticVariable.TV_TIME_DESTANCE.setVisibility(View.GONE);
         StaticVariable.TV_VIA = (TextView) root.findViewById(R.id.tv_via);
         StaticVariable.TV_VIA.setVisibility(View.GONE);
-        StaticVariable.TV_ROUTING_DETAIL = (TextView) root
-                .findViewById(R.id.tv_preview);
-        StaticVariable.TV_ROUTING_DETAIL.setText(Html
-                .fromHtml(" <font color=#5789ff>  >> "
+        StaticVariable.TV_ROUTING_DETAIL = (TextView) root.findViewById(R.id.tv_preview);
+        StaticVariable.TV_ROUTING_DETAIL.setText(Html.fromHtml(" <font color=#5789ff>  >> "
                         + mContext.getResources().getString(R.string.detail)
                         + " </font> "));
         StaticVariable.TV_ROUTING_DETAIL.setTextSize(13);
         StaticVariable.TV_ROUTING_DETAIL.setVisibility(View.GONE);
 
-        ll_routing_info = (LinearLayout) root
-                .findViewById(R.id.ll_routing_info);
+        ll_routing_info = (LinearLayout) root.findViewById(R.id.ll_routing_info);
         ll_routing_info.setVisibility(View.GONE);
 
-        ll_distance_time_via = (LinearLayout) root
-                .findViewById(R.id.ll_distance_time_via);
-        ll_search_routing_mode = (LinearLayout) root
-                .findViewById(R.id.ll_search_routing_mode);
+        ll_distance_time_via = (LinearLayout) root.findViewById(R.id.ll_distance_time_via);
+        ll_search_routing_mode = (LinearLayout) root.findViewById(R.id.ll_search_routing_mode);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             ll_distance_time_via.setOrientation(LinearLayout.HORIZONTAL);
             ll_search_routing_mode.setOrientation(LinearLayout.HORIZONTAL);
@@ -1485,18 +1479,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         }
         // ################################################
         if (lastLocation != null) {
-            mMapController.animateTo(new GeoPoint(lastLocation.getLatitude(),
-                    lastLocation.getLongitude()));
-            userLocDynamicOverlay = new DynamicOverlay(mContext, lon, lat,
-                    mMapView, true);
-            updateUserLocationMarker(position_marker,
-                    lastLocation.getLatitude(), lastLocation.getLongitude());
+            mMapController.animateTo(new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            userLocDynamicOverlay = new DynamicOverlay(mContext, lon, lat, mMapView, true);
+            updateUserLocationMarker(position_marker, lastLocation.getLatitude(), lastLocation.getLongitude());
         }
 
         // ### Check if GPS is enabled
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(mContext, R.string.gps_dialog_title,
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.gps_dialog_title, Toast.LENGTH_SHORT).show();
             final Dialog dialog = new Dialog(mContext);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.gps_dialog);
@@ -2494,8 +2484,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     /**
      * Update (or create if null) a marker in itineraryMarkers.
      */
-    public Marker updateItineraryMarker(Marker marker, GeoPoint p, int index,
-                                        int titleResId, int markerResId, int imageResId, String address) {
+    public Marker updateItineraryMarker(Marker marker, GeoPoint p, int index, int titleResId, int markerResId, int imageResId, String address) {
         Drawable icon = getResources().getDrawable(markerResId);
         String title = getResources().getString(titleResId);
         if (marker == null) {
@@ -2992,8 +2981,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         }
     }
 
-    private class POILoadingTask extends
-            AsyncTask<Object, Void, ArrayList<POI>> {
+    private class POILoadingTask extends AsyncTask<Object, Void, ArrayList<POI>> {
         String mFeatureTag;
         String message;
 
@@ -3291,6 +3279,5 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             Log.e("Status changed", provider + " " + status);
         }
     }
-
 
 }

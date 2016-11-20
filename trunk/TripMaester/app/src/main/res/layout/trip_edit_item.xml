@@ -2,19 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+	android:padding="10dp"
+	android:background="@color/white">
     
     <!-- view user create trip and date create -->
 	<LinearLayout
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"> 
+	    android:orientation="horizontal"
+		android:layout_marginBottom="10dp">
 	    
 	    <ImageView
 	        android:id="@+id/list_edit_img_trip"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:src="@drawable/ic_launcher" />
+	        android:src="@drawable/edit_trip"
+			android:layout_marginRight="10dp"/>
 	
 	    <LinearLayout
 	        android:layout_width="wrap_content"
@@ -40,71 +44,94 @@
 
    	</LinearLayout>
 
-	<!-- info Time trip -->
+	<!-- info Time Trip -->
 	 <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+		 android:layout_width="match_parent"
+		 android:layout_height="wrap_content"
+		 android:orientation="horizontal"
+		 android:weightSum="2"
+		 android:layout_marginBottom="10dp">
 
-		<TextView
-		    android:id="@+id/edit_trip_start_date"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:drawableStart="@drawable/ic_action_event"
-		    android:drawableLeft="@drawable/ic_action_event"
-		    android:gravity="center"
-		    android:textColor="@color/map_item_trip_gray" />
-		<TextView
-		    android:id="@+id/edit_trip_finish_date"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:drawableStart="@drawable/ic_action_go_to_today_holo_light"
-		    android:drawableLeft="@drawable/ic_action_go_to_today_holo_light"
-		    android:gravity="center"
-		    android:textColor="@color/map_item_trip_gray" />
+		 <ImageView
+			 android:layout_width="wrap_content"
+			 android:layout_height="wrap_content"
+			 android:src="@drawable/calendar"
+			 android:layout_marginLeft="42dp"
+			 android:layout_gravity="center"/>
+
+		 <TextView
+			 android:id="@+id/edit_trip_start_date"
+			 android:layout_width="match_parent"
+			 android:layout_height="wrap_content"
+			 android:layout_weight="1"
+			 android:gravity="center"
+			 android:textColor="@color/map_item_trip_gray" />
+		 <TextView
+			 android:id="@+id/edit_trip_finish_date"
+			 android:layout_width="match_parent"
+			 android:layout_height="wrap_content"
+			 android:layout_weight="1"
+			 android:gravity="center"
+			 android:textColor="@color/map_item_trip_gray" />
 	
 	</LinearLayout>
 	
 	 <!-- info Place trip -->
-	 <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:weightSum="2"
+		android:layout_marginBottom="10dp">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/place_start"
+			android:layout_marginLeft="42dp"
+			android:layout_gravity="center"/>
 
 		<TextView
-		    android:id="@+id/edit_trip_start_point"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:drawableStart="@drawable/ic_action_place_holo_light"
-		    android:drawableLeft="@drawable/ic_action_place_holo_light"
-		    android:gravity="center"
-		    android:textColor="@color/map_item_trip_gray" />
-		<TextView
-		    android:id="@+id/edit_trip_finish_point"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:drawableStart="@drawable/ic_action_directions_holo_light"
-		    android:drawableLeft="@drawable/ic_action_directions_holo_light"
-		    android:gravity="center"
-		    android:textColor="@color/map_item_trip_gray" />
+			android:id="@+id/edit_trip_start_point"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textColor="@color/map_item_trip_gray" />
 	
 	</LinearLayout>
-    
-	 <LinearLayout
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginBottom="10dp">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/place_finish"
+			android:layout_marginLeft="42dp"
+			android:layout_gravity="center"/>
+
 		<TextView
-		    android:id="@+id/edit_trip_comment"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_weight="1"
-		    android:textColor="@color/map_item_trip_gray" />
+			android:id="@+id/edit_trip_finish_point"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:textColor="@color/map_item_trip_gray" />
+
 	</LinearLayout>
+
+	 <!--<LinearLayout-->
+		 <!--android:layout_width="fill_parent"-->
+		 <!--android:layout_height="wrap_content"-->
+		 <!--android:orientation="vertical" >-->
+		 <!--<TextView-->
+			 <!--android:id="@+id/edit_trip_comment"-->
+			 <!--android:layout_width="match_parent"-->
+		     <!--android:layout_height="wrap_content"-->
+		     <!--android:layout_weight="1"-->
+		     <!--android:textColor="@color/map_item_trip_gray" />-->
+	<!--</LinearLayout>-->
+
 </LinearLayout>

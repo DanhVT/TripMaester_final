@@ -94,17 +94,6 @@ public class User {
 		if(tokenId != null){
 			this.tokenId = tokenId;
 		}
-		
-		
-		
-		
-		
-		
-
-
-
-
-
 		this.setStatus(status);
 	}
 

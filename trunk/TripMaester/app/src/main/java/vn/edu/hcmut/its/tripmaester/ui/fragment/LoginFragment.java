@@ -38,7 +38,7 @@ import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
  */
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
-    private static final String[] PERMISSIONS = {"public_profile", "email", "user_friends"};
+    private static final String[] PERMISSIONS = {"public_profile", "user_birthday", "email", "user_friends"};
     //    GameRequestDialog requestDialog;
 //    AccessTokenTracker accessTokenTracker;
     CallbackManager mCallbackManager;

@@ -51,18 +51,17 @@ public class LoginFragment extends Fragment {
 
     private void logInFB() {
         GraphRequest request = GraphRequest.newMeRequest(
-                LoginManager.getInstance().getUserToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-
+                LoginManager.getInstance().getUserToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
-                    public void onCompleted(JSONObject object,
-                                            GraphResponse response) {
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.i("LoginActivity", response.toString());
                         try {
                             if (object != null) {
                                 // set permission to get picture
                                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                                         .permitAll().build();
                                 StrictMode.setThreadPolicy(policy);
+
                                 String name = null, user_fb_id = null, first_name = null, last_name = null, birthday = null, email = null, updated_time = null, gender = null, local = null, verified = null, timezone = null, link = null, imei = null;
                                 if (!object.isNull("name")) {
                                     name = object.getString("name");
@@ -134,11 +133,11 @@ public class LoginFragment extends Fragment {
 //							e.printStackTrace();
 //							Log.i("error", e.getMessage());
                         }
+
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("permission",
-                "user_friends");
+        parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location"); // Parámetros que pedimos a facebook
         request.setParameters(parameters);
         request.executeAsync();
     }

@@ -23,6 +23,8 @@ import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import group.traffic.nhn.user.User;
@@ -36,6 +38,7 @@ import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
  */
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
+    private static final String[] PERMISSIONS = {"public_profile", "email", "user_friends"};
     //    GameRequestDialog requestDialog;
 //    AccessTokenTracker accessTokenTracker;
     CallbackManager mCallbackManager;
@@ -63,6 +66,7 @@ public class LoginFragment extends Fragment {
                                 StrictMode.setThreadPolicy(policy);
 
                                 String name = null, user_fb_id = null, first_name = null, last_name = null, birthday = null, email = null, updated_time = null, gender = null, local = null, verified = null, timezone = null, link = null, imei = null;
+                                System.out.println(object);
                                 if (!object.isNull("name")) {
                                     name = object.getString("name");
                                 }
@@ -137,7 +141,7 @@ public class LoginFragment extends Fragment {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location"); // Parámetros que pedimos a facebook
+        parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
         request.setParameters(parameters);
         request.executeAsync();
     }
@@ -197,7 +201,8 @@ public class LoginFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         LoginButton authButton = (LoginButton) rootView.findViewById(R.id.authButton);
-        authButton.setReadPermissions("user_friends");
+        authButton.setReadPermissions(PERMISSIONS);
+
         authButton.setFragment(this);
 
         // Callback registration

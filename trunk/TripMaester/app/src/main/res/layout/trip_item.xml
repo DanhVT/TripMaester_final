@@ -2,22 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_card"
-    android:layout_marginRight="20px"
-    android:layout_marginLeft="20px"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@color/white">
 
     <!-- view user create trip and date create -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:id="@+id/imgAvaUserCreateTrip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_profile" />
+            android:src="@drawable/ic_user_profile"
+            android:layout_marginRight="10dp" />
 
         <LinearLayout
             android:id="@+id/linerItemTripListUser"
@@ -29,7 +30,8 @@
                 android:id="@+id/txtUserNameCreateTrip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hoàng Dũng"
+                android:text="User Name"
+                android:textStyle="normal|bold"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/map_item_trip_blue" />
 
@@ -37,69 +39,89 @@
                 android:id="@+id/txtDateCreateTrip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="13/04"
+                android:text="Time-Date"
+                android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/map_item_trip_gray" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- info Time trip -->
+    <!-- info Time Trip -->
     <LinearLayout
-        android:id="@+id/Item_list_trip_Content_info_Time_trip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/calendar"
+            android:layout_marginLeft="42dp"
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/txt_Item_list_trip_Time_Start_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_action_event"
-            android:drawableStart="@drawable/ic_action_event"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="@color/map_item_trip_gray" />
-
         <TextView
             android:id="@+id/txt_Item_list_trip_Time_End_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_action_go_to_today_holo_light"
-            android:drawableStart="@drawable/ic_action_go_to_today_holo_light"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="@color/map_item_trip_gray" />
 
     </LinearLayout>
 
     <!-- info Place trip -->
+
     <LinearLayout
-        android:id="@+id/Item_list_trip_Content_info_Place_trip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/place_start"
+            android:layout_marginLeft="42dp"
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/txt_Item_list_trip_Place_Start_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_action_place_holo_light"
-            android:drawableStart="@drawable/ic_action_place_holo_light"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="@color/map_item_trip_gray" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/place_finish"
+            android:layout_marginLeft="42dp"
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/txt_Item_list_trip_Place_End_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_action_directions_holo_light"
-            android:drawableStart="@drawable/ic_action_directions_holo_light"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="@color/map_item_trip_gray" />
 
     </LinearLayout>
@@ -162,11 +184,11 @@
                 android:text="@string/view_on_map"/>
 
             <!--<TextView-->
-                <!--android:id="@+id/txtViewOnMap"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/view_on_map"-->
-                <!--android:textColor="@color/gray_opac"></TextView>-->
+            <!--android:id="@+id/txtViewOnMap"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/view_on_map"-->
+            <!--android:textColor="@color/gray_opac"></TextView>-->
         </LinearLayout>
     </LinearLayout>
 
@@ -180,7 +202,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="4">
 
         <!-- button like -->
         <LinearLayout
@@ -189,22 +211,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center">
+            android:layout_gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_action_good"
-                android:drawableStart="@drawable/ic_action_good"
-                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_like"
+                android:drawableStart="@drawable/ic_like"
                 android:text=""
+                android:textStyle="normal|bold"
+                android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
-
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@color/map_item_trip_gray" />
 
 
         <!-- button comment -->
@@ -213,24 +231,37 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_action_chat_holo_light"
-                android:drawableStart="@drawable/ic_action_chat_holo_light"
-                android:gravity="center"
+                android:drawableLeft="@drawable/ic_comment"
+                android:drawableStart="@drawable/ic_comment"
                 android:text=""
+                android:textStyle="normal|bold"
+                android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@color/map_item_trip_gray" />
+        <!-- button comment -->
+        <LinearLayout
+            android:id="@+id/item_list_trip_button_comm"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_view"
+                android:drawableStart="@drawable/ic_view"
+                android:text=""
+                android:textStyle="normal|bold"
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
 
         <!-- button share -->
         <LinearLayout
@@ -239,15 +270,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center">
+            android:layout_gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_action_share_holo_light"
-                android:drawableStart="@drawable/ic_action_share_holo_light"
-                android:gravity="center"
+                android:drawableLeft="@drawable/ic_share_"
+                android:drawableStart="@drawable/ic_share_"
                 android:text=""
+                android:textStyle="normal|bold"
+                android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 

@@ -1,5 +1,6 @@
 package group.traffic.nhn.trip;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -25,7 +28,8 @@ public class TripsFragment extends Fragment {
     private Timer timer;
     private Timer timerTrip;
     private ListView lstTripsInfor;
-
+    private LinearLayout noTripWrap;
+    private Button bAddtrip;
     public void stopTimer() {
         if (timer != null) {
             timer.purge();
@@ -81,12 +85,21 @@ public class TripsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_trips, container, false);
         lstTripsInfor = (ListView) rootView.findViewById(R.id.list_trips_infor);
-
+        noTripWrap= (LinearLayout) rootView.findViewById(R.id.no_trip_wrap);
+        bAddtrip = (Button) rootView.findViewById(R.id.bAddtrip);
         // create trip adapter
         TripArrayAdapter tripAdapter = new TripArrayAdapter(getActivity()
                 .getApplicationContext(),
                 R.id.list_trips_infor,
                 TripManager.lst_user_trip);
+
+        bAddtrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent trip = new Intent(getActivity(), NewTripActivity.class);
+                startActivity(trip);
+            }
+        });
         tripAdapter.mainActivity = (MainActivity) this.getActivity();
         tripAdapter.tripsFragment = this;
 
@@ -104,12 +117,18 @@ public class TripsFragment extends Fragment {
             @Override
             public void onDataUpdated() {
                 tripAdapter.notifyDataSetChanged();
+                if(TripManager.lst_user_trip.size() == 0 ){
+                    noTripWrap.setVisibility(View.VISIBLE);
+                }
+                else{
+                    noTripWrap.setVisibility(View.GONE);
+                }
                 lstTripsInfor.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         loadTrips(tripAdapter);
                     }
-                }, 2000);
+                }, 10000);
             }
         });
     }

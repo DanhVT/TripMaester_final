@@ -40,12 +40,11 @@ public class UserFragment extends Fragment {
             textViewNameUser.setText(LoginManager.getInstance().getUser().getFirst_name() + LoginManager.getInstance().getUser().getLast_name());
             textViewGender.setText(LoginManager.getInstance().getUser().gender);
             try {
-                if (LoginManager.getInstance().isLogin()) {
-                    URL image_value = new URL(GRAPH_FB_URL + LoginManager.getInstance().getUser().getId() + "/picture");
-                    InputStream input_stream = (InputStream) image_value.getContent();
-                    Bitmap user_fb_icon = BitmapFactory.decodeStream(input_stream);
-                    imageViewAvartaUser.setImageBitmap(user_fb_icon);
-                }
+                URL image_value = new URL(GRAPH_FB_URL + LoginManager.getInstance().getUser().getId() + "/picture");
+                InputStream input_stream = (InputStream) image_value.getContent();
+                Bitmap user_fb_icon = BitmapFactory.decodeStream(input_stream);
+                imageViewAvartaUser.setImageBitmap(user_fb_icon);
+
             } catch (Exception ex) {
                 Log.i("User Info image", ex.getMessage());
             }

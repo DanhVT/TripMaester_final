@@ -12,14 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.koushikdutta.ion.Ion;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
 
@@ -127,7 +130,7 @@ public class LoginFragment extends Fragment {
                                     boolean status = json_result.getBoolean("status");
                                     LoginManager.getInstance().getUser().setStatus(status);
                                 }
-
+                                Logger.t("tokenId").d(LoginManager.getInstance().getUser().getTokenId());
                                 //get list friend-in-app of user
                                 LoginManager.getInstance().getUser().getListFriend();
 
@@ -156,8 +159,12 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // FacebookSdk.sdkInitialize(this.getActivity().getApplicationContext());
+         FacebookSdk.sdkInitialize(this.getActivity().getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
+
+        if(AccessToken.getCurrentAccessToken()==null){
+            com.facebook.login.LoginManager.getInstance().logOut();
+        }
         // App Invite
 //		 String appLinkUrl, previewImageUrl;
 

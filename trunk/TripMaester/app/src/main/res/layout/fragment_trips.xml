@@ -3,7 +3,32 @@
     android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:orientation="vertical" >
-	
+
+	<LinearLayout
+		android:layout_marginTop="100dp"
+		android:id="@+id/no_trip_wrap"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:textSize="24dp"
+			android:text="No Trip Available"
+			android:textColor="@color/gray_opac"/>
+		<Button
+			android:id="@+id/bAddtrip"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="16dp"
+			android:text="Add New Trip"
+			android:drawableLeft="@android:drawable/ic_menu_add"
+			android:layout_marginTop="50dp"
+			android:textSize="24sp"/>
+
+	</LinearLayout>
 	<ListView
 		android:id="@+id/list_trips_infor"
 		android:layout_width="match_parent"

@@ -114,7 +114,8 @@
     <string name="sharing_infor_fail">Failed</string>
     <string name="loading">Loading</string>
     <string name="wait">Please wait &#8230;</string>
-    <string name="tp_hcm">Thành phố Hồ Chí Minh</string>
+    <string name="tp_hcm">Tp HCM</string>
+    <string name="tp_hochiminh">Thành phố Hồ Chí Minh</string>
     <string name="hcm">Hồ Chí Minh</string>
     <string name="arrive">You have arrived at</string>
     <string name="warning">Warning options</string>

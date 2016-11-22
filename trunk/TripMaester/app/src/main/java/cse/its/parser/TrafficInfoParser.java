@@ -1,14 +1,15 @@
 package cse.its.parser;
 
-import vn.edu.hcmut.its.tripmaester.R;
-import group.traffice.nhn.common.StaticVariable;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,8 +24,14 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.PathOverlay;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import cse.its.dbhelper.DBTrafficHelper;
 import cse.its.dbhelper.DBTrafficSource;
@@ -32,17 +39,8 @@ import cse.its.dbhelper.NodeDrawable;
 import cse.its.dbhelper.SegDrawable;
 import cse.its.dbhelper.StrDrawable;
 import cse.its.helper.Constant;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.widget.Toast;
+import group.traffice.nhn.common.StaticVariable;
+import vn.edu.hcmut.its.tripmaester.R;
 
 /**
  * @author SinhHuynh

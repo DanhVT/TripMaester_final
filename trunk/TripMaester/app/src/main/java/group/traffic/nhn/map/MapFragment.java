@@ -1569,8 +1569,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             // ### on map scroll
             @Override
             public boolean onScroll(ScrollEvent arg0) {
+                Logger.t("traffice").d(StaticVariable.SHOW_TRAFFIC_INFO);
                 if (StaticVariable.SHOW_TRAFFIC_INFO) {
-                    // Log.wtf("ON SCROLL", "scroll");
+
                     NodeDrawable current = new NodeDrawable(0,
                             currentMapCenterPoint.getLongitude(),
                             currentMapCenterPoint.getLatitude());

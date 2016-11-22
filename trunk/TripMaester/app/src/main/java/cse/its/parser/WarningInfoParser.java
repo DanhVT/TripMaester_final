@@ -88,10 +88,6 @@ public class WarningInfoParser extends
 		boolean flag = false;
 		ArrayList<Overlay> templistWarning = new ArrayList<Overlay>();
 		try {
-			
-			
-			
-			
 			String url = arg0[0];
 			Log.i("Url: ", url);
 			StringBuilder builder = new StringBuilder();

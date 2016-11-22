@@ -72,6 +72,7 @@ dependencies {
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.osmdroid:osmdroid-android:4.3'
     compile 'com.orhanobut:logger:1.15'

@@ -42,6 +42,7 @@ import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
     private static final String[] PERMISSIONS = {"public_profile", "user_birthday", "email", "user_friends"};
+    private static final String PARAMETERS = "id,name,email,picture,first_name,last_name,gender,birthday,location";
     //    GameRequestDialog requestDialog;
 //    AccessTokenTracker accessTokenTracker;
     CallbackManager mCallbackManager;
@@ -144,7 +145,7 @@ public class LoginFragment extends Fragment {
                     }
                 });
         Bundle parameters = new Bundle();
-        parameters.putString("fields", "id, first_name, last_name, email, gender, birthday, location");
+        parameters.putString("fields", PARAMETERS);
         request.setParameters(parameters);
         request.executeAsync();
     }

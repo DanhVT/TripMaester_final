@@ -60,6 +60,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -681,8 +682,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         // ### register location listener
         mLocationManager.requestLocationUpdates(Constant.GPS_PROVIDER, 0, 0,
                 locationListener);
-        mLocationManager.requestLocationUpdates(Constant.NETWORK_PROVIDER, 0, 0,
-                locationListener);
+        if (mLocationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
+            mLocationManager.requestLocationUpdates(Constant.NETWORK_PROVIDER, 0, 0,
+                    locationListener);
+        }
         StaticVariable.GROUP_MAP_MENU_ITEMS.get(3).check = StaticVariable.VOICE;
         if (StaticVariable.NAVIGATE) {
             // set check for navigate mode menu
@@ -3135,6 +3138,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 // get the address of point
                 String addressParserUrl = Constant.OSM_ADDRESS_SEARCH_URL;
                 addressParserUrl += lat + "&lon=" + lon + "&zoom=18";
+
                 // new AddressParser(context, false).execute(addressParserUrl);
                 new AddressParser(getActivity(), false)
                         .execute(addressParserUrl);

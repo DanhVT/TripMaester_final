@@ -31,6 +31,8 @@ import android.util.Log;
 import android.util.Xml;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 /**
  * @author SinhHuynh
  * @Tag GET ADDRESS FROM COORDINATE, OSM SERVICE
@@ -87,12 +89,15 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 			int statusCode = statusLine.getStatusCode();
 			if (statusCode == 200) {// successful connection
 				HttpEntity entity = response.getEntity();
+				Logger.t("aaa").d(entity);
 				InputStream content = entity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(content));
 				String line;
+
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);
+
 				}
 			} else {// fail connection
 				Log.e("Routing service", "Failed to get JSON");
@@ -103,8 +108,9 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 			e.printStackTrace();
 		}
 
+
 		String xml = builder.toString();
-		// System.out.println(xml);
+
 		InputStream is = new ByteArrayInputStream(xml.getBytes());
 		XmlPullParser parser = Xml.newPullParser();
 		try {
@@ -123,7 +129,7 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 							address.indexOf(", "
 									+ context.getResources().getString(
 											R.string.tp_hcm)));
-				// System.out.println(address);
+				Logger.t("xml").d(address);
 
 			}
 		} catch (XmlPullParserException e) {

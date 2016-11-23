@@ -1604,10 +1604,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     }
 
                 }
-
                 return false;
             }
-
             // ### on zoom level change
             @Override
             public boolean onZoom(ZoomEvent arg0) {

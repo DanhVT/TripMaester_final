@@ -117,6 +117,7 @@
     <string name="tp_hcm">Tp HCM</string>
     <string name="tp_hochiminh">Thành phố Hồ Chí Minh</string>
     <string name="hcm">Hồ Chí Minh</string>
+    <string name="tphcm">Tp HCM</string>
     <string name="arrive">You have arrived at</string>
     <string name="warning">Warning options</string>
     <string name="search_location_not_found">Location not found</string>

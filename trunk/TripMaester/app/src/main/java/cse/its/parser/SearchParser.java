@@ -68,7 +68,6 @@ public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 	@Override
 	protected ArrayList<String> doInBackground(String... params) {
 		String url = params[0];
-		System.out.println(url);
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(url).get();
@@ -77,11 +76,11 @@ public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		if (doc != null) {
 			Elements links = doc.select("a[href]");
 			for (Element link : links) {
-				if (link.text().contains(context.getString(R.string.hcm))) {
-
+				if (link.text().contains(context.getString(R.string.tphcm))) {
 					String id = link.attr("href");
 					id = id.substring(id.lastIndexOf("/") + 1);
 					way_id_list.add(Long.parseLong(id));

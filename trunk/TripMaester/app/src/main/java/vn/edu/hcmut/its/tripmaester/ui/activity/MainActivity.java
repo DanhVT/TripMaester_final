@@ -244,7 +244,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                                                     .build();
                                             StrictMode.setThreadPolicy(policy);
 
-                                            String name = "", user_fb_id = "", first_name = "", last_name = "", birthday = "",
+                                            String name = "", picture ="", cover="",  user_fb_id = "", first_name = "", last_name = "", birthday = "",
                                                     email = "", updated_time = "", gender = "", local = "", verified = "",
                                                     timezone = "", link = "", imei = "";
 
@@ -287,8 +287,13 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                                             if (!object.isNull("imei")) {
                                                 imei = object.getString("imei");
                                             }
-
-                                            LoginManager.getInstance().setUser(new User("", user_fb_id, name, first_name, last_name,
+                                            if (!object.isNull("cover")) {
+                                                cover = response.getJSONObject().getJSONObject("cover").getString("source");
+                                            }
+                                            if (!object.isNull("picture")) {
+                                                picture = response.getJSONObject().getJSONObject("picture").getJSONObject("data").getString("url");
+                                            }
+                                            LoginManager.getInstance().setUser(new User("", user_fb_id, name, first_name, last_name, cover,picture,
                                                     birthday, email, updated_time, gender, local, verified, timezone, link,
                                                     imei, false));
                                             // TODO: WTF ??? KenK11

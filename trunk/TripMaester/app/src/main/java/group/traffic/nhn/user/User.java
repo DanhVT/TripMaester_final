@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 
 public class User {
-	String id;
+	private String id;
 	String name;
 	String first_name;
 	String last_name;
+	String cover;
+	String picture;
 	String birthday;
 	String email;
 	String updated_time;
@@ -34,6 +36,8 @@ public class User {
 		this.id = "";
 		this.name = "";
 		this.first_name = "";
+		this.cover = "";
+		this.picture = "";
 		this.last_name = "";
 		this.birthday = "";
 		this.email = "";
@@ -47,10 +51,10 @@ public class User {
 		this.setTokenId("");
 		this.setStatus(false);
 	}
-	public User(String tokenId,String id, String name, String first_name, String last_name,
+	public User(String tokenId,String id, String name, String first_name, String last_name, String cover, String picture,
 			String birthday, String email, String updated_time, String gender,
 			String local, String verified, String timezone, String link,
-			String imei,boolean status) {
+			String imei, boolean status) {
 		super();
 		if(id != null){
 			this.id = id;
@@ -63,6 +67,12 @@ public class User {
 		}
 		if(last_name != null){
 			this.last_name = last_name;
+		}
+		if(picture != null){
+			this.picture = picture;
+		}
+		if(cover != null){
+			this.cover = cover;
 		}
 		if(birthday != null){
 			this.birthday = birthday;

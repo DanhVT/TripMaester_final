@@ -10,6 +10,9 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.orhanobut.logger.Logger;
 
 /**
  * @author SinhHuynh
@@ -17,7 +20,9 @@ import android.database.sqlite.SQLiteOpenHelper;
  *      folder
  */
 public class DBTrafficHelper extends SQLiteOpenHelper {
-	public final static String DB_NAME = "gpsTraffic.sqlite";
+	public final static String DB_NAME = "gpsTraffic.db";
+	// Phiên bản
+	private static final int DATABASE_VERSION = 1;
 
 	/* Segment table */
 	public static final String SEGMENT = "staticData";
@@ -33,12 +38,14 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 
 	// Constructor
 	public DBTrafficHelper(Context context) {
-		super(context, DB_NAME, null, 1);
+		super(context, DB_NAME, null, DATABASE_VERSION);
 		this.context = context;
+		SQLiteDatabase db = this.getWritableDatabase();
 	}
 
 	public void createDataBase() throws IOException {
 		// If database does not exist, then copy it from the assets
+
 		if (!checkDataBase()) {
 			this.getReadableDatabase();
 			this.close();
@@ -58,6 +65,7 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 														// context.getPackageName()
 		// + "/databases/" + DB_NAME);
 		// Log.v("dbFile", dbFile + "   "+ dbFile.exists());
+
 		return dbFile.exists();
 	}
 
@@ -83,7 +91,6 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 																			// +
 																			// context.getPackageName()
 		// + "/databases/" + DB_NAME;
-		// Log.v("mPath", mPath);
 		myDataBase = SQLiteDatabase.openDatabase(mPath, null,
 				SQLiteDatabase.CREATE_IF_NECESSARY);
 		// mDataBase = SQLiteDatabase.openDatabase(mPath,
@@ -93,10 +100,18 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		String drop_segment_table = String.format("DROP TABLE IF EXISTS "+ SEGMENT);
+		db.execSQL(drop_segment_table);
+
+		onCreate(db);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+//		Logger.t("aaa").d(context.getDatabasePath(DB_NAME).getAbsolutePath());
+//		openDataBase();
+//		String create_segment_table = "CREATE TABLE "+ SEGMENT+" ( "+ SEGMENT_ID +" STRING PRIMARY KEY, "+ SEGMENT_STREET_ID+" LONG, "+ LATE+" DOUBLE,"+ LONE +" DOUBLE, "+ LATS+ " DOUBLE, "+ LONS+ " DOUBLE)";
+//		db.execSQL(create_segment_table);
 	}
 
 }

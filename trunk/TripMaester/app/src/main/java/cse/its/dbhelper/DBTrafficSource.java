@@ -34,7 +34,7 @@ public class DBTrafficSource {
 	  }
 	public void open() throws SQLException {
 	    database = dbHelper.getWritableDatabase();
-	  }
+	}
 
 	public Cursor getSeg(String segID){
 		Cursor cursor = database.query(DBTrafficHelper.SEGMENT,
@@ -42,8 +42,10 @@ public class DBTrafficSource {
 		return cursor;
 	}
 	public Cursor getSegbyStreetID(Long streetID){
+//		database = dbHelper.getReadableDatabase();
 		Cursor cursor = database.query(DBTrafficHelper.SEGMENT,
 		        SegColumns, DBTrafficHelper.SEGMENT_STREET_ID + " =" + streetID, null, null, null, null);
+
 		return cursor;
 	}
 	

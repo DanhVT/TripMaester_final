@@ -149,6 +149,7 @@ public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 										.getColumnIndex(DBTrafficHelper.LATE));
 								double lon = segmentCursor.getDouble(segmentCursor
 										.getColumnIndex(DBTrafficHelper.LONE));
+
 								mapView.getController().animateTo(
 										new GeoPoint(lat, lon));
 								searchLoc = new DynamicOverlay(context, lon,

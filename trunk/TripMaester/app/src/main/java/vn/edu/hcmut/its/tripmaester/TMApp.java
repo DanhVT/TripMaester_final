@@ -7,6 +7,7 @@ import com.facebook.FacebookSdk;
 
 import io.fabric.sdk.android.Fabric;
 import vn.edu.hcmut.its.tripmaester.controller.ControllerFactory;
+import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.setting.TMPref;
 
 
@@ -32,7 +33,7 @@ public class TMApp extends Application {
 
         //initial Facebook
         FacebookSdk.sdkInitialize(this);
-
+        ImageLoaderHelper.init(this);
         //initial Preference
         TMPref.initialize(this);
     }

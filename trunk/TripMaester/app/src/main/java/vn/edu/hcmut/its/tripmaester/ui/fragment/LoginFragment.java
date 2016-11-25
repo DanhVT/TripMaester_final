@@ -41,8 +41,8 @@ import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
  */
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
-    private static final String[] PERMISSIONS = {"public_profile", "user_birthday", "email", "user_friends"};
-    private static final String PARAMETERS = "id,name,email,picture,first_name,last_name,gender,birthday,location";
+    private static final String[] PERMISSIONS = {"public_profile", "email", "user_friends"};
+    private static final String PARAMETERS = "id,name,cover,timezone,email,picture,first_name,last_name,gender,birthday,location";
     //    GameRequestDialog requestDialog;
 //    AccessTokenTracker accessTokenTracker;
     CallbackManager mCallbackManager;
@@ -69,10 +69,16 @@ public class LoginFragment extends Fragment {
                                         .permitAll().build();
                                 StrictMode.setThreadPolicy(policy);
 
-                                String name = null, user_fb_id = null, first_name = null, last_name = null, birthday = null, email = null, updated_time = null, gender = null, local = null, verified = null, timezone = null, link = null, imei = null;
+                                String name = null, picture=null, cover  =null, user_fb_id = null, first_name = null, last_name = null, birthday = null, email = null, updated_time = null, gender = null, local = null, verified = null, timezone = null, link = null, imei = null;
                                 System.out.println(object);
                                 if (!object.isNull("name")) {
                                     name = object.getString("name");
+                                }
+                                if (!object.isNull("cover")) {
+                                    cover = response.getJSONObject().getJSONObject("cover").getString("source");
+                                }
+                                if (!object.isNull("picture")) {
+                                    picture = response.getJSONObject().getJSONObject("picture").getJSONObject("data").getString("url");
                                 }
                                 if (!object.isNull("id")) {
                                     user_fb_id = object.getString("id");
@@ -113,7 +119,7 @@ public class LoginFragment extends Fragment {
                                 }
 
                                 LoginManager.getInstance().setUser(new User("", user_fb_id,
-                                        name, first_name, last_name, birthday,
+                                        name, first_name, last_name, cover, picture, birthday,
                                         email, updated_time, gender, local,
                                         verified, timezone, link, imei, false));
                                 updateNameAndImage();

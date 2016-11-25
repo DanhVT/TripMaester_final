@@ -16,6 +16,7 @@ import java.net.URL;
 
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 
 public class UserFragment extends Fragment {
     private static String GRAPH_FB_URL = "https://graph.facebook.com/";
@@ -32,24 +33,20 @@ public class UserFragment extends Fragment {
         TextView textViewNameUser = (TextView) rootView.findViewById(R.id.txtFirstLastName);
         TextView textViewEmail = (TextView) rootView.findViewById(R.id.txtEmail);
         TextView textViewGender = (TextView) rootView.findViewById(R.id.txtGender);
-        ImageView imageViewAvartaUser = (ImageView) rootView.findViewById(R.id.imguser);
+        final ImageView imageViewAvartaUser = (ImageView) rootView.findViewById(R.id.imguser);
+        final ImageView imgcover = (ImageView) rootView.findViewById(R.id.imgcover);
 
         if (LoginManager.getInstance().isLogin()) {
             textViewBirthday.setText(LoginManager.getInstance().getUser().getBirthday());
             textViewEmail.setText(LoginManager.getInstance().getUser().getEmail());
             textViewNameUser.setText(LoginManager.getInstance().getUser().getFirst_name() + LoginManager.getInstance().getUser().getLast_name());
             textViewGender.setText(LoginManager.getInstance().getUser().gender);
-            try {
-                URL image_value = new URL(GRAPH_FB_URL + LoginManager.getInstance().getUser().getId() + "/picture");
-                InputStream input_stream = (InputStream) image_value.getContent();
-                Bitmap user_fb_icon = BitmapFactory.decodeStream(input_stream);
-                imageViewAvartaUser.setImageBitmap(user_fb_icon);
+            ImageLoaderHelper.displayImage(LoginManager.getInstance().getUser().picture, imageViewAvartaUser);
+            ImageLoaderHelper.displayImage(LoginManager.getInstance().getUser().cover, imgcover);
 
-            } catch (Exception ex) {
-                Log.i("User Info image", ex.getMessage());
-            }
         }
         return rootView;
     }
+
 }
 

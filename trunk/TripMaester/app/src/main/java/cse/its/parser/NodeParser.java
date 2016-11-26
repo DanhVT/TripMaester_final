@@ -1,28 +1,30 @@
 package cse.its.parser;
 
-import group.traffic.nhn.map.DynamicOverlay;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import group.traffic.nhn.map.DynamicOverlay;
+import okhttp3.OkHttpClient;
+import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
+
 /**
  * @author SinhHuynh
  * @Tag GET NODE (coordinate) from a way(street) ID, only used in case that ID does not exist in local db, ITS service
@@ -30,7 +32,7 @@ import android.util.Log;
 public class NodeParser extends AsyncTask<String, Void, Void> {
 	Context context;
 	MapView mapView;
-	
+	private final OkHttpClient client = new OkHttpClient();
 	public NodeParser(Context context, MapView mapView){
 		this.context = context;
 		this.mapView = mapView;
@@ -40,49 +42,36 @@ public class NodeParser extends AsyncTask<String, Void, Void> {
 	protected Void doInBackground(String... params) {
 		
 		Log.i("Url: ", params[0]);
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(params[0]);
-
-		int timeout = 3000;
-		HttpParams httpParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
-		HttpConnectionParams.setSoTimeout(httpParams, timeout);
-		httpGet.setParams(httpParams);
-
+		String url = params[0];
 		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-				String line = reader.readLine();
-				System.out.println(line);
-				if(!line.contains("null")){
-//					System.out.println(":" + line.subSequence(15, line.indexOf(",") - 1) + ".");
-//					System.out.println(":" + line.substring(line.lastIndexOf(" ") + 1, line.length() -1) + ".");
-					
-					double lon = Double.parseDouble(line.subSequence(15, line.indexOf(",") - 1).toString());
-					double lat = Double.parseDouble(line.substring(line.lastIndexOf(" ") + 1, line.length() -1));
+			String xml = ApiCall.GET(client, url);
+			InputStream is = new ByteArrayInputStream(xml.getBytes());
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(is);
 
-					SearchParser.searchLoc = new DynamicOverlay(context, lon,
-							lat, mapView, false);
-					mapView.getOverlays().add(SearchParser.searchLoc);
-					mapView.getController().animateTo(
-							new GeoPoint(lat, lon));
-				}
+			Element element =doc.getDocumentElement();
+			element.normalize();
 
-			} else {
-				Log.e("Search node info Service", "Failed to get node info");
+			NodeList nList = doc.getElementsByTagName("node");
+			if(nList.getLength() > 0){
+				Element element1 = (Element) nList.item(0);
+				double lon = Double.parseDouble(element1.getAttribute("lon"));
+				double lat = Double.parseDouble(element1.getAttribute("lat"));
+				SearchParser.searchLoc = new DynamicOverlay(context, lon, lat, mapView, false);
+				mapView.getOverlays().add(SearchParser.searchLoc);
+				mapView.getController().animateTo(new GeoPoint(lat, lon));
 			}
-		} catch (ClientProtocolException e) {
+			else{
+				Toast.makeText(context, "Not found node", Toast.LENGTH_LONG).show();
+			}
+
+		}catch (IOException e) {
 			e.printStackTrace();
-			Log.i("Search node info Timeout", "timeout");
-		} catch (IOException e) {
+		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
-			Log.i("Search node info Timeout", "timeout1");
+		} catch (SAXException e) {
+			e.printStackTrace();
 		}
 		return null;
 	

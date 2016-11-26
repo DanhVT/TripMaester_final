@@ -161,8 +161,9 @@ public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 										+ "");
 								NodeParser nodeParser = new NodeParser(context,
 										mapView);
-								String node_url = "http://traffic.hcmut.edu.vn/MobileService/rest/get_node/"
-										+ way_id_list.get(position);
+//								String node_url = "http://traffic.hcmut.edu.vn/MobileService/rest/get_node/"
+//										+ way_id_list.get(position);
+								String node_url = "http://api.openstreetmap.org/api/0.6/way/"+way_id_list.get(position)+"/full";
 								nodeParser.execute(node_url);
 							}
 							dataSource.close();

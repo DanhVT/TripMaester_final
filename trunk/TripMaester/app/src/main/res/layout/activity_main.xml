@@ -1,4 +1,4 @@
-<android.support.v4.widget.DrawerLayout
+<vn.edu.hcmut.its.tripmaester.ui.activity.FullDrawerlayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout_main_screen"
@@ -103,4 +103,4 @@
         android:dividerHeight="1dp"        
         android:groupIndicator="@null" />
     
-</android.support.v4.widget.DrawerLayout>
+</vn.edu.hcmut.its.tripmaester.ui.activity.FullDrawerlayout>

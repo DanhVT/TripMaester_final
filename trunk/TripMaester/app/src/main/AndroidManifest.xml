@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="vn.edu.hcmut.its.tripmaester"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="1"
-          android:versionName="1.0">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="1"
+    android:versionName="1.0"
+    xmlns:tools="http://schemas.android.com/tools">
     <!--package="group.traffic.nhn.followtrip"-->
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -39,6 +40,7 @@
             android:value="@string/facebook_app_id"/>
 
         <activity
+            tools:replace="android:theme"
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"

@@ -57,6 +57,9 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 				throw new Error("ErrorCopyingDataBase");
 			}
 		}
+		else{
+			openDataBase();
+		}
 	}
 
 	private boolean checkDataBase() {
@@ -108,10 +111,9 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-//		Logger.t("aaa").d(context.getDatabasePath(DB_NAME).getAbsolutePath());
 //		openDataBase();
-//		String create_segment_table = "CREATE TABLE "+ SEGMENT+" ( "+ SEGMENT_ID +" STRING PRIMARY KEY, "+ SEGMENT_STREET_ID+" LONG, "+ LATE+" DOUBLE,"+ LONE +" DOUBLE, "+ LATS+ " DOUBLE, "+ LONS+ " DOUBLE)";
-//		db.execSQL(create_segment_table);
+		String create_segment_table = "CREATE TABLE "+ SEGMENT+" ( "+ SEGMENT_ID +" STRING PRIMARY KEY, "+ SEGMENT_STREET_ID+" LONG, "+ LATE+" DOUBLE,"+ LONE +" DOUBLE, "+ LATS+ " DOUBLE, "+ LONS+ " DOUBLE)";
+		db.execSQL(create_segment_table);
 	}
 
 }

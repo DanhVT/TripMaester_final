@@ -69,7 +69,7 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		String url = params[0];
-
+		System.out.println(url);
 		String xml = null;
 		Request request = new Request.Builder()
 				.url(url)

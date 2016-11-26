@@ -20,10 +20,10 @@ android {
     def VERSION_MINOR = 0
     def VERSION_BUILD = 0
 
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
-//    useLibrary 'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "vn.edu.hcmut.its.tripmaester"
@@ -64,7 +64,7 @@ dependencies {
     compile(name: 'FloatingActionButton', ext: 'aar')
     compile 'com.android.support:support-annotations:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.15.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.guava:guava:19.0-rc1'
     compile 'com.jakewharton:butterknife:7.0.1'

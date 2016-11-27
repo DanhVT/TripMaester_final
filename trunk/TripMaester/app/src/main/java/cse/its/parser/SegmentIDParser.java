@@ -25,6 +25,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 /**
  * @author SinhHuynh
  * @Tag get id of the nearest segment of a node(point), ITS service
@@ -64,6 +66,7 @@ public class SegmentIDParser extends AsyncTask<String, Void, Integer> {
 		HttpGet httpGet = new HttpGet(arg0[0]);
 
 		int timeout = 3000;
+		
 		HttpParams httpParams = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
 		HttpConnectionParams.setSoTimeout(httpParams, timeout);
@@ -78,6 +81,7 @@ public class SegmentIDParser extends AsyncTask<String, Void, Integer> {
 				InputStream content = entity.getContent();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
 				String line = reader.readLine();
+
 				if (mode == DESINATION_MODE)
 					Log.i("DES Segment id", line);
 				else
@@ -88,7 +92,7 @@ public class SegmentIDParser extends AsyncTask<String, Void, Integer> {
 					segmentID = 0;
 
 			} else {
-				Log.e("Search Segment ID Service", "Failed to get SegmentID");
+				Log.e("SearchSegmentIDService", "Failed to get SegmentID");
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -103,6 +107,7 @@ public class SegmentIDParser extends AsyncTask<String, Void, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 		super.onPostExecute(result);
+		Logger.t("result").d(result);
 		// Log.wtf("SegmentId", "Mode " + mode + " " + result);
 		if (mode == DESINATION_MODE) {// destination segment
 			StaticVariable.DES_SEGMENT_ID = result;

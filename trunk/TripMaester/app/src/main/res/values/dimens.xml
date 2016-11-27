@@ -10,7 +10,7 @@
     <dimen name="ic_left_menu_magin_bottom">5dp</dimen>
     <dimen name="text_left_menu_margin_top">10dp</dimen>
     <dimen name="text_left_menu_size">13sp</dimen>
-    
+
     <dimen name="login_margin_top">50dp</dimen>
     <dimen name="login_margin_button">30dp</dimen>
     <dimen name="login_text_size_large">26dp</dimen>
@@ -26,9 +26,9 @@
     <dimen name="split_size">3dp</dimen>
     <dimen name="split_size_vertical">3dp</dimen>
     <dimen name="padding_left">10dp</dimen>
-    
-      <!-- Default screen margins, per the Android Design guidelines. -->
-   
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
     <dimen name="fab_size">56dp</dimen>
 
     <dimen name="button_elevation">2dp</dimen>

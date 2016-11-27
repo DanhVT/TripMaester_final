@@ -10,6 +10,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 import cse.its.dbhelper.NodeDrawable;
 import cse.its.dbhelper.WarningDrawable;
 import cse.its.parser.RouteParser;
@@ -108,6 +110,7 @@ public class UrlHelper {
 					+ start.getLon() + "&waypoints=" + destination.getLat()
 					+ "," + destination.getLon();
 		}
+		Logger.t("Url").d(url);
 		return url;
 	}
 

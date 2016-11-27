@@ -59,7 +59,6 @@
     </string-array>
 
 
-
     <string-array name="map_pop_items">
         <item>Broken light</item>
         <item>Accident</item>
@@ -198,7 +197,6 @@
     <string name="take_photo_fail">Image Capture Failed</string>
     <string name="error_loading_road_status">Error when loading the road - status =</string>
     <string name="view_on_map">View On Map</string>
-
 
 
     <!-- <string name="ic_brokenlight">@drawable/broken_light</string>

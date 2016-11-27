@@ -3103,13 +3103,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 StaticVariable.START_NEW_PATH = false;
                 if (StaticVariable.PATH_OVERLAY_EXIST) {
                     removePreviousMakingPoints(false);
-
                 }
             }
-
             // add the first node to multiple point list
             StaticVariable.LIST_MULTIPLE_POINT.add(StaticVariable.START_NODE);
-
         }
 
         /**
@@ -3153,12 +3150,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
                         if (!StaticVariable.START_NEW_PATH
                                 && start_marker_exist) {
+                            Log.d("navigate_no", "Make other point");
                             makeOtherPoint();
                         } else {
+                            Log.d("navigate_no", "Make start point");
                             makeStartingPoint();
                         }
 
                     } else {
+                        Log.d("navigate", "Make other point");
                         makeOtherPoint();
                     }
 
@@ -3166,8 +3166,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     // add marker
                     if (!StaticVariable.NAVIGATE && !add_des) {
                         makeStartingPoint();
+                        Log.d("navigate_no", "Make start point");
                     } else {
                         makeOtherPoint();
+                        Log.d("navigate", "Make other point");
                     }
 
                     if (!StaticVariable.NAVIGATE)

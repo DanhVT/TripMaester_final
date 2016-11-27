@@ -349,7 +349,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 //		mRouteParserController.setRouteMode(myOpenMapView, rerouteMode, apiMode );
 //		mRouteParserController.execute(routingUrl);
 
-        Log.wtf("Air distance",
+        Log.wtf("AirDistance",
                 NodeDrawable.getDistance(StaticVariable.START_NODE,
                         StaticVariable.DES_NODE) + " ");
         double air_distance = NodeDrawable.getDistance(

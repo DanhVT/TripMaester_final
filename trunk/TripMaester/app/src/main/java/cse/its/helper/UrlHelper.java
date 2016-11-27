@@ -1,20 +1,15 @@
 package cse.its.helper;
 
-import group.traffice.nhn.common.StaticVariable;
-
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.orhanobut.logger.Logger;
+import java.net.URLEncoder;
 
 import cse.its.dbhelper.NodeDrawable;
-import cse.its.dbhelper.WarningDrawable;
 import cse.its.parser.RouteParser;
+import group.traffice.nhn.common.StaticVariable;
 
 /**
  * @author SinhHuynh To build URLs which was used to get traffic data from TIS
@@ -107,10 +102,9 @@ public class UrlHelper {
 			addNodeToUrl();
 		} else {
 			url = Constant.GOOGLE_ROUTING_API + "origin=" + start.getLat() + ","
-					+ start.getLon() + "&waypoints=" + destination.getLat()
+					+ start.getLon() + "&destination=" + destination.getLat()
 					+ "," + destination.getLon();
 		}
-		Logger.t("Url").d(url);
 		return url;
 	}
 

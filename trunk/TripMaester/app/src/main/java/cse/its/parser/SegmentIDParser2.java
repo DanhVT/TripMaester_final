@@ -1,31 +1,18 @@
 package cse.its.parser;
 
-import vn.edu.hcmut.its.tripmaester.R;
-import group.traffice.nhn.common.StaticVariable;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.osmdroid.views.MapView;
-
-import cse.its.dbhelper.NodeDrawable;
-
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
+
+import org.osmdroid.views.MapView;
+
+import java.io.IOException;
+
+import cse.its.dbhelper.NodeDrawable;
+import group.traffice.nhn.common.StaticVariable;
+import okhttp3.OkHttpClient;
+import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 
 /**
  * @author SinhHuynh
@@ -36,7 +23,7 @@ public class SegmentIDParser2 extends AsyncTask<String, Void, Integer> {
 	public Context context;
 	public MapView mapView;
 	public int index;
-
+	private final OkHttpClient client = new OkHttpClient();
 	String url = "";
 
 	// 0: get segment id of starting point,
@@ -58,41 +45,16 @@ public class SegmentIDParser2 extends AsyncTask<String, Void, Integer> {
 	protected Integer doInBackground(String... arg0) {
 		Integer segmentID = -1;
 		url = arg0[0];
-		Log.i("Url: ", arg0[0]);
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(arg0[0]);
-
-		int timeout = 3000;
-		HttpParams httpParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
-		HttpConnectionParams.setSoTimeout(httpParams, timeout);
-		httpGet.setParams(httpParams);
-
 		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-				String line = reader.readLine();
-				//get segment ID
-				if (line.length() > 2) {
-					segmentID = Integer.parseInt(line.substring(15, line.length() - 2));
-				} else
-					segmentID = 0;
-
-			} else {
-				Log.e("Search Segment ID Service", "Failed to get SegmentID");
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			Log.i("Search segment id fail", "ClientProtocolException");
+			String response = ApiCall.GET(client, url);
+			if (response.length() > 2) {
+				segmentID = Integer.parseInt(response.substring(15, response.length() - 2));
+			} else
+				segmentID = 0;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.i("Search segment id fail", "IOException");
 		}
+
 		return segmentID;
 	}
 

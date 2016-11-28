@@ -43,49 +43,49 @@ public class UrlHelper {
 		// this is TIS service
 		if (apiMode == RouteParser.ITS_API_MODE) {
 			switch (TypeOfTransport.getTransportType(transportation)) {
-			case CAR: {
-				url = Constant.ITS + "car/";
-				break;
-			}
-			case MOTOR: {
-				url = Constant.ITS + "motor/";
-				break;
-			}
-			case BUS: {
-				url = Constant.ITS + "bus/";
-				break;
-			}
-			case TRUCK: {
-				url = Constant.ITS + "truck/";
-				break;
-			}
-			default: {
-				url = Constant.ITS + "motor/";
-				break;
-			}
+				case CAR: {
+					url = Constant.ITS + "car/";
+					break;
+				}
+				case MOTOR: {
+					url = Constant.ITS + "motor/";
+					break;
+				}
+				case BUS: {
+					url = Constant.ITS + "bus/";
+					break;
+				}
+				case TRUCK: {
+					url = Constant.ITS + "truck/";
+					break;
+				}
+				default: {
+					url = Constant.ITS + "motor/";
+					break;
+				}
 			}
 
 
 			switch (routingMode) {
-			case ModeHelper.DISTANCE_MODE: {
-				url += Constant.DISTANCE;
-				break;
-			}
-			case ModeHelper.MULTI_POINT_PATH:{
-				//http://traffic.hcmut.edu.vn/ITS/rest/motor/multiple_points/testuser/
-				url += "multiple_points/testuser/";
-				break;
-			}
-			case ModeHelper.REAL_TIME_MODE: {
-				url += Constant.REAL_TIME;
-				break;
-			}
-			case ModeHelper.PREFERENT_REAL_TIME:
-				url +=Constant.PREFERENT_USER + "testuser/";
-				break;
-			default: {
-				url += Constant.DISTANCE;
-			}
+				case ModeHelper.DISTANCE_MODE: {
+					url += Constant.DISTANCE;
+					break;
+				}
+				case ModeHelper.MULTI_POINT_PATH:{
+					//http://traffic.hcmut.edu.vn/ITS/rest/motor/multiple_points/testuser/
+					url += "multiple_points/testuser/";
+					break;
+				}
+				case ModeHelper.REAL_TIME_MODE: {
+					url += Constant.REAL_TIME;
+					break;
+				}
+				case ModeHelper.PREFERENT_REAL_TIME:
+					url +=Constant.PREFERENT_USER + "testuser/";
+					break;
+				default: {
+					url += Constant.DISTANCE;
+				}
 			
 //			case ModeHelper.STATIC_TIME_MODE: {
 //				url += STATIC_TIME;
@@ -96,9 +96,7 @@ public class UrlHelper {
 //			break;
 //			}
 			
-			}	
-
-			
+			}
 			addNodeToUrl();
 		} else {
 			url = Constant.GOOGLE_ROUTING_API + "origin=" + start.getLat() + ","

@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -153,18 +155,22 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 		String json = null;
 		try {
 			json = ApiCall.GET(client, arg0[0]);
-			JSONArray jsonArray;
-			if(StaticVariable.MULTIPLE_POINT)
-				jsonArray = new JSONArray(json);
-			else{
-				jsonArray = new JSONArray();
-				if (json != null && json.length() > 0) {
-					JSONObject jsonResource = new JSONObject(json);
-					jsonArray.put(jsonResource);
-				}
-			}
+			Logger.t("json").d(arg0[0]);
+
+
 			// ### ITS API
 			if (apiMode == ITS_API_MODE) {
+				JSONArray jsonArray;
+				if(StaticVariable.MULTIPLE_POINT)
+					jsonArray = new JSONArray(json);
+				else{
+					jsonArray = new JSONArray();
+					if (json != null && json.length() > 0) {
+						JSONObject jsonResource = new JSONObject(json);
+						jsonArray.put(jsonResource);
+					}
+				}
+				
 				int size = jsonArray.length();
 				int tmp_street_length = 0;
 				for(int k = 0 ; k < size ; k++){
@@ -277,10 +283,23 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 			}
 			// ### GOOGLE API
 			else {
+//				if(StaticVariable.MULTIPLE_POINT)
+//					jsonArray = new JSONArray(json);
+//				else{
+//					jsonArray = new JSONArray();
+//					if (json != null && json.length() > 0) {
+//						JSONObject jsonResource = new JSONObject(json);
+//						jsonArray.put(jsonResource);
+//					}
+//				}
+
 				JSONObject jsonResource = new JSONObject(json);
+				Logger.t("json").d(jsonResource);
+
 				// Log.wtf("GG ROUTE",jsonResource.getJSONArray("routes").getJSONObject(0).toString());
 				JSONArray legs = jsonResource.getJSONArray("routes")
 						.getJSONObject(0).getJSONArray("legs");
+
 				Locale locale = Locale.getDefault();
 				NumberFormat format = NumberFormat.getInstance(locale);
 				Number number = format.parse(String.format("%.1f",
@@ -306,6 +325,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 							.getString("points");
 					ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
 					points = decodePoly(decodedPolyline);
+
 					StaticVariable.ROUTING_PATH.addPoint(new GeoPoint(lat1, lon1));
 					for (GeoPoint point : points) {
 						StaticVariable.ROUTING_PATH.addPoint(point);
@@ -399,7 +419,6 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 		Log.wtf("Route Parser", "directionList: " + directionList.size() + " mainStreetName " + mainStreetName.size());
 		progressDialog.dismiss();
 		dbStaticSource.close();
-		
 		// notify finish doing background
 		StaticVariable.FINISH_ROUTING = true;
 		if (StaticVariable.ROUTING_PATH.getNumberOfPoints() == 0) {

@@ -789,17 +789,18 @@ public class HttpManager {
     }
 
     //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
-    public static JSONObject uploadImage(File file, String fileName, String type, String MIME) {
+    public static JSONObject uploadImage(File file, String fileName, String MIME) {
         String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
         String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
         MediaType MEDIA_TYPE = MediaType.parse(MIME);
+        String format = MIME.split("/")[1];
         JSONObject responseJson = new JSONObject();
         MultipartBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("filename", fileName)
                 .addFormDataPart("pointId", POINT_ID)
                 .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                .addFormDataPart("dataImage", fileName+"."+type, RequestBody.create(MEDIA_TYPE, file))
+                .addFormDataPart("dataImage", fileName+"."+format, RequestBody.create(MEDIA_TYPE, file))
                 .build();
         String str_response = null;
         try {

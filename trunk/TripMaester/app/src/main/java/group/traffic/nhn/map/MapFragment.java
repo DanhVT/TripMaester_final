@@ -138,6 +138,7 @@ import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.CameraHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
+import vn.edu.hcmut.its.tripmaester.service.http.UploadAsync;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
 
 
@@ -782,6 +783,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
             }
             //JSONObject json  = HttpManager.uploadImage(mTempCameraPhotoFile.getPath());
+            new UploadAsync(currentPath, CameraHelper.getMimeType(currentPath),  mContext );
         } else {
             Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
                     Toast.LENGTH_SHORT).show();

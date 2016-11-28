@@ -1,6 +1,7 @@
 package vn.edu.hcmut.its.tripmaester.helper;
 
 import android.os.Environment;
+import android.webkit.MimeTypeMap;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,14 @@ import java.util.UUID;
  */
 
 public class CameraHelper {
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
     public static File createImageFile() throws IOException {
         boolean externalStorageAvailable = false;
         boolean externalStorageWriteable = false;

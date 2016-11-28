@@ -24,7 +24,7 @@ public class SplashScreen extends Activity {
         @Override
         protected String doInBackground(String... params) {
             //some heavy processing resulting in a Data String
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 5; i++) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

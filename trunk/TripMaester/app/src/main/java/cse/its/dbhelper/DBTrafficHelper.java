@@ -20,6 +20,7 @@ import com.orhanobut.logger.Logger;
  *      folder
  */
 public class DBTrafficHelper extends SQLiteOpenHelper {
+
 	public final static String DB_NAME = "gpsTraffic.db";
 	// Phiên bản
 	private static final int DATABASE_VERSION = 1;
@@ -48,7 +49,7 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 
 		if (!checkDataBase()) {
 			this.getReadableDatabase();
-			this.close();
+//			this.close();        DANH_24/11
 			try {
 				// Copy the database from assets
 				copyDataBase();
@@ -103,17 +104,24 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
 		String drop_segment_table = String.format("DROP TABLE IF EXISTS "+ SEGMENT);
 		db.execSQL(drop_segment_table);
 
-		onCreate(db);
+
+		db.execSQL("DROP TABLE IF EXISTS " + SEGMENT);
+
+
+
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+
 //		openDataBase();
 		String create_segment_table = "CREATE TABLE "+ SEGMENT+" ( "+ SEGMENT_ID +" STRING PRIMARY KEY, "+ SEGMENT_STREET_ID+" LONG, "+ LATE+" DOUBLE,"+ LONE +" DOUBLE, "+ LATS+ " DOUBLE, "+ LONS+ " DOUBLE)";
 		db.execSQL(create_segment_table);
+
 	}
 
 }

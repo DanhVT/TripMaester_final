@@ -135,6 +135,7 @@ import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.CameraHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
@@ -145,6 +146,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private static final String TAG = MapFragment.class.getSimpleName();
     // Storage for camera image URI components
     private final static int REQUEST_TAKE_PHOTO = 100;
+    private final static int REQUEST_TAKE_VIDEO = 200;
     private final static String FOLDER_NAME = "TempFolder";
     public static MapFragment Instance = null;
     /**
@@ -243,6 +245,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private RoadManager roadManager;
     private Polyline roadOverlay;
     private Button btn_capture;
+    private String currentPath = null;
     private View rootView;
     // Required for camera operations in order to save the image file on resume.
     private List<MyMarker> lst_markers;
@@ -730,8 +733,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             if (runtime.freeMemory() < minRunningMemory)
                 System.gc();
 
-            String filePath = mTempCameraPhotoFile.getPath();
-            Bitmap imageBitmap = decodeSampledBitmapFromFile(filePath, 400, 600);// BitmapFactory.decodeFile(filePath,
+            Bitmap imageBitmap = decodeSampledBitmapFromFile(currentPath, 400, 600);// BitmapFactory.decodeFile(filePath,
             // options);
 
             if (lastLocation == null) {
@@ -783,6 +785,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         } else {
             Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
                     Toast.LENGTH_SHORT).show();
+        }
+
+        if (requestCode == REQUEST_TAKE_VIDEO
+                && resultCode == Activity.RESULT_OK) {
+
         }
     }
 
@@ -1269,7 +1276,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeFromCamera();
+                showCamera();
             }
         });
         isCapturing = false;
@@ -2041,7 +2048,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeFromCamera();
+                showCamera();
             }
         });
         isCapturing = false;
@@ -2445,25 +2452,26 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         return false;
     }
 
-    private void takeFromCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent
-                .resolveActivity(getActivity().getPackageManager()) != null) {
-            //KenK11 create folder for saving new image
-            File exportDir = new File(
-                    Environment.getExternalStorageDirectory(), FOLDER_NAME);
-            if (!exportDir.exists()) {
-                exportDir.mkdirs();
-            } else {
-                exportDir.delete();
-            }
-            mTempCameraPhotoFile = new File(exportDir, "/"
-                    + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg");
-            // Log.d(LOG_TAG, "/" + UUID.randomUUID().toString().replaceAll("-",
-            // "") + ".jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(mTempCameraPhotoFile));
+    public void showCameraVideo() {
+        try {
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            File f = CameraHelper.createVideoFile();
+            currentPath = f.getAbsolutePath();
+            takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void showCamera() {
+        try {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File f = CameraHelper.createImageFile();
+            currentPath = f.getAbsolutePath();
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -22,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,9 +34,14 @@ import group.traffic.nhn.trip.PointItem;
 import group.traffic.nhn.user.FriendItem;
 import group.traffic.nhn.user.User;
 import group.traffice.nhn.common.Utilities;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
 
@@ -60,6 +67,7 @@ public class HttpManager {
     static final String URL_SAVE_FRIENDS = HttpConstants.HOST_NAME + "/ITS/rest/friend/SaveListFriend";
     static final String URL_SAVE_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/share/SaveShareOnTrip";
     private static final String TAG = HttpManager.class.getName();
+    private static OkHttpClient client = new OkHttpClient();
 
     //TripComment trip
     /*
@@ -780,28 +788,55 @@ public class HttpManager {
         return in;
     }
 
-
-    public static JSONObject uploadImage(String filePath) {
+    //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
+    public static JSONObject uploadImage(File file, String fileName, String type, String MIME) {
         String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
         String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
-
+        MediaType MEDIA_TYPE = MediaType.parse(MIME);
         JSONObject responseJson = new JSONObject();
-
-        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("filename", filePath));
-        nameValuePairs.add(new BasicNameValuePair("pointId", POINT_ID));
-        nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
-        nameValuePairs.add(new BasicNameValuePair("dataImage", GraphicUtils.convertImage2Base64(filePath)));
-
-
-        InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_UPLOAD);
-        String str_response = Utilities.readStringFromInputStream(response_stream);
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("filename", fileName)
+                .addFormDataPart("pointId", POINT_ID)
+                .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .addFormDataPart("dataImage", fileName+"."+type, RequestBody.create(MEDIA_TYPE, file))
+                .build();
+        String str_response = null;
         try {
+            str_response = ApiCall.POST(client, URL_UPLOAD, requestBody);
             responseJson = new JSONObject(str_response);
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (JSONException e) {
-            Log.i(TAG, e.getMessage());
+            e.printStackTrace();
         }
         return responseJson;
     }
+
+    //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
+    public static JSONObject uploadVideo(File file, String fileName, String type, String MIME) {
+        String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
+        String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
+        MediaType MEDIA_TYPE = MediaType.parse(MIME);
+        JSONObject responseJson = new JSONObject();
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("filename", fileName)
+                .addFormDataPart("pointId", POINT_ID)
+                .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .addFormDataPart("dataVideo", fileName+"."+type, RequestBody.create(MEDIA_TYPE, file))
+                .build();
+        String str_response = null;
+        try {
+            str_response = ApiCall.POST(client, URL_UPLOAD, requestBody);
+            responseJson = new JSONObject(str_response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return responseJson;
+    }
+
 
 }

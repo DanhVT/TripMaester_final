@@ -595,6 +595,8 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         // LoginManager.getInstance().logOut();
         accessTokenTracker.stopTracking();
         profileTracker.stopTracking();
+         StaticVariable.TEXT_TO_SPEECH.shutdown();
+
     }
 
     @Override

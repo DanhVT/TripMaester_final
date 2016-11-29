@@ -40,7 +40,7 @@ public class Constant {
 	public final static String STATIC_TIME = "static_time_dijkstra1/";
 	public final static String PROFILE_TIME = "profile_time_dijkstra1/";
 	public final static String REAL_TIME = "real_time_dijkstra1/";
-	public final static String MULTIPLE_POINTS="multiple_points/";
+	public final static String MULTIPLE_POINTS="multiple_pointsPOST/";
 	public final static String PREFERENT_USER = "preference_real_time_dijkstra1/";
 	public static final int STARTING_POINT_MAKER = 0;
 	public static final int DESTINATION_POINT_MAKER = 1;

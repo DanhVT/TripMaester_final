@@ -327,17 +327,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         StaticVariable.START_NODE.setId(StaticVariable.START_SEGMENT_ID);
         StaticVariable.DES_NODE.setId(StaticVariable.DES_SEGMENT_ID);
 
-        Log.wtf("ID", "START " + StaticVariable.START_SEGMENT_ID + "  DES "
-                + StaticVariable.DES_SEGMENT_ID);
-
         UrlHelper routingUrlHelper = new UrlHelper(StaticVariable.START_NODE,
                 StaticVariable.DES_NODE);
 
+        Logger.t("node").d(StaticVariable.START_NODE + " "+StaticVariable.DES_NODE );
         // to create full path url to request traffic data
         String routingUrl = routingUrlHelper.getUrl(
                 StaticVariable.INT_ROUTING_MODE,
                 StaticVariable.INT_TRANSPORTATION_MODE, apiMode);
-
+        Logger.t("url").d(routingUrl);
         LogFile.writeToFile(mDeviceId + " #3 URL " + routingUrl);
 //		if (mLocationSender == null)
         mLocationSender = new LocationSender(context);

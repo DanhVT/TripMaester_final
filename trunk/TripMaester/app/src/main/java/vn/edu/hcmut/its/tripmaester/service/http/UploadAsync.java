@@ -16,7 +16,6 @@ import vn.edu.hcmut.its.tripmaester.R;
  */
 
 public class UploadAsync extends AsyncTask<File, Void, JSONObject> {
-    ProgressDialog mProgress;
     String  MIME, fileName;
     Context context;
     ProgressDialog PD;

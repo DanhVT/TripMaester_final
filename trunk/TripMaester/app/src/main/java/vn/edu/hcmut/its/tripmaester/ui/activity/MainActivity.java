@@ -166,7 +166,6 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 fragment = new LoginFragment();
                 break;
             default:
-                Log.d("aaa", "default");
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 if (mapFragment == null) {
                     mapFragment = new MapFragment();
@@ -296,22 +295,6 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                                             LoginManager.getInstance().setUser(new User("", user_fb_id, name, first_name, last_name, cover,picture,
                                                     birthday, email, updated_time, gender, local, verified, timezone, link,
                                                     imei, false));
-                                            // TODO: WTF ??? KenK11
-                                            JSONObject json = new JSONObject();
-                                            json.put("name", LoginManager.getInstance().getUser().getName());
-                                            json.put("userId", LoginManager.getInstance().getUser().getName());
-                                            json.put("first_name", LoginManager.getInstance().getUser().getName());
-                                            json.put("last_name", LoginManager.getInstance().getUser().getName());
-                                            json.put("birthday", LoginManager.getInstance().getUser().getName());
-                                            json.put("email", LoginManager.getInstance().getUser().getName());
-                                            json.put("updated_time", LoginManager.getInstance().getUser().getName());
-                                            json.put("gender", LoginManager.getInstance().getUser().getName());
-                                            json.put("local", LoginManager.getInstance().getUser().getName());
-                                            json.put("verified", LoginManager.getInstance().getUser().getName());
-                                            json.put("link", LoginManager.getInstance().getUser().getName());
-                                            json.put("timezone", LoginManager.getInstance().getUser().getName());
-                                            json.put("imei", LoginManager.getInstance().getUser().getName());
-
                                             JSONObject json_result = HttpManager.login();
                                             if (!json_result.isNull("tokenId")) {
                                                 String tokenId = json_result.get("tokenId").toString();

@@ -155,7 +155,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 		String json = null;
 		try {
 			json = ApiCall.GET(client, arg0[0]);
-			Logger.t("json").d(arg0[0]);
+			Logger.t("json").d(json);
 
 
 			// ### ITS API
@@ -170,7 +170,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 						jsonArray.put(jsonResource);
 					}
 				}
-				
+				Logger.t("jsonArray").d(jsonArray);
 				int size = jsonArray.length();
 				int tmp_street_length = 0;
 				for(int k = 0 ; k < size ; k++){
@@ -283,16 +283,6 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 			}
 			// ### GOOGLE API
 			else {
-//				if(StaticVariable.MULTIPLE_POINT)
-//					jsonArray = new JSONArray(json);
-//				else{
-//					jsonArray = new JSONArray();
-//					if (json != null && json.length() > 0) {
-//						JSONObject jsonResource = new JSONObject(json);
-//						jsonArray.put(jsonResource);
-//					}
-//				}
-
 				JSONObject jsonResource = new JSONObject(json);
 				Logger.t("json").d(jsonResource);
 

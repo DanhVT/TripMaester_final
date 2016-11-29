@@ -49,7 +49,7 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 
 		if (!checkDataBase()) {
 			this.getReadableDatabase();
-//			this.close();        DANH_24/11
+			this.close();        //DANH_24/11
 			try {
 				// Copy the database from assets
 				copyDataBase();

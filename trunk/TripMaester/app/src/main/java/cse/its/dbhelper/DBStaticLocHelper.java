@@ -19,7 +19,7 @@ import android.util.Log;
  *      folder
  */
 public class DBStaticLocHelper extends SQLiteOpenHelper {
-	public final static String DB_NAME = "leanstreet.sqlite";
+	public final static String DB_NAME = "leanstreet.db ";
 
 	/* Segment table */
 	public static final String ID = "id";
@@ -35,13 +35,14 @@ public class DBStaticLocHelper extends SQLiteOpenHelper {
 	public DBStaticLocHelper(Context context) {
 		super(context, DB_NAME, null, 1);
 		this.context = context;
+		SQLiteDatabase db = this.getWritableDatabase();
 	}
 
 	public void createDataBase() throws IOException {
 		// If database does not exist, then copy it from the assets
 		if (!checkDataBase()) {
 			this.getReadableDatabase();
-			this.close();
+//			this.close();
 			try {
 				// Copy the database from assets
 				copyDataBase();
@@ -50,6 +51,9 @@ public class DBStaticLocHelper extends SQLiteOpenHelper {
 				
 				Log.e("copy data", mIOException.getMessage());
 			}
+		}
+		else{
+			openDataBase();
 		}
 	}
 
@@ -94,6 +98,8 @@ public class DBStaticLocHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		String create_segment_table = "CREATE TABLE "+ TABLE+" ( "+ ID +" LONG PRIMARY KEY, "+ TYPE+" STRING, "+ OBJECTID+" LONG,"+ NAME +" STRING)";
+		db.execSQL(create_segment_table);
 	}
 
 }

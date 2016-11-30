@@ -34,6 +34,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.speech.tts.TextToSpeech;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -59,7 +60,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -320,8 +320,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         int apiMode = RouteParser.GOOGLE_API_MODE; // set google route mode
         if (StaticVariable.START_SEGMENT_ID > 0
-                && StaticVariable.DES_SEGMENT_ID > 0)
+                && StaticVariable.START_SEGMENT_ID > 0)
             apiMode = RouteParser.ITS_API_MODE; // set ITS route mode
+
+        Logger.t("segment").d(StaticVariable.START_SEGMENT_ID + " "+StaticVariable.START_SEGMENT_ID+ " "+apiMode );
 
         // set start and destination segment id
         StaticVariable.START_NODE.setId(StaticVariable.START_SEGMENT_ID);
@@ -781,7 +783,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
             }
             //JSONObject json  = HttpManager.uploadImage(mTempCameraPhotoFile.getPath());
-            new UploadAsync(currentPath, CameraHelper.getMimeType(currentPath),  mContext );
+            new UploadAsync(currentPath, CameraHelper.getMimeType(currentPath),  mContext ).execute(new File(currentPath));
         } else {
             Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
                     Toast.LENGTH_SHORT).show();

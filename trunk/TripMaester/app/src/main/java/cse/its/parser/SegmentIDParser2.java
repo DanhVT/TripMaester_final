@@ -54,6 +54,9 @@ public class SegmentIDParser2 extends AsyncTask<String, Void, Integer> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		catch(NumberFormatException e){
+			e.printStackTrace();
+		}
 
 		return segmentID;
 	}

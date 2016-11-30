@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
@@ -25,7 +26,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.routing.Road;
@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
     private Fragment mapFragment;
-    private Fragment fragment = null;
+    private Fragment fragment = null;on
 
     @Override
     public void changeToMapFragments(Trip trip) {

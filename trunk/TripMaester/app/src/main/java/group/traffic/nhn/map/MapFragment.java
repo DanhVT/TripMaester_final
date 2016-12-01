@@ -767,7 +767,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                         int which) {
                                         isCapturing = true;
 //										btn_capture.performClick();
-                                        MainActivity.fab_btn_capture.performClick();
+                                        MainActivity.fab_camera.performClick();
                                     }
                                 })
                         .setNegativeButton("Cancel",
@@ -792,7 +792,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         if (requestCode == REQUEST_TAKE_VIDEO
                 && resultCode == Activity.RESULT_OK) {
-
+            if (!isCapturing) {
+                GeoPoint geoPoint = new GeoPoint(lastLocation);
+//                setMarker(geoPoint, imageBitmap);
+            }
+            File file = new File (currentPath);
+            new UploadAsync(currentPath,  CameraHelper.getMimeType(currentPath) , mContext).execute(file);
         }
     }
 

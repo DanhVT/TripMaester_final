@@ -11,6 +11,7 @@
         android:src="@drawable/ic_photo_camera_white_24dp"
         android:layout_gravity="center|end"
         android:visibility="invisible"
+        android:layout_marginRight="@dimen/fab_margin"
         app:backgroundTint="#FF0000"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -20,6 +21,7 @@
         android:src="@drawable/ic_videocam_white_24dp"
         android:layout_gravity="center|end"
         android:visibility="invisible"
+        android:layout_marginRight="@dimen/fab_margin"
         app:backgroundTint="#ECAB53" />
 
 </FrameLayout>

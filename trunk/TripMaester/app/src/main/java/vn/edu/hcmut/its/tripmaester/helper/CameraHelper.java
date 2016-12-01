@@ -75,8 +75,8 @@ public class CameraHelper {
                 }
                 // Create an image file name
                 String randome = UUID.randomUUID().toString().replaceAll("-", "");
-                String imageFileName = "Video_" + randome + "_";
-                tempFile = File.createTempFile(imageFileName,".mp4",root);
+                String videoFileName = "Video_" + randome + "_";
+                tempFile = File.createTempFile(videoFileName,".mp4",root);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,7 +28,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -53,6 +52,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -103,7 +103,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import cse.its.adapter.ContextMenuAdapter;
 import cse.its.adapter.StreetListAdapter;
@@ -237,6 +236,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private long lastTimeUpdateGPS = System.currentTimeMillis();
     private long lastTimeReroute = System.currentTimeMillis();
     private LocationListener locationListener = new MyLocationListener();
+    private Animation Move_Duoi, Move_Tren, Back_Duoi, Back_Tren;
+    private  boolean move_back = false;
     //===============
     // map location listener
     // private MapLocationListener mapLocationListener;
@@ -1271,9 +1272,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         // ### Floating Action Button Capture
         MainActivity.fab_btn_capture = (FloatingActionButton) mainActivity.findViewById(R.id.fab_btn_capture);
-        Drawable gps_drawable = getResources().getDrawable(R.drawable.fab_capture);
-        Drawable gps_follow_drawable = getResources().getDrawable(R.drawable.fab_capture_select);
-        MainActivity.fab_btn_capture.setBackgroundDrawable(gps_drawable);
+
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
@@ -2043,14 +2042,33 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         // ### Floating Action Button Capture
         MainActivity.fab_btn_capture = (FloatingActionButton) mainActivity.findViewById(R.id.fab_btn_capture);
-        Drawable gps_drawable = getResources().getDrawable(R.drawable.fab_capture);
-        Drawable gps_follow_drawable = getResources().getDrawable(R.drawable.fab_capture_select);
-        MainActivity.fab_btn_capture.setBackgroundDrawable(gps_drawable);
+        MainActivity.fab_camera = (FloatingActionButton) mainActivity.findViewById(R.id.fab_camera);
+        MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
+
+        Move_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.move_duoi);
+        Move_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.move_tren);
+        Back_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.back_duoi);
+        Back_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.back_tren);
+
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(move_back == false) Move();
+                else Back();
+                move_back = !move_back;
+            }
+        });
+        MainActivity.fab_camera.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 showCamera();
+            }
+        });
+        MainActivity.fab_video.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCameraVideo();
             }
         });
         isCapturing = false;
@@ -2169,6 +2187,29 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             trafficInfoParser = new TrafficInfoParser(mContext, mMapView);
             trafficInfoParser.execute(url);
         }
+    }
+
+    private void Move(){
+        FrameLayout.LayoutParams paramsTrai = (FrameLayout.LayoutParams) MainActivity.fab_video.getLayoutParams();
+        paramsTrai.topMargin = (int)(MainActivity.fab_video.getWidth() * 1.5);
+        MainActivity.fab_video.setLayoutParams(paramsTrai);
+        MainActivity.fab_video.startAnimation(Move_Duoi);
+
+        FrameLayout.LayoutParams paramsTren = (FrameLayout.LayoutParams) MainActivity.fab_camera.getLayoutParams();
+        paramsTren.bottomMargin = (int)(MainActivity.fab_camera.getWidth() * 1.5);
+        MainActivity.fab_camera.setLayoutParams(paramsTren);
+        MainActivity.fab_camera.startAnimation(Move_Tren);
+    }
+    private void Back(){
+        FrameLayout.LayoutParams paramsTrai = (FrameLayout.LayoutParams) MainActivity.fab_video.getLayoutParams();
+        paramsTrai.topMargin -= (int)(MainActivity.fab_video.getWidth() * 1.5);
+        MainActivity.fab_video.setLayoutParams(paramsTrai);
+        MainActivity.fab_video.startAnimation(Back_Duoi);
+
+        FrameLayout.LayoutParams paramsTren = (FrameLayout.LayoutParams) MainActivity.fab_camera.getLayoutParams();
+        paramsTren.bottomMargin -= (int)(MainActivity.fab_camera.getWidth() * 1.5);
+        MainActivity.fab_camera.setLayoutParams(paramsTren);
+        MainActivity.fab_camera.startAnimation(Back_Tren);
     }
 
     /**

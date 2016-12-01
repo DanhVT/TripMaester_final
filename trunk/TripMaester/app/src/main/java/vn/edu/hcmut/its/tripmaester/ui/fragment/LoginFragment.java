@@ -205,6 +205,7 @@ public class LoginFragment extends Fragment {
         // requestDialog.show(content);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -268,5 +269,7 @@ public class LoginFragment extends Fragment {
             Log.i(TAG, "updateNameAndImage", ex);
         }
     }
+
+
 }
 

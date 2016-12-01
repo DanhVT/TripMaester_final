@@ -10,7 +10,7 @@
     <dimen name="ic_left_menu_magin_bottom">5dp</dimen>
     <dimen name="text_left_menu_margin_top">10dp</dimen>
     <dimen name="text_left_menu_size">13sp</dimen>
-
+    <dimen name="fab_margin">16dp</dimen>
     <dimen name="login_margin_top">50dp</dimen>
     <dimen name="login_margin_button">30dp</dimen>
     <dimen name="login_text_size_large">26dp</dimen>

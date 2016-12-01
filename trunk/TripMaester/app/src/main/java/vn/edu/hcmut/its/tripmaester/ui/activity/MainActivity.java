@@ -66,7 +66,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     public static final int LEFT_MENU__LOGOUT = 5;
     public static SharedPreferences mSharedPreferences;
     // TODO: 12/20/15 Why public static?
-    public static FloatingActionButton fab_btn_capture;
+    public static FloatingActionButton fab_btn_capture, fab_camera, fab_video;
     public static boolean isDraw = false;
     @Bind(R.id.drawer_layout_main_screen)
     DrawerLayout mDrawerLayoutMain;
@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
     private Fragment mapFragment;
-    private Fragment fragment = null;on
+    private Fragment fragment = null;
 
     @Override
     public void changeToMapFragments(Trip trip) {

@@ -180,6 +180,7 @@ public class HttpManager {
                 .setBodyParameter("fromDescription", trip_item.getPlaceStartTrip())
                 .setBodyParameter("toDescription", trip_item.getPlaceEndTrip())
                 .setBodyParameter("tripName", trip_item.getDateTime())//span time of trip
+                .setBodyParameter("privacy", trip_item.getPrivacy())
                 .asString()
                 .setCallback(new FutureCallback<String>() {
                     @Override
@@ -789,9 +790,9 @@ public class HttpManager {
     }
 
     //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
-    public static JSONObject uploadImage(File file, String fileName, String MIME) {
+    public static JSONObject uploadImage(File file, String fileName, String MIME, String pointId) {
         String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
-        String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
+        String POINT_ID = pointId;
         MediaType MEDIA_TYPE = MediaType.parse(MIME);
         String format = MIME.split("/")[1];
         JSONObject responseJson = new JSONObject();

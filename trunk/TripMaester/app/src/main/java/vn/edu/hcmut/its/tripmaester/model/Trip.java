@@ -22,6 +22,7 @@ public class Trip implements Serializable {
     String placeEndTrip;
     String numberLikeTrip;
     String numberCommentTrip;
+    String privacy;
     int avaUserCreateTrip;
     private String tripId;
     private String dateTime;
@@ -144,6 +145,14 @@ public class Trip implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
+
+    public String getPrivacy() {
+        return privacy;
     }
 }
 

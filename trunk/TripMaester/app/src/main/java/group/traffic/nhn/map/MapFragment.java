@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -143,7 +142,6 @@ import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.service.http.UploadAsync;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
-import android.media.MediaMetadataRetriever;
 
 public class MapFragment extends Fragment implements MapEventsReceiver,
         SensorEventListener {
@@ -390,6 +388,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             return;
         }
         viaPoints.add(p);
+
+
+
         if (BuildConfigs.DRAW_ROAD_BY_CALL_API) {
             updateItineraryMarker(null, p, viaPoints.size() - 1,
                     R.string.viapoint, R.drawable.marker_via, -1, null);
@@ -754,7 +755,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     // if user want to capture more image or not
                     if (!isCapturing) {
                         GeoPoint geoPoint = new GeoPoint(lastLocation);
-                        setMarker(geoPoint, imageBitmap, true);
+                        setMarker(geoPoint, imageBitmap);
 
                     } else {
                         // save to list image of marker
@@ -792,7 +793,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
                     }
                     //JSONObject json  = HttpManager.uploadImage(mTempCameraPhotoFile.getPath());
-                    new UploadAsync(filePath, CameraHelper.getMimeType(filePath), mContext).execute(fileUri);
+//                    new UploadAsync(filePath, CameraHelper.getMimeType(filePath), mContext).execute(fileUri);
                 }
                 else {
                     Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
@@ -807,7 +808,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
                             MediaStore.Video.Thumbnails.MICRO_KIND);
                     GeoPoint geoPoint = new GeoPoint(lastLocation);
-                    setMarker(geoPoint, bmThumbnail, false);
+                    setMarker(geoPoint, bmThumbnail);
 
 //            File file = new File (currentPath);
 //            new UploadAsync(currentPath,  CameraHelper.getMimeType(currentPath) , mContext).execute(file);
@@ -1560,7 +1561,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             trip1.setPlaceEndTrip(txt_endPlace.getText().toString());
                                             trip1.setNumberLikeTrip(mainActivity.getString(R.string.default_like));
                                             trip1.setNumberCommentTrip(mainActivity.getString(R.string.default_comment));
-
+                                            trip1.setPrivacy(spinner_trip_privacy.getSelectedItem().toString());
                                             //send trip to server
                                             HttpManager.createTrip(trip1, getActivity(), new ICallback<JSONObject>() {
                                                 @Override
@@ -1619,13 +1620,30 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                     .getLongitudeE6());
                                                                     // FIXME: set trip
                                                                     // id
+                                                                    final int finalJ = j;
                                                                     HttpManager
                                                                             .createPointOnTrip(
                                                                                     trip1.getTripId(),
                                                                                     pointItem, getActivity(), new ICallback<JSONObject>() {
                                                                                         @Override
                                                                                         public void onCompleted(JSONObject data, Object tag, Exception e) {
-                                                                                            //do nothing
+                                                                                            if (e != null || data == null){
+                                                                                                Log.e(TAG,"Error when create trip",e);
+                                                                                            }
+                                                                                            if (!data.isNull("pointId")) {
+                                                                                                try{
+                                                                                                    String pointId = data.getString("pointId");
+                                                                                                    for(int k=0; k <lst_markers.size(); k++){
+                                                                                                        if(lst_markers.get(k).pointIndex > finalJ) break;
+                                                                                                        if(lst_markers.get(k).pointIndex < finalJ) continue;
+                                                                                                        String data1 = lst_markers.get(k).getData();
+                                                                                                        HttpManager.uploadImage(new File(data1), data1, CameraHelper.getMimeType(data1), pointId);
+                                                                                                    }
+                                                                                                }
+                                                                                                catch(JSONException ex){
+                                                                                                    ex.printStackTrace();
+                                                                                                }
+                                                                                            }
                                                                                         }
                                                                                     });
                                                                 }
@@ -1890,7 +1908,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     //set marker for image capture
-    public void setMarker(GeoPoint geoPoint, Bitmap bitmap, boolean isImage) {
+    public void setMarker(GeoPoint geoPoint, Bitmap bitmap) {
 
         // //0. Using the Marker overlay
         final MyMarker startMarker = new MyMarker(mMapView);
@@ -1899,16 +1917,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         String str_lat_long = "Lattitude: " + geoPoint.getLatitude()
                 + "\r\nLongtitude: " + geoPoint.getLongitude();
         startMarker.getMarker().setTitle(str_lat_long);
-        if(isImage){
-            Drawable icon = getResources().getDrawable(R.drawable.ic_image_pink_a400_24dp);
-            startMarker.setIcon(icon);
-        }
-        else{
-            Drawable icon = getResources().getDrawable(R.drawable.ic_movie_orange_300_24dp);
-            startMarker.setIcon(icon);
-        }
-
-
 
         ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
                 R.layout.itinerary_bubble, mMapView, bitmap, mainActivity) {
@@ -1946,18 +1954,20 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                             showChoiceDialogMarker(lst_around_markers);
                             // return false;
                         } else {
-                            lst_markers.get(startMarker.index).getMarker()
+                            lst_markers.get(startMarker.getIndex()).getMarker()
                                     .showInfoWindow();
                         }
                         return false;
                     }
                 });
         startMarker.setIndex(lst_markers.size());
+        startMarker.setPointIndex(viaPoints.size());
+        startMarker.setData(fileUri.getPath());
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();
 
-        Logger.t("viapoint").d(viaPoints.size() + " "+ lst_markers.size());
+        Logger.t("viapoint").d(viaPoints.size() + " "+ lst_markers.size() +"  " + startMarker.getIndex()+" "+ startMarker.getPointIndex()+" "+ FlagUpdates.FlagUpdate_DEPARTURE);
     }
 
     //set marker for image capture
@@ -2539,6 +2549,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public class MyMarker {
         private Marker marker;
         private int index;
+        private int pointIndex;
+        private String data;
 
         public MyMarker(MapView mapView) {
             marker = new Marker(mapView);
@@ -2552,6 +2564,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             return marker;
         }
 
+        public void setPointIndex(int index){
+            this.pointIndex = index;
+        }
+
+        public int getPointIndex(){
+            return this.pointIndex;
+        }
+
         public void setIndex(int index) {
             this.index = index;
         }
@@ -2560,6 +2580,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             this.marker = marker;
         }
 
+        public void setData(String data){
+            this.data = data;
+        }
+        public String getData(){
+            return  this.data;
+        }
         public void setIcon(Drawable icon){
             marker.setIcon(icon);
         }

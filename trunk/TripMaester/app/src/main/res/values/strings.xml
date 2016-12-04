@@ -194,6 +194,7 @@
     <string name="route_step">Route step</string>
     <string name="take_photo_title">Notification</string>
     <string name="take_photo_prompt">Would you like to continue capturing?</string>
+    <string name="take_video_fail">Video Capture Failed</string>
     <string name="take_photo_fail">Image Capture Failed</string>
     <string name="error_loading_road_status">Error when loading the road - status =</string>
     <string name="view_on_map">View On Map</string>

@@ -50,7 +50,7 @@
             android:textSize="10dp"
             android:visibility="gone" />
     </LinearLayout>
-
+    
     <Button
         android:id="@+id/bubble_delete"
         android:layout_width="65dp"

@@ -86,7 +86,6 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
 //											/* User clicked No so do some stuff */
 //										}
 //									}).show();
-                    Logger.t("list_image").d(lstImage);
                     PriorityDlg dlg = new PriorityDlg(mapView.getContext(), R.style.dlg_priority, lstImage);
                     dlg.show();
 

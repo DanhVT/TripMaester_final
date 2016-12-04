@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,10 +25,12 @@ import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -103,6 +106,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import cse.its.adapter.ContextMenuAdapter;
 import cse.its.adapter.StreetListAdapter;
@@ -139,7 +143,7 @@ import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.service.http.UploadAsync;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
-
+import android.media.MediaMetadataRetriever;
 
 public class MapFragment extends Fragment implements MapEventsReceiver,
         SensorEventListener {
@@ -263,8 +267,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private List<Bitmap> lst_user_capture_bitmap;
     private boolean isCapturing;
     private ReceiverLocationChange mReceiverLocationChange = new ReceiverLocationChange();
-    //===============
-    private File mTempCameraPhotoFile;
+    private File fileUri;
 
     public MapFragment() {
 
@@ -382,6 +385,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     public void addViaPoint(GeoPoint p) {
+        // Not add added_added
         if (viaPoints.contains(p)) {
             return;
         }
@@ -722,83 +726,102 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_TAKE_PHOTO
-                && resultCode == Activity.RESULT_OK) {
-            // Bundle extras = data.getExtras();
-            // Bitmap imageBitmap = (Bitmap) extras.get("data");
+        try{
+            if (requestCode == REQUEST_TAKE_PHOTO) {
+                if(resultCode == Activity.RESULT_OK && fileUri.getPath() != null) {
+                    // Bundle extras = data.getExtras();
+                    // Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            // Mimimum acceptable free memory you think your app needs
-            long minRunningMemory = (12024 * 12024);
+                    // Mimimum acceptable free memory you think your app needs
+                    long minRunningMemory = (12024 * 12024);
 
-            Runtime runtime = Runtime.getRuntime();
+                    Runtime runtime = Runtime.getRuntime();
 
-            if (runtime.freeMemory() < minRunningMemory)
-                System.gc();
+                    if (runtime.freeMemory() < minRunningMemory)
+                        System.gc();
 
-            Bitmap imageBitmap = decodeSampledBitmapFromFile(currentPath, 400, 600);// BitmapFactory.decodeFile(filePath,
-            // options);
+                    String filePath = fileUri.getPath();
 
-            if (lastLocation == null) {
-                lastLocation = mLocationManager
-                        .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    Bitmap imageBitmap = decodeSampledBitmapFromFile(filePath, 400, 600);// BitmapFactory.decodeFile(filePath,
+                    // options);
+
+                    if (lastLocation == null) {
+                        lastLocation = mLocationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 //					updateCurrentLocation();
+                    }
+
+                    // if user want to capture more image or not
+                    if (!isCapturing) {
+                        GeoPoint geoPoint = new GeoPoint(lastLocation);
+                        setMarker(geoPoint, imageBitmap, true);
+
+                    } else {
+                        // save to list image of marker
+                        if (lst_markers != null && lst_markers.size() > 1) {
+                            Marker marker = lst_markers.get(lst_markers.size() - 1).getMarker();
+                            ViaPointInfoWindow viaInfoWindow = (ViaPointInfoWindow) marker
+                                    .getInfoWindow();
+                            viaInfoWindow.addImage(imageBitmap);
+                            viaInfoWindow.setLastImageButton();
+                        }
+
+                        new AlertDialog.Builder(mainActivity)
+                                .setTitle(mainActivity.getString(R.string.take_photo_title))
+                                .setMessage(mainActivity.getString(R.string.take_photo_prompt))
+                                .setPositiveButton(android.R.string.yes,
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                isCapturing = true;
+//										btn_capture.performClick();
+                                                MainActivity.fab_camera.performClick();
+                                            }
+                                        })
+                                .setNegativeButton("Cancel",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                // FIXME: save marker
+                                                isCapturing = false;
+                                                lst_user_capture_bitmap = new ArrayList<Bitmap>();
+
+                                            }
+                                        }).setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+
+                    }
+                    //JSONObject json  = HttpManager.uploadImage(mTempCameraPhotoFile.getPath());
+                    new UploadAsync(filePath, CameraHelper.getMimeType(filePath), mContext).execute(fileUri);
+                }
+                else {
+                    Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
-            // if user want to capture more image or not
-            if (!isCapturing) {
-                GeoPoint geoPoint = new GeoPoint(lastLocation);
-                setMarker(geoPoint, imageBitmap);
-            } else {
-                // save to list image of marker
-                if (lst_markers != null && lst_markers.size() > 1) {
-                    Marker marker = lst_markers.get(lst_markers.size() - 1).getMarker();
-                    ViaPointInfoWindow viaInfoWindow = (ViaPointInfoWindow) marker
-                            .getInfoWindow();
-                    viaInfoWindow.addImage(imageBitmap);
-                    viaInfoWindow.setLastImageButton();
+            if (requestCode == REQUEST_TAKE_VIDEO) {
+                if(resultCode == Activity.RESULT_OK && fileUri.getPath() != null){
+                    String filePath = fileUri.getPath();
+                    Bitmap bmThumbnail;
+                    bmThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
+                            MediaStore.Video.Thumbnails.MICRO_KIND);
+                    GeoPoint geoPoint = new GeoPoint(lastLocation);
+                    setMarker(geoPoint, bmThumbnail, false);
+
+//            File file = new File (currentPath);
+//            new UploadAsync(currentPath,  CameraHelper.getMimeType(currentPath) , mContext).execute(file);
+                }
+                else{
+                    Toast.makeText(mainActivity, mainActivity.getString(R.string.take_video_fail), Toast.LENGTH_SHORT ).show();
                 }
 
-                new AlertDialog.Builder(mainActivity)
-                        .setTitle(mainActivity.getString(R.string.take_photo_title))
-                        .setMessage(mainActivity.getString(R.string.take_photo_prompt))
-                        .setPositiveButton(android.R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        isCapturing = true;
-//										btn_capture.performClick();
-                                        MainActivity.fab_camera.performClick();
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        // FIXME: save marker
-                                        isCapturing = false;
-                                        lst_user_capture_bitmap = new ArrayList<Bitmap>();
-
-                                    }
-                                }).setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-
             }
-            //JSONObject json  = HttpManager.uploadImage(mTempCameraPhotoFile.getPath());
-            new UploadAsync(currentPath, CameraHelper.getMimeType(currentPath),  mContext ).execute(new File(currentPath));
-        } else {
-            Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
-                    Toast.LENGTH_SHORT).show();
+        }
+        catch (NullPointerException ex){
+            ex.printStackTrace();
         }
 
-        if (requestCode == REQUEST_TAKE_VIDEO
-                && resultCode == Activity.RESULT_OK) {
-            if (!isCapturing) {
-                GeoPoint geoPoint = new GeoPoint(lastLocation);
-//                setMarker(geoPoint, imageBitmap);
-            }
-            File file = new File (currentPath);
-            new UploadAsync(currentPath,  CameraHelper.getMimeType(currentPath) , mContext).execute(file);
-        }
     }
 
     public boolean onChildClick(int groupPosition, int childPosition) {
@@ -919,376 +942,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         Instance = this;
         return rootView;
     }
-
-    /**
-     * load map and view
-     *
-     * @param root
-     */
-    private void onLoadMap(View root) {
-        mMapView = (MapView) root.findViewById(R.id.openmapview);
-        mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
-        mMapView.setMultiTouchControls(true);
-        mMapView.setBuiltInZoomControls(false);
-
-        // add controller
-        mMapController = (MapController) mMapView.getController();
-        mMapController.setZoom(Constants.ZOOM_LEVEL);
-        mMapController.animateTo(Constants.GEO_HCM_UNIV);
-
-        // add overly listener
-        // mMapOverlyListener = new MapOverlayListener(getActivity()); // Add
-        // Map overlay listener to catch touch event on map
-
-        mMapOverlyListener = new MapOverlayListener(mainActivity); // Add Map
-        // overlay
-        // listener
-        // to catch
-        // touch
-        // event on
-        // map
-
-        mOverlays = mMapView.getOverlays();
-        mOverlays.add(mMapOverlyListener);
-
-        // for testing get around markers->delete when done
-        // for (int m = 0; m < 5; m++) {
-        // GeoPoint startPoint = new GeoPoint(
-        // 10.809807 + (double) (m * 0.0001),
-        // 106.645101 + (double) (m * 0.01));
-        // Marker startMarker = new Marker(mMapView);
-        // startMarker.setPosition(startPoint);
-        // startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        // String str_lat_long = "lattitude: " + startPoint.getLatitude()
-        // + "\r\nLongtitude: " + startPoint.getLongitude();
-        // startMarker.setTitle(str_lat_long);
-        //
-        // startMarker.setImage(getResources().getDrawable(
-        // R.drawable.ic_launcher));
-        // startMarker.setInfoWindow(new MarkerInfoWindow(
-        // R.layout.bonuspack_bubble_black, mMapView));
-        // startMarker.setDraggable(true);
-        //
-        // lst_marker.add(startMarker);
-        // startMarker
-        // .setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-        //
-        // @Override
-        // public boolean onMarkerClick(Marker arg0, MapView arg1) {
-        // GeoPoint curr_marker_pos = arg0.getPosition();
-        //
-        // // get distance between markers and only get markers
-        // // have distance with current marker < 10km
-        // lst_around_markers = new ArrayList<Marker>();
-        // for (int i = 0; i < lst_marker.size(); i++) {
-        // Marker marker = lst_marker.get(i);
-        //
-        // double distance = Utilities.distanceInKm(
-        // curr_marker_pos, marker.getPosition());
-        // if (Math.abs(distance) <= 2) {
-        // lst_around_markers.add(marker);
-        // }
-        // }
-        // if (lst_around_markers.size() > 1
-        // && !isShowDialogMarker) {
-        // isShowDialogMarker = true;
-        // showChoiceDialogMarker(lst_around_markers);
-        // } else {
-        // // lst_marker.get
-        // }
-        //
-        // return false;
-        // }
-        // });
-        // mMapView.getOverlays().add(startMarker);
-        // mMapView.invalidate();
-        //
-        // }
-        // ===================
-        mDrawablePosition = getResources().getDrawable(R.drawable.ic_position);
-
-        // Map location listener
-        resourceProxy = new DefaultResourceProxyImpl(
-                mainActivity.getApplicationContext());
-        // mItemizedOverlay = new OsmMapsItemizedOverlay(
-        // new ArrayList<OverlayItem>(), myOnItemGestureListener,
-        // mResourceProxy);
-
-        // GeoPoint(10.809807,106.645101));
-
-			/* location manager */
-        mLocationManager = (LocationManager) mainActivity
-                .getSystemService(Context.LOCATION_SERVICE);
-
-        // button capture image and set marker at current postion
-//			btn_capture = (Button) rootView.findViewById(R.id.btn_capture);
-//			btn_capture.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					takeFromCamera();
-//				}
-//			});
-
-        btn_start = (Button) rootView.findViewById(R.id.btn_start);
-        btn_start.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //check user login FB
-                if (!LoginManager.getInstance().isLogin()) {
-                    new AlertDialog.Builder(mainActivity)
-                            //TODO: KenK11 replace new method
-                            .setTitle(mainActivity.getString(R.string.login_first_title))
-                            .setMessage(mainActivity.getString(R.string.login_first_prompt))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                    return;
-                }
-
-                // set button text when click
-                if (btn_start.getText().equals(mainActivity.getString(R.string.btn_start))) {
-                    btn_start.setText(mainActivity.getString(R.string.btn_end));
-                } else {
-                    btn_start.setText(mainActivity.getString(R.string.btn_start));
-                }
-
-                if (!isStart) {
-                    // create new trip
-                    isStart = true;
-                    MainActivity.fab_btn_capture.setVisibility(View.VISIBLE);
-                    lstPassedPoint = new ArrayList<Location>();
-                    Calendar c = Calendar.getInstance();
-                    currentTime_start_trip = c.getTime();
-                    // FIXME: =====================
-                    // updateUITrackingButton();
-                    // GeoPoint location = myLocationOverlay.getLocation();
-                    // mMapView.getController().animateTo(location);
-
-                    mContext.startService(new Intent(mContext,
-                            DetectLocationService.class));
-                    mContext.registerReceiver(
-                            mReceiverLocationChange,
-                            new IntentFilter(
-                                    StaticStrings.IntentFilter_ACTION_LOCATION_CHANGE));
-                } else {
-                    isStart = false;
-                    MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
-                    // get prompts.xml view
-                    LayoutInflater li = LayoutInflater.from(mainActivity);
-                    View promptsView = li.inflate(
-                            R.layout.input_trip_info_dialog, null);
-
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                            mainActivity);
-
-                    // set prompts.xml to alertdialog builder
-                    alertDialogBuilder.setView(promptsView);
-
-                    final EditText txt_startPlace = (EditText) promptsView
-                            .findViewById(R.id.txtStartPlace);
-                    final EditText txt_endPlace = (EditText) promptsView
-                            .findViewById(R.id.txtEndPlace);
-                    final Spinner spinner_trip_privacy = (Spinner) promptsView.findViewById(R.id.spinner_trip_privacy);
-                    // set dialog message
-                    alertDialogBuilder
-                            .setCancelable(false)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            // FIXME: save trip and send to server
-                                            Trip trip1 = new Trip();
-                                            trip1.setUserName(LoginManager.getInstance().getUser().getName());
-                                            trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
-                                            trip1.setNumberCommentTrip(mainActivity.getString(R.string.default_like));
-                                            trip1.setNumberLikeTrip(mainActivity.getString(R.string.default_comment));
-
-                                            Calendar c = Calendar.getInstance();
-                                            Date currentTime = c.getTime();
-
-                                            StringBuffer sb = new StringBuffer();
-                                            long diffInSeconds = (currentTime.getTime() - currentTime_start_trip.getTime()) / 1000;
-
-											    /*long diff[] = new long[]{0, 0, 0, 0};
-                                                /* sec *  diff[3] = (diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds);
-											    /* min *  diff[2] = (diffInSeconds = (diffInSeconds / 60)) >= 60 ? diffInSeconds % 60 : diffInSeconds;
-											    /* hours *  diff[1] = (diffInSeconds = (diffInSeconds / 60)) >= 24 ? diffInSeconds % 24 : diffInSeconds;
-											    /* days * diff[0] = (diffInSeconds = (diffInSeconds / 24));
-											     */
-                                            //TODO: replace new method calculate date time
-                                            long sec = (diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds);
-                                            long min = (diffInSeconds = (diffInSeconds / 60)) >= 60 ? diffInSeconds % 60 : diffInSeconds;
-                                            long hrs = (diffInSeconds = (diffInSeconds / 60)) >= 24 ? diffInSeconds % 24 : diffInSeconds;
-                                            long days = (diffInSeconds = (diffInSeconds / 24)) >= 30 ? diffInSeconds % 30 : diffInSeconds;
-                                            long months = (diffInSeconds = (diffInSeconds / 30)) >= 12 ? diffInSeconds % 12 : diffInSeconds;
-                                            long years = (diffInSeconds = (diffInSeconds / 12));
-
-                                            if (years > 0) {
-                                                if (years == 1) {
-                                                    sb.append("a year");
-                                                } else {
-                                                    sb.append(years + " years");
-                                                }
-                                                if (years <= 6 && months > 0) {
-                                                    if (months == 1) {
-                                                        sb.append(" and a month");
-                                                    } else {
-                                                        sb.append(" and " + months + " months");
-                                                    }
-                                                }
-                                            } else if (months > 0) {
-                                                if (months == 1) {
-                                                    sb.append("a month");
-                                                } else {
-                                                    sb.append(months + " months");
-                                                }
-                                                if (months <= 6 && days > 0) {
-                                                    if (days == 1) {
-                                                        sb.append(" and a day");
-                                                    } else {
-                                                        sb.append(" and " + days + " days");
-                                                    }
-                                                }
-                                            } else if (days > 0) {
-                                                if (days == 1) {
-                                                    sb.append("a day");
-                                                } else {
-                                                    sb.append(days + " days");
-                                                }
-                                                if (days <= 3 && hrs > 0) {
-                                                    if (hrs == 1) {
-                                                        sb.append(" and an hour");
-                                                    } else {
-                                                        sb.append(" and " + hrs + " hours");
-                                                    }
-                                                }
-                                            } else if (hrs > 0) {
-                                                if (hrs == 1) {
-                                                    sb.append("an hour");
-                                                } else {
-                                                    sb.append(hrs + " hours");
-                                                }
-                                                if (min > 1) {
-                                                    sb.append(" and " + min + " minutes");
-                                                }
-                                            } else if (min > 0) {
-                                                if (min == 1) {
-                                                    sb.append("a minute");
-                                                } else {
-                                                    sb.append(min + " minutes");
-                                                }
-                                                if (sec > 1) {
-                                                    sb.append(" and " + sec + " seconds");
-                                                }
-                                            } else {
-                                                if (sec <= 1) {
-                                                    sb.append("about a second");
-                                                } else {
-                                                    sb.append("about " + sec + " seconds");
-                                                }
-                                            }
-                                            trip1.setDateTime(sb.toString());
-
-                                            String intMonth = (String) android.text.format.DateFormat
-                                                    .format("MM", currentTime); // 06
-                                            String year = (String) android.text.format.DateFormat
-                                                    .format("yyyy", currentTime); // 2013
-                                            String day = (String) android.text.format.DateFormat
-                                                    .format("dd", currentTime); // 20
-
-                                            trip1.setTimeStartTrip(day + "/"
-                                                    + intMonth + "/" + year);
-                                            trip1.setTimeEndTrip(day + "/"
-                                                    + intMonth + "/" + year);
-                                            trip1.setPlaceStartTrip(txt_startPlace.getText().toString());
-                                            trip1.setPlaceEndTrip(txt_endPlace.getText().toString());
-                                            trip1.setNumberLikeTrip(trip1.getNumberLikeTrip() + " likes");
-                                            trip1.setNumberCommentTrip(trip1.getNumberCommentTrip() + " comments");
-
-                                            //send trip to server
-                                            HttpManager.createTrip(trip1, getActivity(), new ICallback<JSONObject>() {
-                                                @Override
-                                                public void onCompleted(JSONObject data, Object tag, Exception e) {
-                                                    //Do nothing
-                                                }
-                                            });
-//												TripManager.addTrip(trip1);
-
-                                            // stop sevice trip
-                                            mContext.stopService(new Intent(
-                                                    mContext,
-                                                    DetectLocationService.class));
-                                            mContext.unregisterReceiver(mReceiverLocationChange);
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-
-                    // create alert dialog
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-
-                    // show it
-                    alertDialog.show();
-
-                }
-            }
-        });
-
-        myLocationOverlay = new DirectedLocationOverlay(mainActivity);
-        mMapView.getOverlays().add(myLocationOverlay);
-
-        mDeparture = null;
-        mDestination = null;
-        viaPoints = new ArrayList<GeoPoint>();
-
-        // ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(this);
-        // map.getOverlays().add(scaleBarOverlay);
-
-        // Itinerary markers:
-        mItineraryMarkers = new FolderOverlay(mainActivity);
-        mItineraryMarkers.setName(mainActivity.getString(R.string.itinerary_maker));
-        mMapView.getOverlays().add(mItineraryMarkers);
-        // mViaPointInfoWindow = new
-        // ViaPointInfoWindow(R.layout.itinerary_bubble, mMapView){
-        // @Override
-        // public void onClickRemovePoint(int p) {
-        // // removePoint(p);
-        // }
-        // };
-
-        mRoadNodeMarkers = new FolderOverlay(mainActivity);
-        mRoadNodeMarkers.setName(mainActivity.getString(R.string.route_step));
-        mMapView.getOverlays().add(mRoadNodeMarkers);
-
-        mPoiMarkers = new RadiusMarkerClusterer(mainActivity);
-        // mKmlDocument = new KmlDocument();
-
-        // Button btnStart = (Button)findViewById(R.id.btnStart);
-        // registerForContextMenu(btnStart);
-
-        // ### Floating Action Button Capture
-        MainActivity.fab_btn_capture = (FloatingActionButton) mainActivity.findViewById(R.id.fab_btn_capture);
-
-        MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
-        MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCamera();
-            }
-        });
-        isCapturing = false;
-    }
-
-    /**
+     /**
      * load map and view
      *
      * @param root
@@ -2236,7 +1890,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     //set marker for image capture
-    public void setMarker(GeoPoint geoPoint, Bitmap bitmap) {
+    public void setMarker(GeoPoint geoPoint, Bitmap bitmap, boolean isImage) {
 
         // //0. Using the Marker overlay
         final MyMarker startMarker = new MyMarker(mMapView);
@@ -2245,7 +1899,16 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         String str_lat_long = "Lattitude: " + geoPoint.getLatitude()
                 + "\r\nLongtitude: " + geoPoint.getLongitude();
         startMarker.getMarker().setTitle(str_lat_long);
-        // startMarker.setImage(drawable);
+        if(isImage){
+            Drawable icon = getResources().getDrawable(R.drawable.ic_image_pink_a400_24dp);
+            startMarker.setIcon(icon);
+        }
+        else{
+            Drawable icon = getResources().getDrawable(R.drawable.ic_movie_orange_300_24dp);
+            startMarker.setIcon(icon);
+        }
+
+
 
         ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
                 R.layout.itinerary_bubble, mMapView, bitmap, mainActivity) {
@@ -2264,6 +1927,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
                     @Override
                     public boolean onMarkerClick(Marker arg0, MapView arg1) {
+
                         GeoPoint curr_marker_pos = arg0.getPosition();
                         lst_around_markers = new ArrayList<Marker>();
                         for (int i = 0; i < lst_markers.size(); i++) {
@@ -2292,6 +1956,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();
+
+        Logger.t("viapoint").d(viaPoints.size() + " "+ lst_markers.size());
     }
 
     //set marker for image capture
@@ -2501,28 +2167,33 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     public void showCameraVideo() {
-        try {
-            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            File f = CameraHelper.createVideoFile();
-            currentPath = f.getAbsolutePath();
-            takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        fileUri = CameraHelper.getOutputMediaFile();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        startActivityForResult(intent, REQUEST_TAKE_VIDEO);
     }
     public void showCamera() {
-        try {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File f = CameraHelper.createImageFile();
-            currentPath = f.getAbsolutePath();
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent
+                .resolveActivity(getActivity().getPackageManager()) != null) {
+            //KenK11 create folder for saving new image
+            File exportDir = new File(
+                    Environment.getExternalStorageDirectory(), FOLDER_NAME);
+            if (!exportDir.exists()) {
+                exportDir.mkdirs();
+            } else {
+                exportDir.delete();
+            }
+            fileUri = new File(exportDir, "/"
+                    + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg");
+            // Log.d(LOG_TAG, "/" + UUID.randomUUID().toString().replaceAll("-",
+            // "") + ".jpg");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(fileUri));
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
-
     /**
      * update current location
      */
@@ -2887,6 +2558,13 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         public void setMarker(Marker marker) {
             this.marker = marker;
+        }
+
+        public void setIcon(Drawable icon){
+            marker.setIcon(icon);
+        }
+        public void setImage(Drawable image){
+            marker.setImage(image);
         }
     }
 

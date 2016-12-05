@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import group.traffic.nhn.map.MapFragment;
 import group.traffic.nhn.message.MessageItem;
 import group.traffic.nhn.trip.PointItem;
 import group.traffic.nhn.user.FriendItem;
@@ -291,16 +292,16 @@ public class HttpManager {
                         public void onCompleted(Exception e, String str_response) {
                             final ArrayList<GeoPoint> lstGeoPoints = new ArrayList<GeoPoint>();
                             try {
-                                JSONArray response_json = new JSONArray();
-
-                                Log.v(TAG, "httpResponse = " + str_response);
+                                JSONArray listPoint = new JSONArray();
                                 JSONObject jsonObj = new JSONObject(str_response);
                                 if (!jsonObj.isNull("listPoint")) {
-                                    response_json = new JSONArray(jsonObj.getString("listPoint"));
+                                    listPoint = new JSONArray(jsonObj.getString("listPoint"));
                                 }
 
-                                for (int i = 0; i < response_json.length(); i++) {
-                                    JSONObject pointJson = new JSONObject(response_json.getString(i));
+
+
+                                for (int i = 0; i < listPoint.length(); i++) {
+                                    JSONObject pointJson = new JSONObject(listPoint.getString(i));
                                     if (!pointJson.isNull("x") && !pointJson.isNull("y")) {
                                         double x = Double.valueOf(pointJson.getString("x"));
                                         double y = Double.valueOf(pointJson.getString("y"));
@@ -308,6 +309,13 @@ public class HttpManager {
                                         GeoPoint geoPoint = new GeoPoint(x, y);
 
                                         lstGeoPoints.add(geoPoint);
+
+                                        JSONArray lstImg = new JSONArray(pointJson.getString("listImage"));
+
+                                        for (int j =0; j< lstImg.length(); j++){
+                                            
+                                        }
+
                                     }
                                 }
                             } catch (Exception ex) {

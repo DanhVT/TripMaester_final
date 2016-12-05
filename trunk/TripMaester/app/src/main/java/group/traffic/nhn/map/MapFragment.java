@@ -163,6 +163,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private static String mDeviceId;
     private static LocationSender mLocationSender;
     private static RouteParser mRouteParserController = null;
+
     /**
      * Define interface
      */
@@ -252,7 +253,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private String currentPath = null;
     private View rootView;
     // Required for camera operations in order to save the image file on resume.
-    private List<MyMarker> lst_markers;
+    private static List<MyMarker> lst_markers;
     private List<Marker> lst_around_markers;
     private int selectMarkerChoice;
     private boolean isShowDialogMarker = false;
@@ -943,7 +944,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         Instance = this;
         return rootView;
     }
-     /**
+    /**
      * load map and view
      *
      * @param root
@@ -1027,8 +1028,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         StaticVariable.TV_VIA.setVisibility(View.GONE);
         StaticVariable.TV_ROUTING_DETAIL = (TextView) root.findViewById(R.id.tv_preview);
         StaticVariable.TV_ROUTING_DETAIL.setText(Html.fromHtml(" <font color=#5789ff>  >> "
-                        + mContext.getResources().getString(R.string.detail)
-                        + " </font> "));
+                + mContext.getResources().getString(R.string.detail)
+                + " </font> "));
         StaticVariable.TV_ROUTING_DETAIL.setTextSize(13);
         StaticVariable.TV_ROUTING_DETAIL.setVisibility(View.GONE);
 
@@ -1435,6 +1436,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 } else {
                     isStart = false;
                     MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
+                    MainActivity.fab_camera.setVisibility(View.INVISIBLE);
+                    MainActivity.fab_video.setVisibility(View.INVISIBLE);
                     // get prompts.xml view
                     LayoutInflater li = LayoutInflater.from(mainActivity);
                     View promptsView = li.inflate(
@@ -1573,40 +1576,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     if (!jsonobject.isNull("tripId")) {
                                                         try {
                                                             trip1.setTripId(jsonobject.getString("tripId"));
-
-//													ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>(2);
-
-//													GeoPoint geo1 = new GeoPoint(10803671,106716896);
-//													GeoPoint geo2 = new GeoPoint(10709671,106710896);
-
-
-//													waypoints.add(geo1);
-//													waypoints.add(geo2);
-//													ArrayList<Road> lstRoads = new ArrayList<Road>();
-//													Road road1 = new Road(waypoints);
-//													lstUserPassRoad = new ArrayList<Road>();
-//													lstUserPassRoad.add(road1);
-//													GeoPoint geo1 = new GeoPoint(10803671,106716896);
-//													GeoPoint geo2 = new GeoPoint(10709671,106710896);
                                                             if (Utilities.hasConnection(mContext)) {
-                                                                // save passed location to server
-//														for(int i=0;i < lstUserPassRoad.size();i++){
-//															Road road = lstUserPassRoad.get(i);
-//															if(road != null){
-//																ArrayList<GeoPoint> lstPoint = road.getRouteLow();
-//																if(lstPoint.size() > 0){
-//																	for(int j =0;j < lstPoint.size();j++){
-//																		GeoPoint lastPointInArray = lstPoint.get(j);
-//																		PointItem pointItem = new PointItem();
-//																		pointItem.setX_Lat(lastPointInArray.getLatitudeE6());
-//																		pointItem.setY_Long(lastPointInArray.getLongitudeE6());
-//																		//FIXME: set trip id
-//																		HttpManager.createPointOnTrip(trip1.getTripId(), pointItem);
-//																	}
-//
-//																}
-//															}
-//														}
                                                                 for (int j = 0; j < viaPoints
                                                                         .size(); j++) {
                                                                     GeoPoint geoPoint = viaPoints
@@ -1899,14 +1869,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         warningIfoParser.execute(url);
     }
 
-    public void saveImage(Intent image) {
-
-    }
-
-    public void setImageMarker() {
-
-    }
-
     //set marker for image capture
     public void setMarker(GeoPoint geoPoint, Bitmap bitmap) {
 
@@ -2024,60 +1986,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         startMarker.setIndex(lst_markers.size());
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
-
-        //set end Marker
-        final MyMarker endMarker = new MyMarker(mMapView);
-        endMarker.getMarker().setPosition(trip.getEndPoint());
-        endMarker.getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        String strEndMarkerContent = "End Place: " + trip.getPlaceEndTrip()
-                + "\r\nEnd Time: " + trip.getTimeEndTrip()
-                + "\r\nDuration: " + trip.getDateOpenTrip()
-                + "\r\nDistance: " + Utilities.distanceInKm(trip.getLstWayPoints()) + " km";
-
-        endMarker.getMarker().setTitle(strEndMarkerContent);
-
-        ViaPointInfoWindow viaPOIInfoWindowEndMarker = new ViaPointInfoWindow(
-                R.layout.itinerary_bubble, mMapView, null, mainActivity) {
-
-            @Override
-            public void onClickRemovePoint(int p) {
-
-            }
-        };
-        endMarker.getMarker().setInfoWindow(viaPOIInfoWindowEndMarker);
-        endMarker.getMarker().setDraggable(false);
-        endMarker.getMarker()
-                .setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker arg0, MapView arg1) {
-                        GeoPoint curr_marker_pos = arg0.getPosition();
-                        lst_around_markers = new ArrayList<Marker>();
-                        for (int i = 0; i < lst_markers.size(); i++) {
-                            Marker marker = lst_markers.get(i).getMarker();
-
-                            double distance = Utilities.distanceInKm(
-                                    curr_marker_pos, marker.getPosition());
-                            if (Math.abs(distance) <= 2) {
-                                lst_around_markers.add(marker);
-                            }
-                        }
-
-                        if (lst_around_markers.size() > 1
-                                && !isShowDialogMarker) {
-                            isShowDialogMarker = true;
-                            showChoiceDialogMarker(lst_around_markers);
-                            // return false;
-                        } else {
-                            lst_markers.get(endMarker.getIndex()).getMarker()
-                                    .showInfoWindow();
-                        }
-                        return false;
-                    }
-                });
-        endMarker.setIndex(lst_markers.size());
-        lst_markers.add(endMarker);
-        mMapView.getOverlays().add(endMarker.getMarker());
-
         mMapView.invalidate();
     }
 

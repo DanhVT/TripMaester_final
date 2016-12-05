@@ -220,7 +220,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                stopTracking();
+
                 // if users logout
                 LoginManager.getInstance().setUserToken(currentAccessToken);
                 if (currentAccessToken == null) {

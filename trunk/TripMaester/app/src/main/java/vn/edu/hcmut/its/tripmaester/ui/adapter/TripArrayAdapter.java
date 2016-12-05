@@ -337,37 +337,33 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         viewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get list position of trip
-//				JSONArray lstPointsTrip_json = HttpManager
-//						.getListPointOnTrip(getTrips().get(pos).getTripId());
+        HttpManager
+                .getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
+                    @Override
+                    public void onCompleted(ArrayList<GeoPoint> waypoints, Object tag, Exception e) {
+                        if (waypoints.size() > 0) {
+                            getTrips().get(pos).setLstWayPoints(waypoints);
 
-                HttpManager
-                        .getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
-                            @Override
-                            public void onCompleted(ArrayList<GeoPoint> waypoints, Object tag, Exception e) {
-                                if (waypoints.size() > 0) {
-                                    getTrips().get(pos).setLstWayPoints(waypoints);
+                            ArrayList<Road> lstRoads = new ArrayList<Road>();
+                            Road road1 = new Road(getTrips().get(pos).getLstWayPoints());
+                            lstRoads.add(road1);
+                            mainActivity.changeToMapFragments(getTrips().get(pos));
+                        } else {
+                            new AlertDialog.Builder(parentViewGroup.getContext())
+                                    .setTitle("View Trip On Map Error")
+                                    .setMessage("No trip's road data.")
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                        // ================
 
-                                    ArrayList<Road> lstRoads = new ArrayList<Road>();
-                                    Road road1 = new Road(getTrips().get(pos).getLstWayPoints());
-                                    lstRoads.add(road1);
-                                    mainActivity.changeToMapFragments(getTrips().get(pos));
-                                } else {
-                                    new AlertDialog.Builder(parentViewGroup.getContext())
-                                            .setTitle("View Trip On Map Error")
-                                            .setMessage("No trip's road data.")
-                                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // do nothing
-                                                }
-                                            })
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
-                                            .show();
-                                }
-                                // ================
-
-                            }
-                        });
+                    }
+                });
 
 
             }

@@ -10,11 +10,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import group.traffice.nhn.common.StaticVariable;
 import okhttp3.OkHttpClient;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
+
 /**
  * @author SinhHuynh
  * @Tag This class helps to get street name of a point, Google map api
@@ -22,7 +25,7 @@ import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 public class GGStreetNameParser extends AsyncTask<String, Void, String> {
 	int index;
 	Context context;
-	private final OkHttpClient client = new OkHttpClient();
+
 	public GGStreetNameParser(Context context, int index) {
 		this.index = index;
 		this.context = context;
@@ -35,12 +38,15 @@ public class GGStreetNameParser extends AsyncTask<String, Void, String> {
 		Log.i("Url: ", params[0]);
 		String street = "";
 		try {
-			json = ApiCall.GET(client, params[0]);
+			HttpConnection connection = new HttpConnection();
+			connection.doGet(params[0]);
+			InputStream stream = connection.getStream();
+			if (stream == null){
+				return null;
+			}
 			JSONObject jsonResource = new JSONObject(json);
 			JSONArray address = jsonResource.getJSONArray("results")
 					.getJSONObject(0).getJSONArray("address_components");
-			// Log.wtf("Adress",
-			// address.getJSONObject(1).getString("short_name"));
 			boolean named = false;
 			for (int i = 0; i < address.length(); ++i) {
 				if (address.getJSONObject(i).getJSONArray("types").getString(0)
@@ -57,8 +63,6 @@ public class GGStreetNameParser extends AsyncTask<String, Void, String> {
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return street;

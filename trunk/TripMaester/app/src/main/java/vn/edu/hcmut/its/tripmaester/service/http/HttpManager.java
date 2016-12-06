@@ -20,7 +20,9 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import group.traffic.nhn.map.MapFragment;
+import group.traffic.nhn.map.ViaPointInfoWindow;
 import group.traffic.nhn.message.MessageItem;
 import group.traffic.nhn.trip.PointItem;
 import group.traffic.nhn.user.FriendItem;
@@ -45,6 +48,8 @@ import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
+
+import static group.traffic.nhn.map.MapFragment.mMapView;
 
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
@@ -298,7 +303,7 @@ public class HttpManager {
                                     listPoint = new JSONArray(jsonObj.getString("listPoint"));
                                 }
 
-
+                                MapFragment.listMarkerTrip = new ArrayList<MapFragment.MyMarker>();
 
                                 for (int i = 0; i < listPoint.length(); i++) {
                                     JSONObject pointJson = new JSONObject(listPoint.getString(i));
@@ -313,7 +318,12 @@ public class HttpManager {
                                         JSONArray lstImg = new JSONArray(pointJson.getString("listImage"));
 
                                         for (int j =0; j< lstImg.length(); j++){
-                                            
+                                            JSONObject imgJSon = new JSONObject(lstImg.getString(i));
+                                            MapFragment.MyMarker startMarker = new MapFragment.MyMarker(mMapView);
+                                            startMarker.getMarker().setPosition(geoPoint);
+                                            startMarker.setData(imgJSon.getString("url"));
+                                            startMarker.setIndex(j);
+                                            MapFragment.listMarkerTrip.add(startMarker);
                                         }
 
                                     }

@@ -14,14 +14,11 @@ import com.orhanobut.logger.Logger;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
 
 /**
  * @author SinhHuynh
@@ -32,7 +29,6 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 	String address = "";
 	ProgressDialog PD;
 	boolean arrivedNotify = false;
-	private final OkHttpClient client = new OkHttpClient();
 
 	Activity mActivity;
 	public AddressParser(Activity activity, boolean arriveNotify){
@@ -56,26 +52,20 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		String url = params[0];
-		System.out.println(url);
-		String xml = null;
-		Request request = new Request.Builder()
-				.url(url)
-				.header("User-Agent", "OkHttp Headers.java")
-				.addHeader("Accept", "application/json; q=0.5")
-				.addHeader("Accept", "application/vnd.github.v3+json")
-				.build();
-		try {
-			Response response = client.newCall(request).execute();
-			xml = response.body().string();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		System.out.println("address:"+url);
 
-		InputStream is = new ByteArrayInputStream(xml.getBytes());
-		XmlPullParser parser = Xml.newPullParser();
+
 		try {
+			HttpConnection connection = new HttpConnection();
+			connection.doGet(url);
+
+			InputStream stream = connection.getStream();
+			if (stream == null){
+				return null;
+			}
+			XmlPullParser parser = Xml.newPullParser();
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			parser.setInput(is, null);
+			parser.setInput(stream, null);
 			parser.nextTag();
 			parser.require(XmlPullParser.START_TAG, null, "reversegeocode");
 			parser.nextTag();
@@ -91,11 +81,15 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 											R.string.tp_hcm)));
 				
 			}
+			connection.close();
 		} catch (XmlPullParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(NullPointerException e){
 			e.printStackTrace();
 		}
 		Logger.t("xml").d(address);

@@ -16,7 +16,6 @@ import okhttp3.Response;
 
 public class ApiCall {
 
-
     //GET network request
     public static String GET(OkHttpClient client, HttpUrl url) throws IOException {
         Request request = new Request.Builder()

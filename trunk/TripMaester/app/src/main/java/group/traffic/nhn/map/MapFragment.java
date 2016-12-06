@@ -157,12 +157,13 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public static Road mRoad; // made static to pass between activities
     public static ArrayList<POI> mPOIs; // made static to pass between
     protected static int START_INDEX = -2, DEST_INDEX = -1;
-    private static MapView mMapView;
+    public static MapView mMapView;
     private static MapController mMapController;
     private static List<Overlay> mOverlays;
     private static String mDeviceId;
     private static LocationSender mLocationSender;
     private static RouteParser mRouteParserController = null;
+    public static ArrayList<MyMarker> listMarkerTrip;
 
     /**
      * Define interface
@@ -1934,58 +1935,63 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
     //set marker for image capture
     public void setMarkerForTrip(Trip trip) {
+        for(int i = 0 ; i < listMarkerTrip.size(); i++){
+            //start marker
+            String str_lat_long = "Lattitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLatitude()
+                    + "\r\nLongtitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLongitude();
 
-        //start marker
-        final MyMarker startMarker = new MyMarker(mMapView);
-        startMarker.getMarker().setPosition(trip.getStartPoint());
-        startMarker.getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        String str_lat_long = "Start Place: " + trip.getPlaceStartTrip()
-                + "\r\nStart Time: " + trip.getTimeStartTrip()
-                + "\r\nDuration: " + trip.getDateOpenTrip()
-                + "\r\nDistance: " + Utilities.distanceInKm(trip.getLstWayPoints()) + " km";
-        startMarker.getMarker().setTitle(str_lat_long);
-
-        ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
-                R.layout.itinerary_bubble, mMapView, null, mainActivity) {
-
-            @Override
-            public void onClickRemovePoint(int p) {
-
+            if(i==0 || (i== listMarkerTrip.size() -1)){
+                str_lat_long = "Start Place: " + trip.getPlaceStartTrip()
+                        + "\r\nStart Time: " + trip.getTimeStartTrip()
+                        + "\r\nDuration: " + trip.getDateOpenTrip()
+                        + "\r\nDistance: " + Utilities.distanceInKm(trip.getLstWayPoints()) + " km";
             }
-        };
-        startMarker.getMarker().setInfoWindow(viaPOIInfoWindow);
-        startMarker.getMarker().setDraggable(false);
-        startMarker.getMarker()
-                .setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker arg0, MapView arg1) {
-                        GeoPoint curr_marker_pos = arg0.getPosition();
-                        lst_around_markers = new ArrayList<Marker>();
-                        for (int i = 0; i < lst_markers.size(); i++) {
-                            Marker marker = lst_markers.get(i).getMarker();
 
-                            double distance = Utilities.distanceInKm(
-                                    curr_marker_pos, marker.getPosition());
-                            if (Math.abs(distance) <= 2) {
-                                lst_around_markers.add(marker);
+            listMarkerTrip.get(i).getMarker().setTitle(str_lat_long);
+
+            ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
+                    R.layout.itinerary_bubble, mMapView, null, mainActivity) {
+
+                @Override
+                public void onClickRemovePoint(int p) {
+
+                }
+            };
+            listMarkerTrip.get(i).getMarker().setInfoWindow(viaPOIInfoWindow);
+            listMarkerTrip.get(i).getMarker().setDraggable(false);
+            final int finalI = i;
+            listMarkerTrip.get(i).getMarker()
+                    .setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker arg0, MapView arg1) {
+                            GeoPoint curr_marker_pos = arg0.getPosition();
+                            lst_around_markers = new ArrayList<Marker>();
+                            for (int j = 0; j < listMarkerTrip.size(); j++) {
+                                Marker marker = listMarkerTrip.get(j).getMarker();
+
+                                double distance = Utilities.distanceInKm(
+                                        curr_marker_pos, marker.getPosition());
+                                if (Math.abs(distance) <= 2) {
+                                    lst_around_markers.add(marker);
+                                }
                             }
-                        }
 
-                        if (lst_around_markers.size() > 1
-                                && !isShowDialogMarker) {
-                            isShowDialogMarker = true;
-                            showChoiceDialogMarker(lst_around_markers);
-                            // return false;
-                        } else {
-                            lst_markers.get(startMarker.getIndex()).getMarker()
-                                    .showInfoWindow();
+                            if (lst_around_markers.size() > 1
+                                    && !isShowDialogMarker) {
+                                isShowDialogMarker = true;
+                                showChoiceDialogMarker(lst_around_markers);
+                                // return false;
+                            } else {
+                                listMarkerTrip.get(finalI).getMarker()
+                                        .showInfoWindow();
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-        startMarker.setIndex(lst_markers.size());
-        lst_markers.add(startMarker);
-        mMapView.getOverlays().add(startMarker.getMarker());
+                    });
+            mMapView.getOverlays().add(listMarkerTrip.get(i).getMarker());
+        }
+
+
         mMapView.invalidate();
     }
 
@@ -2454,7 +2460,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     //DEFINE subclass
-    public class MyMarker {
+    public static class MyMarker {
         private Marker marker;
         private int index;
         private int pointIndex;

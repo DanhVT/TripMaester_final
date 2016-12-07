@@ -22,11 +22,8 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.koushikdutta.ion.Ion;
-import com.orhanobut.logger.Logger;
 
 import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -137,7 +134,6 @@ public class LoginFragment extends Fragment {
                                     boolean status = json_result.getBoolean("status");
                                     LoginManager.getInstance().getUser().setStatus(status);
                                 }
-                                Logger.t("tokenId").d(LoginManager.getInstance().getUser().getTokenId());
                                 //get list friend-in-app of user
                                 LoginManager.getInstance().getUser().getListFriend();
 

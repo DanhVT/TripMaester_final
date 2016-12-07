@@ -62,8 +62,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.DefaultResourceProxyImpl;
@@ -140,8 +138,8 @@ import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.CameraHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
-import vn.edu.hcmut.its.tripmaester.service.http.UploadAsync;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
+import vn.edu.hcmut.its.tripmaester.ui.activity.VideoPlayer;
 
 public class MapFragment extends Fragment implements MapEventsReceiver,
         SensorEventListener {
@@ -255,7 +253,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private View rootView;
     // Required for camera operations in order to save the image file on resume.
     private static List<MyMarker> lst_markers;
-    private List<Marker> lst_around_markers;
+    private List<MyMarker> lst_around_markers;
     private int selectMarkerChoice;
     private boolean isShowDialogMarker = false;
     private Button btn_start = null;
@@ -327,8 +325,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 && StaticVariable.START_SEGMENT_ID > 0)
             apiMode = RouteParser.ITS_API_MODE; // set ITS route mode
 
-        Logger.t("segment").d(StaticVariable.START_SEGMENT_ID + " "+StaticVariable.START_SEGMENT_ID+ " "+apiMode );
-
         // set start and destination segment id
         StaticVariable.START_NODE.setId(StaticVariable.START_SEGMENT_ID);
         StaticVariable.DES_NODE.setId(StaticVariable.DES_SEGMENT_ID);
@@ -336,12 +332,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         UrlHelper routingUrlHelper = new UrlHelper(StaticVariable.START_NODE,
                 StaticVariable.DES_NODE);
 
-        Logger.t("node").d(StaticVariable.START_NODE + " "+StaticVariable.DES_NODE );
+
         // to create full path url to request traffic data
         String routingUrl = routingUrlHelper.getUrl(
                 StaticVariable.INT_ROUTING_MODE,
                 StaticVariable.INT_TRANSPORTATION_MODE, apiMode);
-        Logger.t("url").d(routingUrl);
+
         LogFile.writeToFile(mDeviceId + " #3 URL " + routingUrl);
 //		if (mLocationSender == null)
         mLocationSender = new LocationSender(context);
@@ -1239,7 +1235,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             // ### on map scroll
             @Override
             public boolean onScroll(ScrollEvent arg0) {
-                Logger.t("traffice").d(StaticVariable.SHOW_TRAFFIC_INFO);
                 if (StaticVariable.SHOW_TRAFFIC_INFO) {
 
                     NodeDrawable current = new NodeDrawable(0,
@@ -1334,7 +1329,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         roadManager = new OSRMRoadManager();
 
         lst_markers = new ArrayList<MyMarker>();
-        lst_around_markers = new ArrayList<Marker>();
+        lst_around_markers = new ArrayList<MyMarker>();
 
         // ### init LoadMap View
 //		mMapView = (MapView) root.findViewById(R.id.openmapview);
@@ -1900,12 +1895,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     public boolean onMarkerClick(Marker arg0, MapView arg1) {
 
                         GeoPoint curr_marker_pos = arg0.getPosition();
-                        lst_around_markers = new ArrayList<Marker>();
+                        lst_around_markers = new ArrayList<MyMarker>();
                         for (int i = 0; i < lst_markers.size(); i++) {
-                            Marker marker = lst_markers.get(i).getMarker();
+                            MyMarker marker = lst_markers.get(i);
 
                             double distance = Utilities.distanceInKm(
-                                    curr_marker_pos, marker.getPosition());
+                                    curr_marker_pos, marker.getMarker().getPosition());
                             if (Math.abs(distance) <= 2) {
                                 lst_around_markers.add(marker);
                             }
@@ -1929,8 +1924,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();
-
-        Logger.t("viapoint").d(viaPoints.size() + " "+ lst_markers.size() +"  " + startMarker.getIndex()+" "+ startMarker.getPointIndex()+" "+ FlagUpdates.FlagUpdate_DEPARTURE);
     }
 
     //set marker for image capture
@@ -1965,12 +1958,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         @Override
                         public boolean onMarkerClick(Marker arg0, MapView arg1) {
                             GeoPoint curr_marker_pos = arg0.getPosition();
-                            lst_around_markers = new ArrayList<Marker>();
+                            lst_around_markers = new ArrayList<MyMarker>();
                             for (int j = 0; j < listMarkerTrip.size(); j++) {
-                                Marker marker = listMarkerTrip.get(j).getMarker();
+                                MyMarker marker = listMarkerTrip.get(j);
 
                                 double distance = Utilities.distanceInKm(
-                                        curr_marker_pos, marker.getPosition());
+                                        curr_marker_pos, marker.getMarker().getPosition());
                                 if (Math.abs(distance) <= 2) {
                                     lst_around_markers.add(marker);
                                 }
@@ -2035,14 +2028,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         }
     }
 
-    private void showChoiceDialogMarker(final List<Marker> lstMarker) {
+    private void showChoiceDialogMarker(final List<MyMarker> lstMarker) {
         // lay danh sach Long Lat cua marker xung quanh de hien thi
         ArrayList<String> lstString = new ArrayList<String>();
         for (int i = 0; i < lstMarker.size(); i++) {
             lstString.add(String.valueOf("Lat: "
-                    + lstMarker.get(i).getPosition().getLatitude())
+                    + lstMarker.get(i).getMarker().getPosition().getLatitude())
                     + " Long:"
-                    + String.valueOf(lstMarker.get(i).getPosition()
+                    + String.valueOf(lstMarker.get(i).getMarker().getPosition()
                     .getLongitude()));
         }
         selectMarkerChoice = 0;
@@ -2064,8 +2057,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                             public void onClick(DialogInterface dialog,
                                                 int whichButton) {
                                 isShowDialogMarker = false;
-                                lstMarker.get(selectMarkerChoice)
+                                lstMarker.get(selectMarkerChoice).getMarker()
                                         .showInfoWindow();
+                                Intent intent = new Intent(getActivity(), VideoPlayer.class);
+                                String url = lstMarker.get(selectMarkerChoice).getData();
+                                intent.putExtra("URL", url);
+                                startActivity(intent);
                                     /* User clicked Yes so do some stuff */
                             }
                         })

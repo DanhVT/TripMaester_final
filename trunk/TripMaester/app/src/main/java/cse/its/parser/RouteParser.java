@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -155,7 +154,6 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 		String json = null;
 		try {
 			json = ApiCall.GET(client, arg0[0]);
-			Logger.t("json").d(json);
 
 
 			// ### ITS API
@@ -170,7 +168,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 						jsonArray.put(jsonResource);
 					}
 				}
-				Logger.t("jsonArray").d(jsonArray);
+
 				int size = jsonArray.length();
 				int tmp_street_length = 0;
 				for(int k = 0 ; k < size ; k++){
@@ -284,7 +282,6 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 			// ### GOOGLE API
 			else {
 				JSONObject jsonResource = new JSONObject(json);
-				Logger.t("json").d(jsonResource);
 
 				// Log.wtf("GG ROUTE",jsonResource.getJSONArray("routes").getJSONObject(0).toString());
 				JSONArray legs = jsonResource.getJSONArray("routes")

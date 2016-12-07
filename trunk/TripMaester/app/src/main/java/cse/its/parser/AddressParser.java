@@ -9,8 +9,6 @@ import android.os.AsyncTask;
 import android.util.Xml;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -92,8 +90,6 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 		catch(NullPointerException e){
 			e.printStackTrace();
 		}
-		Logger.t("xml").d(address);
-
 		return address;
 	}
 

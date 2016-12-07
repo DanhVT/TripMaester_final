@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-import com.orhanobut.logger.Logger;
+
 import org.osmdroid.views.MapView;
+
 import java.io.IOException;
+
 import group.traffice.nhn.common.StaticVariable;
 import okhttp3.OkHttpClient;
 import vn.edu.hcmut.its.tripmaester.R;
@@ -69,7 +71,6 @@ public class SegmentIDParser extends AsyncTask<String, Void, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 		super.onPostExecute(result);
-		Logger.t("result").d(result);
 		// Log.wtf("SegmentId", "Mode " + mode + " " + result);
 		if (mode == DESINATION_MODE) {// destination segment
 			StaticVariable.DES_SEGMENT_ID = result;

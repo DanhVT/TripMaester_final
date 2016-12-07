@@ -41,7 +41,9 @@ import group.traffice.nhn.common.Utilities;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
@@ -50,6 +52,7 @@ import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
 
 import static group.traffic.nhn.map.MapFragment.mMapView;
+import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
 
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
@@ -833,29 +836,39 @@ public class HttpManager {
         return responseJson;
     }
 
-    //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
-    public static JSONObject uploadVideo(File file, String fileName, String type, String MIME) {
-        String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
-        String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
-        MediaType MEDIA_TYPE = MediaType.parse(MIME);
-        JSONObject responseJson = new JSONObject();
-        MultipartBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("filename", fileName)
-                .addFormDataPart("pointId", POINT_ID)
-                .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                .addFormDataPart("dataVideo", fileName+"."+type, RequestBody.create(MEDIA_TYPE, file))
-                .build();
-        String str_response = null;
-        try {
-            str_response = ApiCall.POST(client, URL_UPLOAD, requestBody);
-            responseJson = new JSONObject(str_response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return responseJson;
+    public static void uploadFile(final String filePath, final String pointId) {
+        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File f  = new File(filePath);
+                String content_type  = getMimeType(f.getPath());
+                String file_path = f.getAbsolutePath();
+                OkHttpClient client = new OkHttpClient();
+                RequestBody file_body = RequestBody.create(MediaType.parse(content_type),f);
+                RequestBody request_body = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("filename", filePath)
+                        .addFormDataPart("pointId", pointId)
+                        .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                        .addFormDataPart("dataImage",file_path.substring(file_path.lastIndexOf("/")+1), file_body)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(URL_UPLOAD)
+                        .post(request_body)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+
+                    if(!response.isSuccessful()){
+                        throw new IOException("Error : "+response);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 

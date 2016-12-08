@@ -21,6 +21,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
 
+
     <application
         android:name=".TMApp"
         android:allowBackup="true"

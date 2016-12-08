@@ -2090,7 +2090,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public void showCameraVideo() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         fileUri = CameraHelper.getOutputMediaFile();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileUri));
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         startActivityForResult(intent, REQUEST_TAKE_VIDEO);
     }

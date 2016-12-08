@@ -1,6 +1,8 @@
 package vn.edu.hcmut.its.tripmaester;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
@@ -37,4 +39,11 @@ public class TMApp extends Application {
         //initial Preference
         TMPref.initialize(this);
     }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
 }

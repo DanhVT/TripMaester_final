@@ -1603,8 +1603,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                                     for(int k=0; k <lst_markers.size(); k++){
                                                                                                         if(lst_markers.get(k).pointIndex > finalJ) break;
                                                                                                         if(lst_markers.get(k).pointIndex < finalJ) continue;
-                                                                                                        String data1 = lst_markers.get(k).getData();
-                                                                                                        HttpManager.uploadImage(new File(data1), data1, CameraHelper.getMimeType(data1), pointId);
+                                                                                                        String path = lst_markers.get(k).getData();
+                                                                                                        HttpManager.uploadFile(path, pointId);
                                                                                                     }
                                                                                                 }
                                                                                                 catch(JSONException ex){
@@ -1885,6 +1885,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
             }
         };
+
         startMarker.getMarker().setInfoWindow(viaPOIInfoWindow);
         startMarker.getMarker().setDraggable(true);
         // startMarker.setOnMarkerDragListener(new
@@ -2060,10 +2061,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 isShowDialogMarker = false;
                                 lstMarker.get(selectMarkerChoice).getMarker()
                                         .showInfoWindow();
-                                Intent intent = new Intent(getActivity(), VideoPlayer.class);
-                                String url = lstMarker.get(selectMarkerChoice).getData();
-                                intent.putExtra("URL", url);
-                                startActivity(intent);
+//                                Intent intent = new Intent(getActivity(), VideoPlayer.class);
+//                                String url = lstMarker.get(selectMarkerChoice).getData();
+//                                intent.putExtra("URL", url);
+//                                startActivity(intent);
                                     /* User clicked Yes so do some stuff */
                             }
                         })

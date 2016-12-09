@@ -253,19 +253,15 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         comment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View comment_dialog = mInflater.inflate(
-                        R.layout.comment_dialog, null);
-                final ListView mViewDialogContent = (ListView) comment_dialog
-                        .findViewById(R.id.context_menu_comment);
+                View comment_dialog = mInflater.inflate(R.layout.comment_dialog, null);
+                final ListView mViewDialogContent = (ListView) comment_dialog.findViewById(R.id.context_menu_comment);
 
                 ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
-                final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(
-                        mContext, lstMessage);
+                final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(mContext, lstMessage);
 
                 mViewDialogContent.setAdapter(mMessageDetailAdapter);
                 tripsFragment.runAsyncTask(mMessageDetailAdapter, pos);
-                Button btn_comment = (Button) comment_dialog
-                        .findViewById(R.id.btn_comment);
+                Button btn_comment = (Button) comment_dialog.findViewById(R.id.btn_comment);
 
                 final EditText txt_comment = (EditText) comment_dialog
                         .findViewById(R.id.txt_comment);

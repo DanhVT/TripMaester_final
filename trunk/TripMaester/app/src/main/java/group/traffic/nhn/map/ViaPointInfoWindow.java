@@ -54,17 +54,20 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+
+                System.out.println("Danh");
+
                 // open gallery Image
                 if (lstImage.size() > 1) {
 //					new AlertDialog.Builder(mapView.getContext())
 //							.setTitle("SHARE")
-//						
+//
 //							.setSingleChoiceItems(mMessageDetailAdapter, 0, new View.OnClickListener() {
-//								
+//
 //								@Override
 //								public void onClick(View v) {
 //									// TODO Auto-generated method stub
-//									
+//
 //								}
 //							})
 //							.setPositiveButton(R.string.alert_dialog_share,

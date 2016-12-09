@@ -7,37 +7,22 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import group.traffic.nhn.map.MapFragment;
-import group.traffic.nhn.map.ViaPointInfoWindow;
 import group.traffic.nhn.message.MessageItem;
 import group.traffic.nhn.trip.PointItem;
 import group.traffic.nhn.user.FriendItem;
 import group.traffic.nhn.user.User;
-import group.traffice.nhn.common.Utilities;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -49,7 +34,6 @@ import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
-import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
 
 import static group.traffic.nhn.map.MapFragment.mMapView;
 import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
@@ -211,16 +195,18 @@ public class HttpManager {
         ArrayList<MessageItem> lstMessages = new ArrayList<MessageItem>();
         try {
             JSONArray response_json = new JSONArray();
-            List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
-            nameValuePairs.add(new BasicNameValuePair("tripId", tripId));
-
-            InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_GET_COMMENTS_TRIP);
             // http://traffic.hcmut.edu.vn/ITS/rest/user/login
 
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .addFormDataPart("tripId", tripId)
+                    .build();
+            String str_response = null;
+
+            str_response = ApiCall.POST(client, URL_GET_COMMENTS_TRIP, requestBody);
             JSONObject jsonObj = new JSONObject(str_response);
+
             if (!jsonObj.isNull("listComment")) {
                 response_json = new JSONArray(jsonObj.getString("listComment"));
             }
@@ -263,14 +249,14 @@ public class HttpManager {
     public static JSONArray getListFriend() {
         JSONArray response_json = new JSONArray();
         try {
-            List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .build();
+            String str_response = null;
 
-            InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_GET_FRIENDS);
-            // http://traffic.hcmut.edu.vn/ITS/rest/user/login
+            str_response = ApiCall.POST(client, URL_GET_FRIENDS, requestBody);
 
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
             JSONObject jsonObj = new JSONObject(str_response);
             if (!jsonObj.isNull("listFriend")) {
                 response_json = new JSONArray(jsonObj.getString("listFriend"));
@@ -456,10 +442,11 @@ public class HttpManager {
                 + "/" + user.getImei();
 
         try {
-            InputStream response_stream = sendJson_HttpGet(http_get_string);
-            // http://traffic.hcmut.edu.vn/ITS/rest/user/login
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
+
+            HttpConnection connection = new HttpConnection();
+            connection.doGet(http_get_string);
+            String str_response = connection.getContentAsString();
+
             response_json = new JSONObject(str_response);
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
@@ -519,15 +506,16 @@ public class HttpManager {
     public static JSONObject getTripInfo(String tripID, String tokenId) {
         JSONObject response_json = new JSONObject();
         try {
-            List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
-            nameValuePairs.add(new BasicNameValuePair("tripId", tripID));
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .addFormDataPart("tripId", tripID)
+                    .build();
+            String str_response = null;
 
-            InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_GET_TRIP_INFO);
-            // http://traffic.hcmut.edu.vn/ITS/rest/user/login
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
-            response_json = new JSONObject(str_response);
+            str_response = ApiCall.POST(client, URL_GET_TRIP_INFO, requestBody);
+            JSONObject jsonObj = new JSONObject(str_response);
+
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
             // StaticVariable.user.setTokenId(tokenId);
@@ -597,34 +585,27 @@ public class HttpManager {
     public static JSONObject login() {
         JSONObject response_json = new JSONObject();
         try {
-            List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("name", LoginManager.getInstance().getUser().getName()));
-            nameValuePairs.add(new BasicNameValuePair("userId", LoginManager.getInstance().getUser().getId()));
-            nameValuePairs.add(new BasicNameValuePair("firstName",
-                    LoginManager.getInstance().getUser().getFirst_name()));
-            nameValuePairs.add(new BasicNameValuePair("lastName",
-                    LoginManager.getInstance().getUser().getLast_name()));
-            nameValuePairs.add(new BasicNameValuePair("birthday",
-                    LoginManager.getInstance().getUser().getBirthday()));
-            nameValuePairs.add(new BasicNameValuePair("email", LoginManager.getInstance().getUser().getEmail()));
-            nameValuePairs.add(new BasicNameValuePair("updatedime",
-                    LoginManager.getInstance().getUser().getUpdated_time()));
-            nameValuePairs.add(new BasicNameValuePair("gender",
-                    LoginManager.getInstance().getUser().getGender()));
-            nameValuePairs.add(new BasicNameValuePair("local", LoginManager.getInstance().getUser().getLocal()));
-            nameValuePairs.add(new BasicNameValuePair("verified",
-                    LoginManager.getInstance().getUser().getVerified()));
-            nameValuePairs.add(new BasicNameValuePair("link", LoginManager.getInstance().getUser().getLink()));
-            nameValuePairs.add(new BasicNameValuePair("timezone",
-                    LoginManager.getInstance().getUser().getTimezone()));
-            nameValuePairs.add(new BasicNameValuePair("imei", LoginManager.getInstance().getUser().getImei()));
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("name", LoginManager.getInstance().getUser().getName())
+                    .addFormDataPart("userId", LoginManager.getInstance().getUser().getId())
+                    .addFormDataPart("firstName", LoginManager.getInstance().getUser().getFirst_name())
+                    .addFormDataPart("lastName", LoginManager.getInstance().getUser().getLast_name())
+                    .addFormDataPart("birthday", LoginManager.getInstance().getUser().getBirthday())
+                    .addFormDataPart("email", LoginManager.getInstance().getUser().getEmail())
+                    .addFormDataPart("updatedime", LoginManager.getInstance().getUser().getUpdated_time())
+                    .addFormDataPart("gender", LoginManager.getInstance().getUser().getGender())
+                    .addFormDataPart("local", LoginManager.getInstance().getUser().getLocal())
+                    .addFormDataPart("verified", LoginManager.getInstance().getUser().getVerified())
+                    .addFormDataPart("link", LoginManager.getInstance().getUser().getLink())
+                    .addFormDataPart("timezone", LoginManager.getInstance().getUser().getTimezone())
+                    .addFormDataPart("imei", LoginManager.getInstance().getUser().getImei())
+                    .build();
+            String str_response = null;
 
-            InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_LOGIN);
-            // http://traffic.hcmut.edu.vn/ITS/rest/user/login
-
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
+            str_response = ApiCall.POST(client, URL_LOGIN, requestBody);
             response_json = new JSONObject(str_response);
+
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
             // StaticVariable.user.setTokenId(tokenId);
@@ -648,13 +629,13 @@ public class HttpManager {
     public static JSONObject logout() {
         JSONObject response_json = new JSONObject();
         try {
-            List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
-            InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_LOGOUT);
-            // http://traffic.hcmut.edu.vn/ITS/rest/user/login
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .build();
 
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
+            String str_response = ApiCall.POST(client, URL_LOGOUT, requestBody);
+
             response_json = new JSONObject(str_response);
         } catch (Exception ex) {
             Log.i(TAG, ex.getMessage());
@@ -672,15 +653,16 @@ public class HttpManager {
     public static JSONObject saveFriends(List<String> lstFriendId) {
         JSONObject response_json = new JSONObject();
         try {
-            List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
-            nameValuePairs.add(new BasicNameValuePair("fromSocialNetwork", LoginManager.getInstance().getUser().getTokenId()));
-            nameValuePairs.add(new BasicNameValuePair("listFriend", lstFriendId.toString()));
-
-            InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_SAVE_FRIENDS);
             // http://traffic.hcmut.edu.vn/ITS/rest/user/login
-            String str_response = Utilities
-                    .readStringFromInputStream(response_stream);
+            MultipartBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .addFormDataPart("fromSocialNetwork", LoginManager.getInstance().getUser().getTokenId())
+                    .addFormDataPart("listFriend", lstFriendId.toString())
+                    .build();
+
+            String str_response = ApiCall.POST(client, URL_SAVE_FRIENDS, requestBody);
+
             response_json = new JSONObject(str_response);
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
@@ -730,40 +712,6 @@ public class HttpManager {
                 });
     }
 
-    @Deprecated
-    public static InputStream sendJson_HttpGet(String URL) {
-        // Thread t = new Thread() {
-        InputStream in = null;
-        // public void run() {
-        // Looper.prepare(); //For Preparing Message Pool for the child Thread
-        HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
-        // Limit
-        HttpResponse response;
-
-        try {
-            HttpGet get = new HttpGet(URL);
-            response = client.execute(get);
-
-			/* Checking response */
-            if (response != null) {
-                in = response.getEntity().getContent(); // Get the data in the
-                // entity
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error_HttpPost", e.getMessage());
-        }
-
-        // Looper.loop(); //Loop in the message queue
-        // }
-        // };
-
-        // t.start();
-        return in;
-    }
-
     /*
     * KenK11
     * POST: Upload image
@@ -772,43 +720,6 @@ public class HttpManager {
     * tokenID
     * dataImage : image convert to string base64
     * */
-
-    @Deprecated
-    public static InputStream sendJson_HttpPost(List<BasicNameValuePair> nameValuePairs, String URL) {
-        // Thread t = new Thread() {
-        InputStream in = null;
-        // public void run() {
-        // Looper.prepare(); //For Preparing Message Pool for the child Thread
-        HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
-        // Limit
-        HttpResponse response;
-
-        try {
-            HttpPost post = new HttpPost(URL);
-
-            post.setHeader(new BasicHeader(HTTP.CONTENT_TYPE,
-                    "application/x-www-form-urlencoded"));
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            response = client.execute(post);
-
-			/* Checking response */
-            if (response != null) {
-                in = response.getEntity().getContent(); // Get the data in the
-                // entity
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error_HttpPost", e.getMessage());
-        }
-
-        // Looper.loop(); //Loop in the message queue
-        // }
-        // };
-
-        // t.start();
-        return in;
-    }
 
     //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
     public static JSONObject uploadImage(File file, String fileName, String MIME, String pointId) {

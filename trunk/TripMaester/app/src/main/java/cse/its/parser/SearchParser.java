@@ -87,14 +87,9 @@ public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 
 					String address = link.text();
 
-					if (address
-							.indexOf(", "
-									+ context.getResources().getString(
+					if (address.indexOf(", "+ context.getResources().getString(
 											R.string.tp_hcm)) != -1)
-						address = address.substring(
-								0,
-								address.indexOf(", "
-										+ context.getResources().getString(
+						address = address.substring(0,	address.indexOf(", "+ context.getResources().getString(
 												R.string.tp_hcm)));
 					address_list.add(address);
 				}

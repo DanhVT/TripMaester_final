@@ -40,8 +40,8 @@ public class GGStreetNameParser extends AsyncTask<String, Void, String> {
 		try {
 			HttpConnection connection = new HttpConnection();
 			connection.doGet(params[0]);
-			InputStream stream = connection.getStream();
-			if (stream == null){
+			json= connection.getContentAsString();
+			if (json == null){
 				return null;
 			}
 			JSONObject jsonResource = new JSONObject(json);

@@ -94,6 +94,8 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     .findViewById(R.id.txt_Item_list_trip_Place_End_trip);
             viewHolder.txtNumberLikesTrip = (TextView) rowView
                     .findViewById(R.id.txt_item_list_trip_number_likes);
+            viewHolder.likeButton = (TextView) rowView
+                    .findViewById(R.id.likeButton);
             viewHolder.txtNumberCommentsTrip = (TextView) rowView
                     .findViewById(R.id.txt_item_list_trip_number_comments);
 
@@ -112,7 +114,17 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
         viewHolder.txtPlaceEndTrip.setText(mTrip.getPlaceEndTrip());
         viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
+
         viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
+
+        if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
+            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
+        }
+        else{
+            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_like);
+        }
+
+
         viewHolder.imgAvaUserCreateTrip.setImageResource(mTrip
                 .getAvaUserCreateTrip());
 
@@ -226,8 +238,8 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         // ================
 
         //like button
-        LinearLayout likeButton = (LinearLayout) rowView
-                .findViewById(R.id.item_list_trip_button_like);
+        final LinearLayout likeButton = (LinearLayout) rowView.findViewById(R.id.item_list_trip_button_like);
+
         likeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -236,6 +248,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                 String[] temp = strLike.split(" ");
                 if (temp.length > 1) {
                     int trip = Integer.parseInt(temp[0]);
+//                    if(likeButton.getResources().getDrawable())
                     trip++;
                     String tmpStr10 = String.valueOf(trip);
                     viewHolder.txtNumberLikesTrip.setText(tmpStr10 + " likes");
@@ -248,8 +261,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         });
 
         // button commnent click
-        LinearLayout comment_button = (LinearLayout) rowView
-                .findViewById(R.id.item_list_trip_button_comment);
+        LinearLayout comment_button = (LinearLayout) rowView.findViewById(R.id.item_list_trip_button_comment);
         comment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -297,8 +309,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
                 // FIXME: Load trip message
 //				loadMessageOfOneUser(pos, lstMessage);
-                lstMessage = HttpManager
-                        .getListCommentTrip(getTrips().get(pos).getTripId());
+                lstMessage = HttpManager.getListCommentTrip(getTrips().get(pos).getTripId());
 
                 // comment_dialog = mInflater.inflate(
                 // R.layout.comment_dialog, null);
@@ -315,7 +326,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                 AlertDialog mDialog = alter.create();
                 mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-//				mViewDialogContent.setAdapter(mMessageDetailAdapter);
+				mViewDialogContent.setAdapter(mMessageDetailAdapter); //Change DANH_VO
 
                 mMessageDetailAdapter.notifyDataSetChanged();
 
@@ -333,13 +344,11 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         viewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        HttpManager
-                .getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
+        HttpManager.getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
                     @Override
                     public void onCompleted(ArrayList<GeoPoint> waypoints, Object tag, Exception e) {
                         if (waypoints.size() > 0) {
                             getTrips().get(pos).setLstWayPoints(waypoints);
-
                             ArrayList<Road> lstRoads = new ArrayList<Road>();
                             Road road1 = new Road(getTrips().get(pos).getLstWayPoints());
                             lstRoads.add(road1);
@@ -391,5 +400,6 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         TextView txtNumberLikesTrip;
         TextView txtNumberCommentsTrip;
         ImageView imgAvaUserCreateTrip;
+        TextView likeButton;
     }
 }

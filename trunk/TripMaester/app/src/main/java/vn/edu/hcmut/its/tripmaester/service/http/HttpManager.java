@@ -41,7 +41,7 @@ import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
 public class HttpManager {
-    static final String URL_COUNT_LIKE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/like/CountLikeOnTrip";
+    static final String URL_GET_LIKE_INFO_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/like/GetLikeInfoOnTrip";
     static final String URL_CREATE_POINT_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/tripdetails/CreatePointOnTrip";
     static final String URL_CREATE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/CreateTrip";// tokenID/[list
     static final String URL_GET_COMMENTS_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/comment/GetListCommentOnTrip";
@@ -98,8 +98,8 @@ public class HttpManager {
 		+ IRequest data: { tokenId: "...", tripId:"..."}
 		+ Response data:
 	 */
-    public static void countLikeTrip(String tripID, Context context, final ICallback<JSONObject> callback) {
-        Ion.with(context).load(URL_COUNT_LIKE_TRIP)
+    public static void getLikeInfoOnTrip(String tripID, Context context, final ICallback<JSONObject> callback) {
+        Ion.with(context).load(URL_GET_LIKE_INFO_TRIP)
                 .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
                 .setBodyParameter("tripId", tripID)
                 .asString()
@@ -109,14 +109,7 @@ public class HttpManager {
                         if (e == null) {
                             try {
                                 callback.onCompleted(new JSONObject(str_response), null, null);
-                                // if (response_json.isNull("tokenID")) {
-                                // String tokenId = response_json.get("tokenID").toString();
-                                // StaticVariable.user.setTokenId(tokenId);
-                                // }
-                                // if (response_json.isNull("status")) {
-                                // boolean status = response_json.getBoolean("status");
-                                // StaticVariable.user.setStatus(status);
-                                // }
+
                             } catch (Exception ex) {
                                 callback.onCompleted(null, null, ex);
                             }

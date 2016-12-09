@@ -23,12 +23,13 @@ public class Trip implements Serializable {
     String numberLikeTrip;
     String numberCommentTrip;
     String privacy;
+
     int avaUserCreateTrip;
     private String tripId;
     private String dateTime;
     private String userIdOwner;
     private ArrayList<GeoPoint> lstWayPoints = new ArrayList<>();
-
+    public ArrayList<String> lstUserIdLike = new ArrayList<>();
     public int getAvaUserCreateTrip() {
         return avaUserCreateTrip;
     }
@@ -153,6 +154,18 @@ public class Trip implements Serializable {
 
     public String getPrivacy() {
         return privacy;
+    }
+
+    public void setLsitUserIdLike(ArrayList<String> lstUserIdLike){
+        this.lstUserIdLike = lstUserIdLike;
+    }
+    public boolean isUserLikeTrip(String userId){
+        for (int i=0; i< this.lstUserIdLike.size(); i++){
+            if(this.lstUserIdLike.get(i) == userId){
+                return true;
+            }
+        }
+        return false;
     }
 }
 

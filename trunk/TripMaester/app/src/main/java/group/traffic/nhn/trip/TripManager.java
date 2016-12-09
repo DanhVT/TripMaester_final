@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import group.traffic.nhn.message.MessageItem;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
@@ -18,7 +19,7 @@ import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 
 public class TripManager {
     public static ArrayList<Trip> lst_user_trip = new ArrayList<Trip>();
-
+    public static ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
     // for demo only
     public static void addDataTrip(final Context context, final ITripCallback callback) {
         //load trip
@@ -53,12 +54,21 @@ public class TripManager {
                         trip1.setUserName(LoginManager.getInstance().getUser().getName());
                         trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
 
-                        HttpManager.countLikeTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
+                        HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                             @Override
-                            public void onCompleted(JSONObject jsonLike,  Object tag,Exception e) {
-                                if (!jsonLike.isNull("numLike")) {
+                            public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
+                                if (!LikeInfo.isNull("LikeInfo")) {
                                     try {
-                                        trip1.setNumberLikeTrip(jsonLike.getString("numLike") + " likes");
+//                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
+                                        JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
+                                        trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                        ArrayList<String> likers = new ArrayList<String>();
+                                        for (int k =0; k< listLiker.length() ; k++){
+                                            JSONObject json = new JSONObject(listLiker.getString(k));
+                                            likers.add(json.getString("userId"));
+                                        }
+                                        trip1.setLsitUserIdLike(likers);
+
                                     } catch (JSONException e1) {
                                         e1.printStackTrace();
                                     }
@@ -67,8 +77,8 @@ public class TripManager {
                             }
                         });//numLike
                         //FIXME: get list comment, count of likes
-
-                        trip1.setNumberCommentTrip("0 comments");
+                        lstMessage = HttpManager.getListCommentTrip(trip1.getTripId());
+                        trip1.setNumberCommentTrip(lstMessage.size()+ " comments");
                         //======
 
                         addTrip(trip1);
@@ -116,12 +126,21 @@ public class TripManager {
                         trip1.setUserName(LoginManager.getInstance().getUser().getName());
                         trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
 
-                        HttpManager.countLikeTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
+                        HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                             @Override
-                            public void onCompleted(JSONObject jsonLike,  Object tag,Exception e) {
-                                if (!jsonLike.isNull("numLike")) {
+                            public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
+                                if (!LikeInfo.isNull("LikeInfo")) {
                                     try {
-                                        trip1.setNumberLikeTrip(jsonLike.getString("numLike") + " likes");
+//                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
+                                        JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
+                                        trip1.setNumberLikeTrip(listLiker.length() + " likes");
+
+                                        ArrayList<String> likers = new ArrayList<String>();
+                                        for (int k =0; k< listLiker.length() ; k++){
+                                            JSONObject json = new JSONObject(listLiker.getString(k));
+                                            likers.add(json.getString("userId"));
+                                        }
+                                        trip1.setLsitUserIdLike(likers);
                                     } catch (JSONException e1) {
                                         e1.printStackTrace();
                                     }
@@ -131,7 +150,8 @@ public class TripManager {
                         });//numLike
                         // FIXME: get list comment, count of likes
 
-                        trip1.setNumberCommentTrip("0 comments");
+                        lstMessage = HttpManager.getListCommentTrip(trip1.getTripId());
+                        trip1.setNumberCommentTrip(lstMessage.size()+ " comments");
                         //======
 
                         addTrip(trip1);
@@ -199,9 +219,30 @@ public class TripManager {
 
                                 //FIXME: get count comments, count of likes
 //					HttpManager.getListCommentTrip(trip1.getTripId());
+                                HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
+                                    @Override
+                                    public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
+                                        if (!LikeInfo.isNull("LikeInfo")) {
+                                            try {
+//                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
+                                                JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
+                                                trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                                ArrayList<String> likers = new ArrayList<String>();
+                                                for (int k =0; k< listLiker.length() ; k++){
+                                                    JSONObject json = new JSONObject(listLiker.getString(k));
+                                                    likers.add(json.getString("userId"));
+                                                }
+                                                trip1.setLsitUserIdLike(likers);
+                                            } catch (JSONException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
 
-                                trip1.setNumberLikeTrip("0 likes");
-                                trip1.setNumberCommentTrip("0 comments");
+                                    }
+                                });//numLike
+//                                trip1.setNumberCommentTrip("0 comments");
+                                lstMessage = HttpManager.getListCommentTrip(trip1.getTripId());
+                                trip1.setNumberCommentTrip(lstMessage.size()+ " comments");
                                 //======
 //					lst_user_trip.addTrip(trip1);
                                 addTrip(trip1);

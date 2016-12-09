@@ -97,6 +97,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -2088,11 +2089,21 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     public void showCameraVideo() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        fileUri = CameraHelper.getOutputMediaFile();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(fileUri));
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        startActivityForResult(intent, REQUEST_TAKE_VIDEO);
+        File storageDir = new File(Environment
+                .getExternalStorageDirectory() + "/filetoupload/");
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+        try {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            fileUri = new File(storageDir, timeStamp + "_video.mp4");
+            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(fileUri));
+            startActivityForResult(intent, REQUEST_TAKE_VIDEO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public void showCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

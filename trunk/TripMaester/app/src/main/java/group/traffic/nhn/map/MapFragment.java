@@ -2376,6 +2376,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         mMapView.invalidate();
     }
 
+    public void animateToCurrentLocation() {
+        mMapController.setZoom(Constants.ZOOM_LEVEL);
+        if (myLocationOverlay.getLocation() != null) {
+            mMapController.animateTo(myLocationOverlay.getLocation());
+        } else {
+            return;
+        }
+    }
+
     //FIXME ===========updateUIWithRoad
     void updateUIWithRoad(Road road) {
         mRoadNodeMarkers.getItems().clear();

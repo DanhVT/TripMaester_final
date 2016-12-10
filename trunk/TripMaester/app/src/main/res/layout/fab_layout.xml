@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.FloatingActionButton
+        app:useCompatPadding="true"
+        style="@style/floating_action_button"
         android:id="@+id/fab_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,6 +17,8 @@
         app:backgroundTint="#FF0000"/>
 
     <android.support.design.widget.FloatingActionButton
+        app:useCompatPadding="true"
+        style="@style/floating_action_button"
         android:id="@+id/fab_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

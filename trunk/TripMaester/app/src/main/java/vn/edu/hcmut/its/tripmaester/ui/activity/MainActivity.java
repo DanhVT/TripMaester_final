@@ -57,6 +57,8 @@ import vn.edu.hcmut.its.tripmaester.ui.IMainScreen;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.FriendsFragment;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 
+import static group.traffic.nhn.map.MapFragment.fileUri;
+
 // TODO: 12/16/15 Not review yet
 public class MainActivity extends FragmentActivity implements IMainScreen {
     public static final int LEFT_MENU__USER = 1;
@@ -330,6 +332,23 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 // App code
             }
         };
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save file url in bundle as it will be null on screen orientation
+        // changes
+        outState.putParcelable("file_uri", fileUri);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // get the file url
+        fileUri = savedInstanceState.getParcelable("file_uri");
     }
 
     /**

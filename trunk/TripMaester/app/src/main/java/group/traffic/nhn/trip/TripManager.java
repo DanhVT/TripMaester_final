@@ -57,9 +57,8 @@ public class TripManager {
                         HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                             @Override
                             public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
-                                if (!LikeInfo.isNull("LikeInfo")) {
-                                    try {
-//                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
+                                try {
+                                    if (!LikeInfo.isNull("LikeInfo")) {
                                         JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
                                         trip1.setNumberLikeTrip(listLiker.length() + " likes");
                                         ArrayList<String> likers = new ArrayList<String>();
@@ -68,10 +67,11 @@ public class TripManager {
                                             likers.add(json.getString("userId"));
                                         }
                                         trip1.setLsitUserIdLike(likers);
-
-                                    } catch (JSONException e1) {
-                                        e1.printStackTrace();
                                     }
+                                } catch (JSONException e1) {
+                                    e1.printStackTrace();
+                                } catch(NullPointerException ex){
+                                    ex.printStackTrace();
                                 }
 
                             }
@@ -129,21 +129,24 @@ public class TripManager {
                         HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                             @Override
                             public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
-                                if (!LikeInfo.isNull("LikeInfo")) {
-                                    try {
-//                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
-                                        JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
-                                        trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                try {
+                                    if (!LikeInfo.isNull("LikeInfo")) {
 
-                                        ArrayList<String> likers = new ArrayList<String>();
-                                        for (int k =0; k< listLiker.length() ; k++){
-                                            JSONObject json = new JSONObject(listLiker.getString(k));
-                                            likers.add(json.getString("userId"));
-                                        }
-                                        trip1.setLsitUserIdLike(likers);
-                                    } catch (JSONException e1) {
-                                        e1.printStackTrace();
+    //                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
+                                            JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
+                                            trip1.setNumberLikeTrip(listLiker.length() + " likes");
+
+                                            ArrayList<String> likers = new ArrayList<String>();
+                                            for (int k =0; k< listLiker.length() ; k++){
+                                                JSONObject json = new JSONObject(listLiker.getString(k));
+                                                likers.add(json.getString("userId"));
+                                            }
+                                            trip1.setLsitUserIdLike(likers);
                                     }
+                                } catch (JSONException e1) {
+                                    e1.printStackTrace();
+                                }catch (NullPointerException ex){
+                                    ex.printStackTrace();
                                 }
 
                             }
@@ -222,20 +225,22 @@ public class TripManager {
                                 HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                                     @Override
                                     public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
-                                        if (!LikeInfo.isNull("LikeInfo")) {
-                                            try {
-//                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
-                                                JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
-                                                trip1.setNumberLikeTrip(listLiker.length() + " likes");
-                                                ArrayList<String> likers = new ArrayList<String>();
-                                                for (int k =0; k< listLiker.length() ; k++){
-                                                    JSONObject json = new JSONObject(listLiker.getString(k));
-                                                    likers.add(json.getString("userId"));
-                                                }
-                                                trip1.setLsitUserIdLike(likers);
-                                            } catch (JSONException e1) {
-                                                e1.printStackTrace();
+                                        try {
+                                            if (!LikeInfo.isNull("LikeInfo")) {
+                                                    JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
+                                                    trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                                    ArrayList<String> likers = new ArrayList<String>();
+                                                    for (int k =0; k< listLiker.length() ; k++){
+                                                        JSONObject json = new JSONObject(listLiker.getString(k));
+                                                        likers.add(json.getString("userId"));
+                                                    }
+                                                    trip1.setLsitUserIdLike(likers);
+
                                             }
+                                        } catch (JSONException e1) {
+                                            e1.printStackTrace();
+                                        }catch (NullPointerException ex){
+                                            ex.printStackTrace();
                                         }
 
                                     }

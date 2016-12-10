@@ -2,6 +2,7 @@ package vn.edu.hcmut.its.tripmaester.helper;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
@@ -11,12 +12,17 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by danh-vo on 28/11/2016.
  */
 
 public class CameraHelper {
+    // directory name to store captured images and videos
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
     /**
      * Iterate over supported camera video sizes to see which one best fits the
      * dimensions of the given view while maintaining the aspect ratio. If none can,
@@ -146,6 +152,12 @@ public class CameraHelper {
 //                "VID_"+ timeStamp + ".mp4");
 //        return mediaFile;
 //    }
+
+
+    /*
+     * returning image / video
+     */
+
 
     public static String getMimeType(String url) {
         String type = null;

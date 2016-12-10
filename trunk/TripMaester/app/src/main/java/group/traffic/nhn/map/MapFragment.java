@@ -136,19 +136,22 @@ import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
-import vn.edu.hcmut.its.tripmaester.helper.CameraHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
-import vn.edu.hcmut.its.tripmaester.ui.activity.VideoPlayer;
 
 public class MapFragment extends Fragment implements MapEventsReceiver,
         SensorEventListener {
     private static final String TAG = MapFragment.class.getSimpleName();
     // Storage for camera image URI components
-    private final static int REQUEST_TAKE_PHOTO = 100;
-    private final static int REQUEST_TAKE_VIDEO = 200;
-    private final static String FOLDER_NAME = "TempFolder";
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
+
+    // directory name to store captured images and videos
+    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
+
     public static MapFragment Instance = null;
     /**
      * Async task to get the road in a separate thread.
@@ -249,8 +252,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private List<GeoPoint> waypoints;
     private RoadManager roadManager;
     private Polyline roadOverlay;
-    private Button btn_capture;
-    private String currentPath = null;
     private View rootView;
     // Required for camera operations in order to save the image file on resume.
     private static List<MyMarker> lst_markers;
@@ -266,7 +267,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private List<Bitmap> lst_user_capture_bitmap;
     private boolean isCapturing;
     private ReceiverLocationChange mReceiverLocationChange = new ReceiverLocationChange();
-    private File fileUri;
+    public static Uri fileUri;
 
     public MapFragment() {
 
@@ -727,24 +728,16 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try{
-            if (requestCode == REQUEST_TAKE_PHOTO) {
-                if(resultCode == Activity.RESULT_OK && fileUri.getPath() != null) {
-                    // Bundle extras = data.getExtras();
-                    // Bitmap imageBitmap = (Bitmap) extras.get("data");
-
-                    // Mimimum acceptable free memory you think your app needs
+            if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
+                if (resultCode == Activity.RESULT_OK) {
                     long minRunningMemory = (12024 * 12024);
-
                     Runtime runtime = Runtime.getRuntime();
-
                     if (runtime.freeMemory() < minRunningMemory)
                         System.gc();
 
                     String filePath = fileUri.getPath();
-
                     Bitmap imageBitmap = decodeSampledBitmapFromFile(filePath, 400, 600);// BitmapFactory.decodeFile(filePath,
                     // options);
-
                     if (lastLocation == null) {
                         lastLocation = mLocationManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -791,31 +784,39 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 .show();
 
                     }
-                    //JSONObject json  = HttpManager.uploadImage(mTempCameraPhotoFile.getPath());
-//                    new UploadAsync(filePath, CameraHelper.getMimeType(filePath), mContext).execute(fileUri);
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // user cancelled Image capture
+                    Toast.makeText(mainActivity,
+                            "User cancelled image capture", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    // failed to capture image
+                    Toast.makeText(mainActivity,
+                            "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
+                            .show();
                 }
-                else {
-                    Toast.makeText(mainActivity, mainActivity.getString(R.string.take_photo_fail),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            if (requestCode == REQUEST_TAKE_VIDEO) {
-                if(resultCode == Activity.RESULT_OK && fileUri.getPath() != null){
+            }
+            else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("cature", "video");
                     String filePath = fileUri.getPath();
                     Bitmap bmThumbnail;
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
                             MediaStore.Video.Thumbnails.MICRO_KIND);
                     GeoPoint geoPoint = new GeoPoint(lastLocation);
                     setMarker(geoPoint, bmThumbnail);
-
-//            File file = new File (currentPath);
-//            new UploadAsync(currentPath,  CameraHelper.getMimeType(currentPath) , mContext).execute(file);
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // user cancelled recording
+                    Toast.makeText(mainActivity,
+                            "User cancelled video recording", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    // failed to record video
+                    Toast.makeText(mainActivity,
+                            "Sorry! Failed to record video", Toast.LENGTH_SHORT)
+                            .show();
                 }
-                else{
-                    Toast.makeText(mainActivity, mainActivity.getString(R.string.take_video_fail), Toast.LENGTH_SHORT ).show();
-                }
-
             }
         }
         catch (NullPointerException ex){
@@ -2090,43 +2091,70 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     public void showCameraVideo() {
-        File storageDir = new File(Environment
-                .getExternalStorageDirectory() + "/filetoupload/");
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-        }
-        try {
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            fileUri = new File(storageDir, timeStamp + "_video.mp4");
-            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(fileUri));
-            startActivityForResult(intent, REQUEST_TAKE_VIDEO);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+
+        // set video quality
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+        // name
+
+        // start the video capture Intent
+        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+
     }
     public void showCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent
-                .resolveActivity(getActivity().getPackageManager()) != null) {
-            //KenK11 create folder for saving new image
-            File exportDir = new File(
-                    Environment.getExternalStorageDirectory(), FOLDER_NAME);
-            if (!exportDir.exists()) {
-                exportDir.mkdirs();
-            } else {
-                exportDir.delete();
-            }
-            fileUri = new File(exportDir, "/"
-                    + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg");
-            // Log.d(LOG_TAG, "/" + UUID.randomUUID().toString().replaceAll("-",
-            // "") + ".jpg");
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(fileUri));
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        // start the image capture Intent
+        startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
+
+    public Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    private static File getOutputMediaFile(int type) {
+        if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+            return null;
+        }
+
+        // External sdcard location
+        File mediaStorageDir = new File(
+                Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "TripCamera");
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "Oops! Failed create "
+                        + "TripCamera" + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
+
+
     /**
      * update current location
      */

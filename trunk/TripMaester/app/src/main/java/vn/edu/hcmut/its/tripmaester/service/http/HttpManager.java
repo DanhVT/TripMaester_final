@@ -472,7 +472,7 @@ public class HttpManager {
                         if (e == null) {
                             try {
                                 ArrayList<FriendItem> lstShareTrip = new ArrayList<>();
-                                JSONArray jsonObjArray = new JSONArray();
+                                JSONArray jsonObjArray = new JSONArray(str_response);  //TODO: Danhbkit
                                 for (int i = 0; i < jsonObjArray.length(); i++) {
                                     JSONObject jObj = new JSONObject(jsonObjArray.getString(i));
 

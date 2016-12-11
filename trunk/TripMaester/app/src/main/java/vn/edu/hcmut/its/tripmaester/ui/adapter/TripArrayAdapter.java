@@ -162,7 +162,6 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                                 } else {
                                     mListFriendsNotShare.add(mFriends.get(i));
                                 }
-
                             }
                             List<String> listItems = new ArrayList<String>();
                             for (int i = 0; i < mListFriendsNotShare.size(); i++) {

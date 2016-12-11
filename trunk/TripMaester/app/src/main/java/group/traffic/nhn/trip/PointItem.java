@@ -3,8 +3,6 @@
  */
 package group.traffic.nhn.trip;
 
-import java.io.Serializable;
-
 /**
  * @author Thanh
  *

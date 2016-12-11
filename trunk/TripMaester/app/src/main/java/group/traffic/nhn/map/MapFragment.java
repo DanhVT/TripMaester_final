@@ -104,8 +104,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.UUID;
-
 import cse.its.adapter.ContextMenuAdapter;
 import cse.its.adapter.StreetListAdapter;
 import cse.its.dbhelper.NodeDrawable;
@@ -136,6 +134,7 @@ import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
@@ -150,7 +149,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     // directory name to store captured images and videos
-    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
 
     public static MapFragment Instance = null;
     /**
@@ -164,7 +162,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private static List<Overlay> mOverlays;
     private static String mDeviceId;
     private static LocationSender mLocationSender;
-    private static RouteParser mRouteParserController = null;
     public static ArrayList<MyMarker> listMarkerTrip;
 
     /**
@@ -747,7 +744,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     // if user want to capture more image or not
                     if (!isCapturing) {
                         GeoPoint geoPoint = new GeoPoint(lastLocation);
-                        setMarker(geoPoint, imageBitmap);
+                        setMarker(geoPoint, imageBitmap, MEDIA_TYPE_IMAGE);
 
                     } else {
                         // save to list image of marker
@@ -805,7 +802,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
                             MediaStore.Video.Thumbnails.MICRO_KIND);
                     GeoPoint geoPoint = new GeoPoint(lastLocation);
-                    setMarker(geoPoint, bmThumbnail);
+                    setMarker(geoPoint, bmThumbnail, MEDIA_TYPE_VIDEO);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // user cancelled recording
                     Toast.makeText(mainActivity,
@@ -1689,6 +1686,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_btn_capture = (FloatingActionButton) mainActivity.findViewById(R.id.fab_btn_capture);
         MainActivity.fab_camera = (FloatingActionButton) mainActivity.findViewById(R.id.fab_camera);
         MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
+        MainActivity.fab_current = (FloatingActionButton) mainActivity.findViewById(R.id.fab_current);
 
         Move_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.move_duoi);
         Move_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.move_tren);
@@ -1714,6 +1712,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             @Override
             public void onClick(View view) {
                 showCameraVideo();
+            }
+        });
+        MainActivity.fab_current.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (lastLocation != null) {
+                    mMapController.animateTo(new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude()));
+                }
             }
         });
         isCapturing = false;
@@ -1868,12 +1874,13 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     //set marker for image capture
-    public void setMarker(GeoPoint geoPoint, Bitmap bitmap) {
+    public void setMarker(GeoPoint geoPoint, Bitmap bitmap, int type) {
 
         // //0. Using the Marker overlay
         final MyMarker startMarker = new MyMarker(mMapView);
         startMarker.getMarker().setPosition(geoPoint);
         startMarker.getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setType(type);
         String str_lat_long = "Lattitude: " + geoPoint.getLatitude()
                 + "\r\nLongtitude: " + geoPoint.getLongitude();
         startMarker.getMarker().setTitle(str_lat_long);
@@ -1886,6 +1893,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
             }
         };
+
+        if(type == MEDIA_TYPE_VIDEO){
+            Drawable myIcon = getResources().getDrawable( R.drawable.ic_videocam_white_24dp );
+            startMarker.getMarker().setImage(myIcon);
+        }
 
         startMarker.getMarker().setInfoWindow(viaPOIInfoWindow);
         startMarker.getMarker().setDraggable(true);
@@ -1917,6 +1929,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         } else {
                             lst_markers.get(startMarker.getIndex()).getMarker()
                                     .showInfoWindow();
+                            previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()));
+
                         }
                         return false;
                     }
@@ -1927,6 +1941,20 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();
+    }
+
+    public void previewMedia(int type, MyMarker startMarker) {
+        if (type == MEDIA_TYPE_IMAGE) {
+            Dialog dialog = new Dialog(getActivity());
+            dialog.setContentView(R.layout.activity_image_preview);
+            dialog.setTitle("Image");
+            ImageView myImage = (ImageView) dialog.findViewById(R.id.imageview);
+            ImageLoaderHelper.displayImage(Uri.fromFile(new File(startMarker.getData())).toString(), myImage);
+            dialog.show();
+
+        } else {
+            //
+        }
     }
 
     //set marker for image capture
@@ -2063,9 +2091,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 lstMarker.get(selectMarkerChoice).getMarker()
                                         .showInfoWindow();
 //                                Intent intent = new Intent(getActivity(), VideoPlayer.class);
-//                                String url = lstMarker.get(selectMarkerChoice).getData();
-//                                intent.putExtra("URL", url);
-//                                startActivity(intent);
+                              previewMedia(lstMarker.get(selectMarkerChoice).getType(), lstMarker.get(selectMarkerChoice));
                                     /* User clicked Yes so do some stuff */
                             }
                         })
@@ -2376,15 +2402,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         mMapView.invalidate();
     }
 
-    public void animateToCurrentLocation() {
-        mMapController.setZoom(Constants.ZOOM_LEVEL);
-        if (myLocationOverlay.getLocation() != null) {
-            mMapController.animateTo(myLocationOverlay.getLocation());
-        } else {
-            return;
-        }
-    }
-
     //FIXME ===========updateUIWithRoad
     void updateUIWithRoad(Road road) {
         mRoadNodeMarkers.getItems().clear();
@@ -2511,6 +2528,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         private int index;
         private int pointIndex;
         private String data;
+        private int type;
 
         public MyMarker(MapView mapView) {
             marker = new Marker(mapView);
@@ -2552,6 +2570,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         public void setImage(Drawable image){
             marker.setImage(image);
         }
+        public void setType(int type){this.type = type;}
+        public int getType(){ return this.type;}
     }
 
     class OnItineraryMarkerDragListener implements Marker.OnMarkerDragListener {

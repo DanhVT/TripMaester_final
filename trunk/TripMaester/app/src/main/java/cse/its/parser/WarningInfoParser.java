@@ -9,16 +9,6 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osmdroid.DefaultResourceProxyImpl;
@@ -30,10 +20,6 @@ import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +29,7 @@ import cse.its.dbhelper.WarningDrawable;
 import cse.its.helper.Constant;
 import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
 
 /**
  * @author SinhHuynh
@@ -90,41 +77,9 @@ public class WarningInfoParser extends
 		try {
 			String url = arg0[0];
 			Log.i("Url: ", url);
-			StringBuilder builder = new StringBuilder();
-			HttpClient client = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(url);
-
-			int timeout = 6000;
-			HttpParams httpParams = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
-			HttpConnectionParams.setSoTimeout(httpParams, timeout);
-			httpGet.setParams(httpParams);
-
-			try {
-				HttpResponse response = client.execute(httpGet);
-				StatusLine statusLine = response.getStatusLine();
-				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(content));
-					String line;
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-				} else {
-					Log.e("Warning info", "Failed to get JSON");
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				Log.i("Timeout", "timeout");
-			} catch (IOException e) {
-				e.printStackTrace();
-				Log.i("Timeout", "timeout1");
-			}
-
-			String json  = builder.toString();
+			HttpConnection connection = new HttpConnection();
+			connection.doGet(url);
+			String json = connection.getContentAsString();
 
 			// new parser for traffic info service from
 			// traffic.hcmut.edu.vn/webapp

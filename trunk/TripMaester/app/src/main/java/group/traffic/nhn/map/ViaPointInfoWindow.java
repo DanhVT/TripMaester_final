@@ -54,9 +54,6 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
-                System.out.println("Danh");
-
                 // open gallery Image
                 if (lstImage.size() > 1) {
 //					new AlertDialog.Builder(mapView.getContext())
@@ -90,7 +87,6 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
 //									}).show();
                     PriorityDlg dlg = new PriorityDlg(mapView.getContext(), R.style.dlg_priority, lstImage);
                     dlg.show();
-
                 }
             }
         });

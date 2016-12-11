@@ -11,25 +11,11 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.PathOverlay;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -41,6 +27,7 @@ import cse.its.dbhelper.StrDrawable;
 import cse.its.helper.Constant;
 import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
 
 /**
  * @author SinhHuynh
@@ -89,45 +76,13 @@ public class TrafficInfoParser extends
 	protected ArrayList<PathOverlay> doInBackground(String... arg0) {
 		Log.i("ON DOINBACKFROUND", " ");
 		try {
-			String json;
+			String json = null;
 			String url = arg0[0];
 //			url = "http://221.133.13.113/hcm/rest/rectangleSpeed?latTL=10.754263363641192&lonTL=106.64312839508057&latTR=10.754263363641192&lonTR=106.69806003570557&latBL=10.739717260666932&lonBL=106.64312839508057&latBR=10.739717260666932&lonBR=106.69806003570557&zoom=15";
 			Log.i("Url: ", url);
-			StringBuilder builder = new StringBuilder();
-			HttpClient client = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(url);
-
-			int timeout = 6000;
-			HttpParams httpParams = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
-			HttpConnectionParams.setSoTimeout(httpParams, timeout);
-			httpGet.setParams(httpParams);
-
-			try {
-				HttpResponse response = client.execute(httpGet);
-				StatusLine statusLine = response.getStatusLine();
-				int statusCode = statusLine.getStatusCode();
-				if (statusCode == 200) {
-					HttpEntity entity = response.getEntity();
-					InputStream content = entity.getContent();
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(content));
-					String line;
-					while ((line = reader.readLine()) != null) {
-						builder.append(line);
-					}
-				} else {
-					Log.e("Traffic info", "Failed to get JSON");
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-				Log.i("Timeout", "timeout");
-			} catch (IOException e) {
-				e.printStackTrace();
-				Log.i("Timeout", "timeout1");
-			}
-
-			json = builder.toString();
+			HttpConnection connection = new HttpConnection();
+			connection.doGet(url);
+			json = connection.getContentAsString();
 
 			// new parser for traffic info service from
 			// traffic.hcmut.edu.vn/webapp

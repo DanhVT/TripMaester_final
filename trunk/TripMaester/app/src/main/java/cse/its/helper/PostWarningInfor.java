@@ -5,20 +5,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
-import java.io.IOException;
-
 import cse.its.dbhelper.WarningDrawable;
 import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
 
 public class PostWarningInfor extends AsyncTask<WarningDrawable, Void, Boolean>{
 	public Context context;
@@ -35,35 +24,18 @@ public class PostWarningInfor extends AsyncTask<WarningDrawable, Void, Boolean>{
 			return false;
 		
 		String url = formatURL(warning);
-		
 		Log.i("Url: ", url);
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(url);
 
-		int timeout = 3000;
-		HttpParams httpParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParams, timeout);
-		HttpConnectionParams.setSoTimeout(httpParams, timeout);
-		httpGet.setParams(httpParams);
-
-		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				return true;
-			} else {
+		HttpConnection connection = new HttpConnection();
+		connection.doGet(url);
+		String stream = connection.getContentAsString();
+		if (stream != null) {
+            return true;
+        } else {
 //				Log.e("Search Segment ID Service", "Failed to get SegmentID");
-				Log.e("SearchSegmentIDService", "Failed to get SegmentID");
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			Log.i("Search segment id fail", "ClientProtocolException");
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.i("Search segment id fail", "IOException");
-		}
-		
+            Log.e("SearchSegmentIDService", "Failed to get SegmentID");
+        }
+
 		return false;
 	}
 	

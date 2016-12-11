@@ -61,6 +61,7 @@ public class HttpConnection {
         }
     }
 
+
     public String getContentAsString(){
         try {
             if (response == null)

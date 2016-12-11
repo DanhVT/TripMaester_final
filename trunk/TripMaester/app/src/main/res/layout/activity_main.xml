@@ -59,7 +59,6 @@
 			android:paddingTop="42dp"/>
 
 		<android.support.design.widget.FloatingActionButton
-			style="@style/floating_action_button"
 			android:id="@+id/fab_btn_capture"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -69,6 +68,15 @@
 			android:src ="@drawable/ic_add_a_photo_white_24dp"/>
 
 		<include layout="@layout/fab_layout" />
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/fab_current"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|end"
+			android:layout_margin="@dimen/fab_margin"
+			app:backgroundTint="@color/com_facebook_button_send_background_color"
+			android:src ="@drawable/btn_tracking_off"/>
     </android.support.design.widget.CoordinatorLayout>
      
     <!-- The left menu --> 

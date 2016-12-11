@@ -20,22 +20,16 @@ import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.GameRequestDialog;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import group.traffic.nhn.user.FriendItem;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
 import vn.edu.hcmut.its.tripmaester.ui.adapter.FriendListAdapter;
 
 public class FriendsFragment extends Fragment {
@@ -93,19 +87,11 @@ public class FriendsFragment extends Fragment {
 
     //TODO: TL: DO NOT CALL VIA THIS
     public void callWebService(String q) {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpGet request = new HttpGet(URL + q);
-        //request.addHeader("deviceId", deviceId);
-        ResponseHandler<String> handler = new BasicResponseHandler();
-        try {
-            result = httpclient.execute(request, handler);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String url = URL + q;
+        HttpConnection connection = new HttpConnection();
+        connection.doGet(url);
+        String result = connection.getContentAsString();
 
-        httpclient.getConnectionManager().shutdown();
         Log.i(tag, result);
     } // end callWebService()
 
@@ -129,7 +115,6 @@ public class FriendsFragment extends Fragment {
                 @Override
                 public void onCompleted(JSONArray objects, GraphResponse response) {
                     for (int i = 0; i < objects.length(); i++) {
-
                         try {
                             JSONObject friend = objects.getJSONObject(i);
                             if (friend != null) {
@@ -142,7 +127,6 @@ public class FriendsFragment extends Fragment {
                     }
 
                     if (objects.length() > 0) {
-
                         mListAdapter.loadData(mFriends);
                         LoginManager.getInstance().getUser().setFriends(mFriends);
                         mListAdapter.notifyDataSetChanged();

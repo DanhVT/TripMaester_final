@@ -67,7 +67,7 @@
 			app:backgroundTint="@color/com_facebook_button_send_background_color"
 			android:src ="@drawable/ic_add_a_photo_white_24dp"/>
 
-		<include layout="@layout/fab_layout" />
+		<include layout="@layout/fab_layout" android:id="@+id/fab_frameLayout" />
 
 		<android.support.design.widget.FloatingActionButton
 			android:id="@+id/fab_current"

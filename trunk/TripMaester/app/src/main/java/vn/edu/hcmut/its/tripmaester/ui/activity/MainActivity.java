@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -59,6 +60,7 @@ import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 
 import static android.view.View.GONE;
 import static group.traffic.nhn.map.MapFragment.fileUri;
+import static group.traffic.nhn.map.MapFragment.isStart;
 
 // TODO: 12/16/15 Not review yet
 public class MainActivity extends FragmentActivity implements IMainScreen {
@@ -133,6 +135,15 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         }
     }
 
+    public void invisebleFloat(){
+
+        FrameLayout layout = (FrameLayout)findViewById(R.id.fab_frameLayout);
+        layout.setVisibility(View.GONE);
+
+        fab_current.setVisibility(View.INVISIBLE);
+        fab_btn_capture.setVisibility(View.INVISIBLE);
+
+    }
     /**
      * display view by position
      *
@@ -149,25 +160,36 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
             case LEFT_MENU__USER:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 fragment = new UserFragment();
+                invisebleFloat();
                 break;
             case LEFT_MENU__MAP:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
                 if (mapFragment == null) {
                     mapFragment = new MapFragment();
                     isNew = true;
                 }
+                if(fab_current == null) fab_current =(FloatingActionButton) findViewById(R.id.fab_current);
+                fab_current.setVisibility(View.VISIBLE);
+                if(fab_btn_capture == null) fab_btn_capture =(FloatingActionButton) findViewById(R.id.fab_btn_capture);
+                FrameLayout layout = (FrameLayout)findViewById(R.id.fab_frameLayout);
+                layout.setVisibility(View.VISIBLE);
+                if(isStart) { fab_btn_capture.setVisibility(View.VISIBLE);  }
                 break;
             case LEFT_MENU__TRIP:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 fragment = new TripsFragment();
+                invisebleFloat();
                 break;
             case LEFT_MENU__FRIEND:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 fragment = new FriendsFragment();
+                invisebleFloat();
                 break;
             case LEFT_MENU__LOGOUT:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 fragment = new LoginFragment();
+                invisebleFloat();
                 break;
             default:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -175,6 +197,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                     mapFragment = new MapFragment();
                     isNew = true;
                 }
+
                 break;
                 // fragment = new LoginFragment();
                 // break;

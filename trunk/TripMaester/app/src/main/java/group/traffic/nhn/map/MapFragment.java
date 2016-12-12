@@ -170,7 +170,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
      */
     final OnItineraryMarkerDragListener mItineraryListener = new OnItineraryMarkerDragListener();
     public MainActivity mainActivity;
-    public boolean isStart = false;
+    public static boolean isStart = false;
     // TRIP INFO
     public List<Location> lstPassedPoint;// list of points user went pass
     // protected MapView map;

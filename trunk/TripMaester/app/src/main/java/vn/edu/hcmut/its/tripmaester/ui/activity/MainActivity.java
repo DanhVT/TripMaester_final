@@ -57,6 +57,7 @@ import vn.edu.hcmut.its.tripmaester.ui.IMainScreen;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.FriendsFragment;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 
+import static android.view.View.GONE;
 import static group.traffic.nhn.map.MapFragment.fileUri;
 
 // TODO: 12/16/15 Not review yet
@@ -137,6 +138,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
      *
      * @param position
      */
+
     private void displayView(int position) {
         // Fragment fragment = null;
         boolean isNew = false;

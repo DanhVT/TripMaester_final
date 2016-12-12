@@ -138,6 +138,7 @@ import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
+import vn.edu.hcmut.its.tripmaester.ui.activity.VideoPlayer;
 
 public class MapFragment extends Fragment implements MapEventsReceiver,
         SensorEventListener {
@@ -1687,13 +1688,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_camera = (FloatingActionButton) mainActivity.findViewById(R.id.fab_camera);
         MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
         MainActivity.fab_current = (FloatingActionButton) mainActivity.findViewById(R.id.fab_current);
+        MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
+        MainActivity.fab_current.setVisibility(View.VISIBLE);
 
         Move_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.move_duoi);
         Move_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.move_tren);
         Back_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.back_duoi);
         Back_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.back_tren);
 
-        MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
+
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1881,8 +1884,13 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         startMarker.getMarker().setPosition(geoPoint);
         startMarker.getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setType(type);
+        String timeStamp = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy",
+                Locale.getDefault()).format(new Date());
+        String typeStr = (type == MEDIA_TYPE_IMAGE)? "Image": "Video";
         String str_lat_long = "Lattitude: " + geoPoint.getLatitude()
-                + "\r\nLongtitude: " + geoPoint.getLongitude();
+                + "\r\nLongtitude: " + geoPoint.getLongitude()
+                + "\r\nTime: "+ timeStamp
+                +"\r\n Type: "+ typeStr;
         startMarker.getMarker().setTitle(str_lat_long);
 
         ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
@@ -1894,10 +1902,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             }
         };
 
-        if(type == MEDIA_TYPE_VIDEO){
-            Drawable myIcon = getResources().getDrawable( R.drawable.ic_videocam_white_24dp );
-            startMarker.getMarker().setImage(myIcon);
-        }
 
         startMarker.getMarker().setInfoWindow(viaPOIInfoWindow);
         startMarker.getMarker().setDraggable(true);
@@ -1926,7 +1930,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                             isShowDialogMarker = true;
                             showChoiceDialogMarker(lst_around_markers);
                             // return false;
-                        } else {
+                        } else if(lst_around_markers.size() <= 1
+                                && !isShowDialogMarker) {
                             lst_markers.get(startMarker.getIndex()).getMarker()
                                     .showInfoWindow();
                             previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()));
@@ -1953,7 +1958,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             dialog.show();
 
         } else {
-            //
+            Intent intent = new Intent(getActivity(), VideoPlayer.class);
+            intent.putExtra("URL", startMarker.getData());
+            startActivity(intent);
         }
     }
 
@@ -2005,16 +2012,18 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 isShowDialogMarker = true;
                                 showChoiceDialogMarker(lst_around_markers);
                                 // return false;
-                            } else {
-                                listMarkerTrip.get(finalI).getMarker()
+                            } else if(lst_around_markers.size() <= 1
+                                    && !isShowDialogMarker) {
+                                lst_markers.get(listMarkerTrip.get(finalI).getIndex()).getMarker()
                                         .showInfoWindow();
+                                previewMedia(lst_markers.get(listMarkerTrip.get(finalI).getIndex()).getType(), lst_markers.get(listMarkerTrip.get(finalI).getIndex()));
+
                             }
                             return false;
                         }
                     });
             mMapView.getOverlays().add(listMarkerTrip.get(i).getMarker());
         }
-
 
         mMapView.invalidate();
     }

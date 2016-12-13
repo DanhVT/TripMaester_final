@@ -1,8 +1,10 @@
 package group.traffic.nhn.trip;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 
 
 public class TripsFragment extends Fragment {
+    public MainActivity mainActivity;
     private Timer timer;
     private Timer timerTrip;
     private ListView lstTripsInfor;
@@ -87,6 +90,10 @@ public class TripsFragment extends Fragment {
         lstTripsInfor = (ListView) rootView.findViewById(R.id.list_trips_infor);
         noTripWrap= (LinearLayout) rootView.findViewById(R.id.no_trip_wrap);
         bAddtrip = (Button) rootView.findViewById(R.id.bAddtrip);
+        this.mainActivity = (MainActivity) this.getActivity();
+        MainActivity.fab_search = (FloatingActionButton) mainActivity.findViewById(R.id.fab_search);
+        MainActivity.fab_search.setVisibility(View.VISIBLE);
+
         // create trip adapter
         TripArrayAdapter tripAdapter = new TripArrayAdapter(getActivity()
                 .getApplicationContext(),
@@ -98,6 +105,18 @@ public class TripsFragment extends Fragment {
             public void onClick(View v) {
                 Intent trip = new Intent(getActivity(), NewTripActivity.class);
                 startActivity(trip);
+            }
+        });
+
+        MainActivity.fab_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater li = LayoutInflater.from(mainActivity);
+                View promptsView = li.inflate(
+                        R.layout.input_trip_info_dialog, null);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        mainActivity);
+                alertDialogBuilder.setView(promptsView);
             }
         });
         tripAdapter.mainActivity = (MainActivity) this.getActivity();
@@ -119,16 +138,18 @@ public class TripsFragment extends Fragment {
                 tripAdapter.notifyDataSetChanged();
                 if(TripManager.lst_user_trip.size() == 0 ){
                     noTripWrap.setVisibility(View.VISIBLE);
+                    lstTripsInfor.setVisibility(View.GONE);
                 }
                 else{
                     noTripWrap.setVisibility(View.GONE);
+                    lstTripsInfor.setVisibility(View.VISIBLE);
                 }
                 lstTripsInfor.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         loadTrips(tripAdapter);
                     }
-                }, 10000);
+                }, 2000);
             }
         });
     }

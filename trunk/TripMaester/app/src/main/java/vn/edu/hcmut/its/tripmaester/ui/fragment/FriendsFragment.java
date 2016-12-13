@@ -75,11 +75,6 @@ public class FriendsFragment extends Fragment {
                     AppInviteDialog.show(getActivity(), content);
                 }
 
-                //GameInvite
-//	            GameRequestContent content = new GameRequestContent.Builder()
-//                .setMessage("Come play this level with me")
-//                .build();
-//	            requestDialog.show(content);
             }
         });
 
@@ -137,24 +132,6 @@ public class FriendsFragment extends Fragment {
             });
             request.executeAsync();
         }
-
-//		FriendItem item1 = new FriendItem(getActivity(),"Thanh Van", R.drawable.ic_user_profile, true);
-//		FriendItem item2 = new FriendItem(getActivity(),"Tran Ha", R.drawable.ic_user_profile, true);
-//		FriendItem item3 = new FriendItem(getActivity(),"Tien Nguyen", R.drawable.ic_user_profile, false);
-//		FriendItem item4 = new FriendItem(getActivity(),"Hai Anh", R.drawable.ic_user_profile, true);
-//		FriendItem item5 = new FriendItem(getActivity(),"Viet Thang", R.drawable.ic_user_profile, false);
-//		FriendItem item6 = new FriendItem(getActivity(),"Hoang Nguyen", R.drawable.ic_user_profile, false);
-//		FriendItem item7 = new FriendItem(getActivity(),"Tien Cua", R.drawable.ic_user_profile, false);
-//		FriendItem item8 = new FriendItem(getActivity(),"Than Dong", R.drawable.ic_user_profile, false);
-//
-//		mFriends.add(item1);
-//		mFriends.add(item2);
-//		mFriends.add(item3);
-//		mFriends.add(item4);
-//		mFriends.add(item5);
-//		mFriends.add(item6);
-//		mFriends.add(item7);
-//		mFriends.add(item8);
         return mFriends;
     }
 

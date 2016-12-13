@@ -71,7 +71,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     public static final int LEFT_MENU__LOGOUT = 5;
     public static SharedPreferences mSharedPreferences;
     // TODO: 12/20/15 Why public static?
-    public static FloatingActionButton fab_btn_capture, fab_camera, fab_video, fab_current;
+    public static FloatingActionButton fab_btn_capture, fab_camera, fab_video, fab_current, fab_search;
     public static boolean isDraw = false;
     @Bind(R.id.drawer_layout_main_screen)
     DrawerLayout mDrawerLayoutMain;
@@ -140,9 +140,9 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         FrameLayout layout = (FrameLayout)findViewById(R.id.fab_frameLayout);
         layout.setVisibility(View.GONE);
 
-        fab_current.setVisibility(View.INVISIBLE);
-        fab_btn_capture.setVisibility(View.INVISIBLE);
-
+        if(fab_current != null) fab_current.setVisibility(View.INVISIBLE);
+        if(fab_btn_capture != null) fab_btn_capture.setVisibility(View.INVISIBLE);
+        if(fab_search != null) fab_search.setVisibility(View.INVISIBLE);
     }
     /**
      * display view by position
@@ -169,6 +169,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                     mapFragment = new MapFragment();
                     isNew = true;
                 }
+                invisebleFloat();
                 if(fab_current == null) fab_current =(FloatingActionButton) findViewById(R.id.fab_current);
                 fab_current.setVisibility(View.VISIBLE);
                 if(fab_btn_capture == null) fab_btn_capture =(FloatingActionButton) findViewById(R.id.fab_btn_capture);
@@ -180,6 +181,8 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 fragment = new TripsFragment();
                 invisebleFloat();
+                if(fab_search == null) fab_search =(FloatingActionButton) findViewById(R.id.fab_search);
+                fab_search.setVisibility(View.VISIBLE);
                 break;
             case LEFT_MENU__FRIEND:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);

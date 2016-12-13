@@ -1415,6 +1415,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     lstUserPassRoad = new ArrayList<Road>();
                     viaPoints = new ArrayList<GeoPoint>();
                     MainActivity.fab_btn_capture.setVisibility(View.VISIBLE);
+                    FrameLayout layout = (FrameLayout) mainActivity.findViewById(R.id.fab_frameLayout);
+                    layout.setVisibility(View.VISIBLE);
                     lstPassedPoint = new ArrayList<Location>();
                     Calendar c = Calendar.getInstance();
                     currentTime_start_trip = c.getTime();
@@ -1432,8 +1434,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 } else {
                     isStart = false;
                     MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
-                    MainActivity.fab_camera.setVisibility(View.INVISIBLE);
-                    MainActivity.fab_video.setVisibility(View.INVISIBLE);
+                    FrameLayout layout = (FrameLayout) mainActivity.findViewById(R.id.fab_frameLayout);
+                    layout.setVisibility(View.GONE);
+
                     // get prompts.xml view
                     LayoutInflater li = LayoutInflater.from(mainActivity);
                     View promptsView = li.inflate(

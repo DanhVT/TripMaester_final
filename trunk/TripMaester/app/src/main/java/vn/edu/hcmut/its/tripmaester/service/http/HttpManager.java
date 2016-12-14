@@ -50,6 +50,7 @@ public class HttpManager {
     static final String URL_GET_LIST_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListShareTrip";
     static final String URL_GET_LIST_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListTrip";
     static final String URL_GET_LIST_PRIVATE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListPrivateTrip";
+    static final String URL_GET_LIST_TRP_SEARCH = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListTripSearch";
     static final String URL_GET_LOGIN = HttpConstants.HOST_NAME + "/ITS/rest/user/GETlogin/";
     static final String URL_GET_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/share/GetShareOnTrip";
     static final String URL_GET_TRIP_INFO = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetTripInfo";
@@ -349,6 +350,33 @@ public class HttpManager {
         }
     }
 
+    public static void searchTrip(String startPlace, String endPlace, String privacy, final ICallback<JSONArray> callback){
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .addFormDataPart("startPlace", startPlace)
+                .addFormDataPart("endPlace", endPlace)
+                .addFormDataPart("privacy", privacy)
+                .build();
+        try {
+            String str_response  = ApiCall.POST(client, URL_GET_LIST_TRP_SEARCH, requestBody);
+            JSONObject jsonObj = new JSONObject(str_response);
+            try {
+                if (!jsonObj.isNull("listTrip")) {
+                    callback.onCompleted(new JSONArray(jsonObj.getString("listTrip")), null, null);
+                }
+            }
+            catch(Exception ex) {
+                callback.onCompleted(null, null, ex);
+                ex.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     // service get List share Trip
 	/*
 	 * + IRequest data (in json): { userId: "...", name: "...", frist_name:"...", last_name:"...",birthday:"...", email:"...", update_time:"...",gender:"...", local:"...", verified:"...", timezone:"...", link:"...", imei:"..."}
@@ -368,6 +396,7 @@ public class HttpManager {
                                     JSONObject jsonObj = new JSONObject(str_response);
                                     if (!jsonObj.isNull("listTrip")) {
                                         response_json = new JSONArray(jsonObj.getString("listTrip"));
+                                        callback.onCompleted(response_json, null, null);
                                     }
                                     // if (response_json.isNull("tokenID")) {
                                     // String tokenId = response_json.get("tokenID").toString();

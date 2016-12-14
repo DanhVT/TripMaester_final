@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import group.traffic.nhn.user.User;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
 
@@ -252,11 +253,12 @@ public class LoginFragment extends Fragment {
             if (LoginManager.getInstance().isLogin()) {
                 mTxtName.setText(LoginManager.getInstance().getUser().getName());
                 String image_value = FacebookHelper.getFacebookProfileImage(LoginManager.getInstance().getUser().getId());
+                ImageLoaderHelper.displayImage(image_value, mUserImage);
                 // TODO: 12/23/15 Get image from profile --- redoing this
-                Ion.with(getContext())
-                        .load(image_value)
-                        .withBitmap()
-                        .intoImageView(mUserImage);
+//                Ion.with(getContext())
+//                        .load(image_value)
+//                        .withBitmap()
+//                        .intoImageView(mUserImage);
 //                InputStream input_stream = (InputStream) image_value.getContent();
 //                Bitmap user_fb_icon = BitmapFactory.decodeStream(input_stream);
 //                mUserImage.setImageBitmap(user_fb_icon);

@@ -1691,7 +1691,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_camera = (FloatingActionButton) mainActivity.findViewById(R.id.fab_camera);
         MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
         MainActivity.fab_current = (FloatingActionButton) mainActivity.findViewById(R.id.fab_current);
+        MainActivity.fab_search = (FloatingActionButton) mainActivity.findViewById(R.id.fab_search);
+
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
+        MainActivity.fab_search.setVisibility(View.INVISIBLE);
         MainActivity.fab_current.setVisibility(View.VISIBLE);
 
         Move_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.move_duoi);

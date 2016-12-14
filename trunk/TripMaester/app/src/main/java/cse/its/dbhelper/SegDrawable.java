@@ -126,8 +126,8 @@ public class SegDrawable {
 	}
 
 	public double distance(NodeDrawable node) {
-		double result = 0;
-		double b = 0, c = 0;
+		double result;
+		double b, c;
 		b = (Slong - Elong) / (Elat - Slat);
 		c = -Slong - b * Slat;
 		result = Math.abs(node.lon + b * node.lat + c) / Math.sqrt(1 + b * b);
@@ -136,8 +136,8 @@ public class SegDrawable {
 
 	// khoang cach den duong trung truc cua segment
 	public double distance1(NodeDrawable node) {
-		double result = 0;
-		double b = 0, c = 0;
+		double result;
+		double b, c;
 		double Mx = (Slong + Elong) / 2;
 		double My = (Slat + Elat) / 2;
 		b = -1 / ((Slong - Elong) / (Elat - Slat));
@@ -148,7 +148,7 @@ public class SegDrawable {
 
 	// length of segment
 	public double length() {
-		double length = 0;
+		double length;
 		length = Math.sqrt((Slong - Elong) * (Slong - Elong) + (Slat - Elat)
 				* (Slat - Elat));
 		return length;
@@ -167,10 +167,10 @@ public class SegDrawable {
 
 	// ### angle of 2 segments
 	public static double angle(SegDrawable seg1, SegDrawable seg2) {
-		double angle = 0;
+		double angle;
 
 		double a1 = 1, a2 = 1;
-		double b1 = 0, b2 = 0;
+		double b1, b2;
 		if(seg1.Elat != seg1.Slat)
 			b1 = (seg1.Slong - seg1.Elong) / (seg1.Elat - seg1.Slat);
 		else{
@@ -198,7 +198,7 @@ public class SegDrawable {
 	
 	// ### detect direction
 	public String direction(SegDrawable seg, Context context){
-		String direction = "";
+		String direction;
 		double angle = angle(this, seg);
 		if((angle >= 40 && angle <= 140) || (angle >= -140 && angle <= 40)){
 			if(isLeft(new NodeDrawable(0, seg.Elong, seg.Elat)))

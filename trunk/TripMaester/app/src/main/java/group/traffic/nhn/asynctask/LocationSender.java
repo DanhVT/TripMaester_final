@@ -20,7 +20,6 @@ import group.traffice.nhn.common.Constants;
  *
  */
 public class LocationSender extends AsyncTask<String, Void, Void> {
-	private String TAG ="LOCATION SENDER";
 	String mAndroidId;
 	Context mContext;
 	String currentTime;
@@ -57,6 +56,7 @@ public class LocationSender extends AsyncTask<String, Void, Void> {
 			clientSocket.close();
 			
 		} catch (IOException e) {
+			String TAG = "LOCATION SENDER";
 			Log.e(TAG, e.getMessage());
 		}
 		

@@ -17,7 +17,6 @@ import android.view.animation.Animation.AnimationListener;
  * @Tag This class creates point or area circle overlay on map
  */
 public class DynamicOverlay extends Overlay {
-	private Projection project;
 	GeoPoint geoPoint;
 	float radius;
 	boolean increase = true;
@@ -54,7 +53,7 @@ public class DynamicOverlay extends Overlay {
 
 	@Override
 	protected void draw(Canvas canvas, MapView mapView, boolean arg2) {
-		project = mapView.getProjection();
+		Projection project = mapView.getProjection();
 		Point point = new Point();
 		project.toPixels(geoPoint, point);
 		

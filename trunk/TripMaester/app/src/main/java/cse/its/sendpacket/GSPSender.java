@@ -8,6 +8,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.content.Context;
 import android.location.Location;
@@ -34,9 +35,9 @@ public class GSPSender extends AsyncTask<Location, Void, Void> {
 		super.onPreExecute();
 		androidID = Secure.getString(context.getContentResolver(),
 				Secure.ANDROID_ID);
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 		currentDate = dateFormat.format(new Date());
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 		currentTime = timeFormat.format(new Date());
 
 	}
@@ -60,10 +61,7 @@ public class GSPSender extends AsyncTask<Location, Void, Void> {
 			clientSocket.send(sendPacket);
 
 			clientSocket.close();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
+		} catch (SocketException | UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {

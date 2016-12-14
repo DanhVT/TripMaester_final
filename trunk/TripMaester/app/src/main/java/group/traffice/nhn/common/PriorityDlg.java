@@ -18,16 +18,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class PriorityDlg extends Dialog {
 	private Context context;
-	private ListView dlg_priority_lvw = null;
 	private List<Bitmap> lst_image = null;
 	private ArrayList<HashMap<String, Object>> priorityList;
 	private final SimpleAdapter.ViewBinder mViewBinder =
@@ -64,10 +61,10 @@ public class PriorityDlg extends Dialog {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.custom_dialog);
-		dlg_priority_lvw = (ListView) findViewById(R.id.dlg_priority_lvw);
+		ListView dlg_priority_lvw = (ListView) findViewById(R.id.dlg_priority_lvw);
 		// ListView
 		
-		priorityList = new ArrayList<HashMap<String, Object>>();
+		priorityList = new ArrayList<>();
 		getPriorityList();
 				    
 		SimpleAdapter adapter = new SimpleAdapter(context, priorityList,
@@ -127,7 +124,7 @@ public class PriorityDlg extends Dialog {
 		
 		for (int i= 0;i < lst_image.size();i++){
 			Drawable image_view_drawable = new BitmapDrawable(context.getResources(), lst_image.get(i));
-			HashMap<String, Object> map1 = new HashMap<String, Object>();
+			HashMap<String, Object> map1 = new HashMap<>();
 			map1.put("list_priority_img",image_view_drawable);// priority_not_important);
 			map1.put("list_priority_value", "");
 			priorityList.add(map1);

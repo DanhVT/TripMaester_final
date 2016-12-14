@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -21,7 +22,6 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import cse.its.dbhelper.DBTrafficSource;
@@ -43,13 +43,13 @@ public class WarningInfoParser extends
 	ArrayList<WarningDrawable> mWarning;
 	
 	DBTrafficSource dataSource;
-	HashMap<Long, Double> SegmentSpeed = new HashMap<Long, Double>();
-	HashMap<Long, Long> SegmentStreet = new HashMap<Long, Long>();
+	SparseArray<Long> SegmentSpeed = new SparseArray<>();
+	SparseArray<Long> SegmentStreet = new SparseArray<>();
 	double lon, lat;
 	int color;
 	int segment_count = 0;
 	
-	public static ArrayList<Overlay> listWarning = new ArrayList<Overlay>();
+	public static ArrayList<Overlay> listWarning = new ArrayList<>();
 	public static boolean finish_get_warning_info = true;
 
 	public WarningInfoParser() {
@@ -66,14 +66,14 @@ public class WarningInfoParser extends
 		finish_get_warning_info = false;
 		Log.wtf("TRAFFIC INFO REQUEST", "start: " + System.currentTimeMillis()% 10000);
 		dataSource = new DBTrafficSource(context);
-		mWarning = new ArrayList<WarningDrawable>();
+		mWarning = new ArrayList<>();
 	}
 
 	@Override
 	protected ArrayList<Overlay> doInBackground(String... arg0) {
 		Log.i("ON DOINBACKFROUND", " ");
 		boolean flag = false;
-		ArrayList<Overlay> templistWarning = new ArrayList<Overlay>();
+		ArrayList<Overlay> templistWarning = new ArrayList<>();
 		try {
 			String url = arg0[0];
 			Log.i("Url: ", url);
@@ -88,7 +88,7 @@ public class WarningInfoParser extends
 			JSONArray jsonArray = result.getJSONArray("dataModel");
 			int size = jsonArray.length();
 			
-			templistWarning = new ArrayList<Overlay>();
+			templistWarning = new ArrayList<>();
 			
 			for (int i = 0; i < size; i++) {
 				//create drawable items
@@ -147,7 +147,7 @@ public class WarningInfoParser extends
 		finish_get_warning_info = true;
 	}
 
-	ArrayList<View> listAnimationDraw = new ArrayList<View>();
+	ArrayList<View> listAnimationDraw = new ArrayList<>();
 
 	// Width stroke appropriate to zoom level
 	public static int getWidth() {
@@ -172,16 +172,16 @@ public class WarningInfoParser extends
 		String timepost = obj.getString("timePost");
 		
 		GeoPoint point = new GeoPoint(lat, log);
-		List<OverlayItem> items = new ArrayList<OverlayItem>();
+		List<OverlayItem> items = new ArrayList<>();
 		items.add(new OverlayItem(timepost, "", point));
 		
 		Drawable marker = StaticVariable.WARNING_ICON.get(obj.getString("type"));
-		result = new ItemizedIconOverlay<OverlayItem>(
+		result = new ItemizedIconOverlay<>(
 				items, marker,
 				new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
 					@Override
 					public boolean onItemSingleTapUp(final int index,
-							final OverlayItem item) {
+													 final OverlayItem item) {
 						return true;
 					}
 
@@ -192,7 +192,7 @@ public class WarningInfoParser extends
 				}, mResourceProxy);
 		
 		
-		}catch(Exception e){
+		}catch(Exception ignored){
 			
 		}
 		

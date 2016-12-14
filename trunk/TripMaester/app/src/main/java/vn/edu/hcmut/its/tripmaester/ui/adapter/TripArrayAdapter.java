@@ -3,6 +3,7 @@ package vn.edu.hcmut.its.tripmaester.ui.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,6 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<Trip> mTrips;
-    private View rowView;
 
     //    private ArrayList<MessageListAdapter> lstMessageAdapter = new ArrayList<MessageListAdapter>();
 //    private Thread thread;
@@ -67,13 +67,13 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         return mTrips;
     }
 
+    @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        rowView = convertView;
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+        View rowView = convertView;
         final ViewHolder viewHolder;
         parentViewGroup = parent;
 
-        final int pos = position;
         if (null == convertView) {
             rowView = mInflater.inflate(R.layout.trip_item, null, false);
 
@@ -141,11 +141,11 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                 // get list friend not share of trip
 
                 // get list shared friend of trip
-                HttpManager.getShareOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<FriendItem>>() {
+                HttpManager.getShareOnTrip(getTrips().get(position).getTripId(), getContext(), new ICallback<ArrayList<FriendItem>>() {
                     @Override
                     public void onCompleted(ArrayList<FriendItem> lstFriendShared, Object tag, Exception e) {
                         if (e == null) {
-                            final ArrayList<FriendItem> mListFriendsNotShare = new ArrayList<FriendItem>();
+                            final ArrayList<FriendItem> mListFriendsNotShare = new ArrayList<>();
                             for (int i = 0; i < mFriends.size(); i++) {
                                 if (lstFriendShared.size() > 0) {
                                     boolean isAddShareList = true;
@@ -163,7 +163,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                                     mListFriendsNotShare.add(mFriends.get(i));
                                 }
                             }
-                            List<String> listItems = new ArrayList<String>();
+                            List<String> listItems = new ArrayList<>();
                             for (int i = 0; i < mListFriendsNotShare.size(); i++) {
                                 listItems.add(mListFriendsNotShare.get(i).getFriendName());
                             }
@@ -192,7 +192,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                                                         int whichButton) {
 
                                                     // call share api
-                                                    List<String> lstUserSharedId = new ArrayList<String>();
+                                                    List<String> lstUserSharedId = new ArrayList<>();
                                                     for (int i = 0; i < mListFriendsNotShare.size(); i++) {
                                                         if (mListFriendsNotShare.get(i).isChecked()) {
                                                             lstUserSharedId
@@ -202,7 +202,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                                                         }
                                                     }
                                                     HttpManager.saveShareTrip(
-                                                            lstUserSharedId, getTrips().get(pos).getTripId(),
+                                                            lstUserSharedId, getTrips().get(position).getTripId(),
                                                             getContext(),
                                                             new ICallback<JSONObject>() {
                                                                 @Override
@@ -243,7 +243,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
             @Override
             public void onClick(View v) {
-                String strLike = getTrips().get(pos).getNumberLikeTrip();
+                String strLike = getTrips().get(position).getNumberLikeTrip();
                 String[] temp = strLike.split(" ");
                 if (temp.length > 1) {
                     int trip = Integer.parseInt(temp[0]);
@@ -252,8 +252,8 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     String tmpStr10 = String.valueOf(trip);
                     viewHolder.txtNumberLikesTrip.setText(tmpStr10 + " likes");
 
-                    HttpManager.likeTrip(getTrips().get(pos).getTripId(), getContext());
-                    getTrips().get(pos).setNumberLikeTrip(String.valueOf(trip) + " likes");
+                    HttpManager.likeTrip(getTrips().get(position).getTripId(), getContext());
+                    getTrips().get(position).setNumberLikeTrip(String.valueOf(trip) + " likes");
                 }
 
             }
@@ -267,11 +267,11 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                 View comment_dialog = mInflater.inflate(R.layout.comment_dialog, null);
                 final ListView mViewDialogContent = (ListView) comment_dialog.findViewById(R.id.context_menu_comment);
 
-                ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
+                ArrayList<MessageItem> lstMessage = new ArrayList<>();
                 final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(mContext, lstMessage);
 
                 mViewDialogContent.setAdapter(mMessageDetailAdapter);
-                tripsFragment.runAsyncTask(mMessageDetailAdapter, pos);
+                tripsFragment.runAsyncTask(mMessageDetailAdapter, position);
                 Button btn_comment = (Button) comment_dialog.findViewById(R.id.btn_comment);
 
                 final EditText txt_comment = (EditText) comment_dialog
@@ -282,7 +282,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     public void onClick(View v) {
                         // FIXME: Service to run in background
                         String content = txt_comment.getText().toString();
-                        HttpManager.commentTrip(getTrips().get(pos)
+                        HttpManager.commentTrip(getTrips().get(position)
                                 .getTripId(), content, getContext(), new ICallback<JSONObject>() {
                             @Override
                             public void onCompleted(JSONObject data, Object tag, Exception e) {
@@ -308,7 +308,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
                 // FIXME: Load trip message
 //				loadMessageOfOneUser(pos, lstMessage);
-                lstMessage = HttpManager.getListCommentTrip(getTrips().get(pos).getTripId());
+                lstMessage = HttpManager.getListCommentTrip(getTrips().get(position).getTripId());
 
                 // comment_dialog = mInflater.inflate(
                 // R.layout.comment_dialog, null);
@@ -343,15 +343,15 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         viewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        HttpManager.getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
+        HttpManager.getListPointOnTrip(getTrips().get(position).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
                     @Override
                     public void onCompleted(ArrayList<GeoPoint> waypoints, Object tag, Exception e) {
                         if (waypoints.size() > 0) {
-                            getTrips().get(pos).setLstWayPoints(waypoints);
-                            ArrayList<Road> lstRoads = new ArrayList<Road>();
-                            Road road1 = new Road(getTrips().get(pos).getLstWayPoints());
+                            getTrips().get(position).setLstWayPoints(waypoints);
+                            ArrayList<Road> lstRoads = new ArrayList<>();
+                            Road road1 = new Road(getTrips().get(position).getLstWayPoints());
                             lstRoads.add(road1);
-                            mainActivity.changeToMapFragments(getTrips().get(pos));
+                            mainActivity.changeToMapFragments(getTrips().get(position));
                         } else {
                             new AlertDialog.Builder(parentViewGroup.getContext())
                                     .setTitle("View Trip On Map Error")

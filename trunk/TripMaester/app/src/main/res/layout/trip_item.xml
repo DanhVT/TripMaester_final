@@ -21,7 +21,6 @@
             android:layout_marginRight="10dp" />
 
         <LinearLayout
-            android:id="@+id/linerItemTripListUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -128,7 +127,6 @@
 
     <!-- Content_status_trip -->
     <LinearLayout
-        android:id="@+id/item_list_trip_Content_status_trip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
@@ -138,7 +136,6 @@
 
         <!-- number likes -->
         <LinearLayout
-            android:id="@+id/item_list_trip_number_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -149,12 +146,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="40 likes"
-                android:textColor="@color/map_item_trip_gray"></TextView>
+                android:textColor="@color/map_item_trip_gray" />
         </LinearLayout>
 
         <!-- number comment -->
         <LinearLayout
-            android:id="@+id/item_list_trip_number_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -165,12 +161,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10 comments"
-                android:textColor="@color/map_item_trip_gray"></TextView>
+                android:textColor="@color/map_item_trip_gray" />
         </LinearLayout>
 
         <!-- continue reading -->
         <LinearLayout
-            android:id="@+id/item_list_trip_continue_reading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -202,6 +197,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:baselineAligned="false"
         android:weightSum="4">
 
         <!-- button like -->
@@ -247,7 +243,6 @@
 
         <!-- button comment -->
         <LinearLayout
-            android:id="@+id/item_list_trip_button_comm"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

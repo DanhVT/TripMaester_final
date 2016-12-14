@@ -16,12 +16,11 @@ import android.widget.TextView;
 
 public class MessageDetailAdapter extends BaseAdapter{
 	private LayoutInflater mInflater;
-	private Context mContext;
 	private ArrayList<MessageItem> mFriends;
 	
 	public MessageDetailAdapter(Context context, ArrayList<MessageItem> friends) {
 		super();
-		this.mContext = context;
+		Context mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mFriends = friends;
 	}

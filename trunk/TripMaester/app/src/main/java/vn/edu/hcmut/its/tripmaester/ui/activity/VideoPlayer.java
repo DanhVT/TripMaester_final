@@ -32,31 +32,20 @@ import vn.edu.hcmut.its.tripmaester.R;
 public class VideoPlayer extends AppCompatActivity {
     private SurfaceView surfaceView;
     private ExoPlayer exoPlayer;
-    private boolean bAutoplay=true;
     private boolean bIsPlaying=false;
     private boolean bControlsActive=true;
     private ImageButton btnPlay;
     private ImageButton btnPause;
-    private ImageButton btnFwd;
-    private ImageButton btnPrev;
-    private ImageButton btnRew;
-    private ImageButton btnNext;
     private RelativeLayout loadingPanel;
-    private int RENDERER_COUNT = 300000;
-    private int minBufferMs =    250000;
 
-    private final int BUFFER_SEGMENT_SIZE = 64 * 1024;
-    private final int BUFFER_SEGMENT_COUNT = 256;
     private LinearLayout mediaController;
     private SeekBar seekPlayerProgress;
     private Handler handler;
     private TextView txtCurrentTime;
     private TextView txtEndTime;
-    private StringBuilder mFormatBuilder;
-    private Formatter mFormatter;
     private String HLSurl = "http://walterebert.com/playground/video/hls/sintel-trailer.m3u8";
     private String mp4URL = "http://player.hungama.com/mp3/91508493.mp4";
-    private String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:40.0) Gecko/20100101 Firefox/40.0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +68,7 @@ public class VideoPlayer extends AppCompatActivity {
 //        initHLSPlayer(0);
 
 
+        boolean bAutoplay = true;
         if(bAutoplay){
             if(exoPlayer!=null){
                 exoPlayer.setPlayWhenReady(true);
@@ -107,7 +97,7 @@ public class VideoPlayer extends AppCompatActivity {
     }
 
     private void initNext() {
-        btnNext = (ImageButton) findViewById(R.id.next);
+        ImageButton btnNext = (ImageButton) findViewById(R.id.next);
         btnNext.requestFocus();
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +108,7 @@ public class VideoPlayer extends AppCompatActivity {
     }
 
     private void initRew() {
-        btnRew = (ImageButton) findViewById(R.id.rew);
+        ImageButton btnRew = (ImageButton) findViewById(R.id.rew);
         btnRew.requestFocus();
         btnRew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +119,7 @@ public class VideoPlayer extends AppCompatActivity {
     }
 
     private void initPrev() {
-        btnPrev = (ImageButton) findViewById(R.id.prev);
+        ImageButton btnPrev = (ImageButton) findViewById(R.id.prev);
         btnPrev.requestFocus();
         btnPrev.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +133,7 @@ public class VideoPlayer extends AppCompatActivity {
 
 
     private void initFwd() {
-        btnFwd = (ImageButton) findViewById(R.id.ffwd);
+        ImageButton btnFwd = (ImageButton) findViewById(R.id.ffwd);
         btnFwd.requestFocus();
         btnFwd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,8 +160,8 @@ public class VideoPlayer extends AppCompatActivity {
     }
 
     private String stringForTime(int timeMs) {
-        mFormatBuilder = new StringBuilder();
-        mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+        StringBuilder mFormatBuilder = new StringBuilder();
+        Formatter mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         int totalSeconds =  timeMs / 1000;
 
         int seconds = totalSeconds % 60;
@@ -320,9 +310,13 @@ public class VideoPlayer extends AppCompatActivity {
     private void initPlayer(int position) {
 
 
+        int minBufferMs = 250000;
         Allocator allocator = new DefaultAllocator(minBufferMs);
+        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:40.0) Gecko/20100101 Firefox/40.0";
         DataSource dataSource = new DefaultUriDataSource(this, null, userAgent);
 
+        int BUFFER_SEGMENT_SIZE = 64 * 1024;
+        int BUFFER_SEGMENT_COUNT = 256;
         ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(mp4URL), dataSource, allocator,
                 BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
 
@@ -332,6 +326,7 @@ public class VideoPlayer extends AppCompatActivity {
 
         MediaCodecAudioTrackRenderer audioRenderer = new MediaCodecAudioTrackRenderer(sampleSource, MediaCodecSelector.DEFAULT);
 
+        int RENDERER_COUNT = 300000;
         exoPlayer = ExoPlayer.Factory.newInstance(RENDERER_COUNT);
         exoPlayer.prepare(videoRenderer, audioRenderer);
         exoPlayer.sendMessage(videoRenderer,

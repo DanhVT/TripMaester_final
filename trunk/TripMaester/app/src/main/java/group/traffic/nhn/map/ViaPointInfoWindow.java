@@ -35,6 +35,7 @@ import org.osmdroid.views.MapView;
  *
  * @author M.Kergall
  */
+@SuppressWarnings("Convert2Diamond")
 @SuppressLint("NewApi")
 public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
 
@@ -91,7 +92,7 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
             }
         });
 
-        lstImage = new ArrayList<Bitmap>();
+        lstImage = new ArrayList<>();
         if (null != bitmap) {
             lstImage.add(bitmap);
             Drawable btn_delete_drawable = new BitmapDrawable(mainActivity.getResources(), lstImage.get(0));
@@ -114,6 +115,7 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
         }
     }
 
+    @SuppressWarnings("UnusedAssignment")
     @Override
     public void onOpen(Object item) {
         Marker eItem = (Marker) item;
@@ -150,6 +152,7 @@ public abstract class ViaPointInfoWindow extends MarkerInfoWindow {
         new AlertDialog.Builder(mMapView.getContext()).setView(formElementsView)
                 .setTitle("Form Elements")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @SuppressWarnings("UnusedAssignment")
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
 

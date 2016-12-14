@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -28,7 +27,6 @@ public class DBStaticLocHelper extends SQLiteOpenHelper {
 	public static final String NAME = "name";
 	public static final String TABLE = "street";
 
-	private SQLiteDatabase myDataBase;
 	private final Context context;
 
 	// Constructor
@@ -85,7 +83,7 @@ public class DBStaticLocHelper extends SQLiteOpenHelper {
 		String mPath = context.getDatabasePath(DB_NAME).getAbsolutePath();// "/data/data/" + context.getPackageName() + "/databases/"
 		//		+ DB_NAME;
 		// Log.v("mPath", mPath);
-		myDataBase = SQLiteDatabase.openDatabase(mPath, null,
+		SQLiteDatabase myDataBase = SQLiteDatabase.openDatabase(mPath, null,
 				SQLiteDatabase.CREATE_IF_NECESSARY);
 		// mDataBase = SQLiteDatabase.openDatabase(mPath,
 		// null,SQLiteDatabase.NO_LOCALIZED_COLLATORS);

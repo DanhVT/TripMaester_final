@@ -54,16 +54,16 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 	Paint pathPaint = new Paint();
 	// used in case checking if user's location on the route or not
 	// main node is a beginning node of a returned street
-	public static ArrayList<NodeDrawable> mainNodes = new ArrayList<NodeDrawable>();
+	public static ArrayList<NodeDrawable> mainNodes = new ArrayList<>();
 	// used to determine direction, last segment and beginning segment of each
 	// returned street
-	ArrayList<SegDrawable> mainSegs = new ArrayList<SegDrawable>();
-	ArrayList<SegDrawable> firstSegList = new ArrayList<SegDrawable>();
-	ArrayList<SegDrawable> lastSegList = new ArrayList<SegDrawable>();
-	public static ArrayList<Integer> directionList = new ArrayList<Integer>();
-	public static ArrayList<String> mainStreetName = new ArrayList<String>();
-	public static ArrayList<Integer> mainStreetLength = new ArrayList<Integer>();
-	public static ArrayList<Long> mainStreetId = new ArrayList<Long>();
+	ArrayList<SegDrawable> mainSegs = new ArrayList<>();
+	ArrayList<SegDrawable> firstSegList = new ArrayList<>();
+	ArrayList<SegDrawable> lastSegList = new ArrayList<>();
+	public static ArrayList<Integer> directionList = new ArrayList<>();
+	public static ArrayList<String> mainStreetName = new ArrayList<>();
+	public static ArrayList<Integer> mainStreetLength = new ArrayList<>();
+	public static ArrayList<Long> mainStreetId = new ArrayList<>();
 	// estimated time and distance for returned path
 	int time = 0;
 	double distance = 0;
@@ -141,17 +141,17 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 		pathPaint.setStrokeJoin(Paint.Join.ROUND);
 
 		// ### renew main nodes, segments and streets array lists
-		mainNodes = new ArrayList<NodeDrawable>();
-		mainSegs = new ArrayList<SegDrawable>();
-		firstSegList = new ArrayList<SegDrawable>();
-		lastSegList = new ArrayList<SegDrawable>();
-		directionList = new ArrayList<Integer>();
-		mainStreetName = new ArrayList<String>();
-		mainStreetLength = new ArrayList<Integer>();
-		mainStreetId = new ArrayList<Long>();
+		mainNodes = new ArrayList<>();
+		mainSegs = new ArrayList<>();
+		firstSegList = new ArrayList<>();
+		lastSegList = new ArrayList<>();
+		directionList = new ArrayList<>();
+		mainStreetName = new ArrayList<>();
+		mainStreetLength = new ArrayList<>();
+		mainStreetId = new ArrayList<>();
 		firstSeg = new SegDrawable();
 		// ### json parse
-		String json = null;
+		String json;
 		try {
 			json = ApiCall.GET(client, arg0[0]);
 
@@ -183,7 +183,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 					}
 					Locale locale = Locale.getDefault();
 					NumberFormat format = NumberFormat.getInstance(locale);
-					Number number = format.parse(String.format("%.1f", jsonResource.getDouble("distance") / 1000));
+					Number number = format.parse(String.format(Locale.getDefault(),"%.1f", jsonResource.getDouble("distance") / 1000));
 					distance += number.doubleValue();
 					Log.wtf("TIME: ", time + "  " + distance);
 					// ###Path -> list streets
@@ -289,7 +289,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 
 				Locale locale = Locale.getDefault();
 				NumberFormat format = NumberFormat.getInstance(locale);
-				Number number = format.parse(String.format("%.1f",
+				Number number = format.parse(String.format(Locale.getDefault(), "%.1f",
 						legs.getJSONObject(0).getJSONObject("distance")
 								.getDouble("value") / 1000));
 				distance = number.doubleValue();
@@ -310,7 +310,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 
 					String decodedPolyline = step.getJSONObject("polyline")
 							.getString("points");
-					ArrayList<GeoPoint> points = new ArrayList<GeoPoint>();
+					ArrayList<GeoPoint> points;
 					points = decodePoly(decodedPolyline);
 
 					StaticVariable.ROUTING_PATH.addPoint(new GeoPoint(lat1, lon1));
@@ -347,10 +347,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 			if(mainStreetLength.size() > 0)
 			distance_to_next_turning_point = mainStreetLength.get(0);
 
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (JSONException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -530,7 +527,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 	 */
 	private ArrayList<GeoPoint> decodePoly(String encoded) {
 
-		ArrayList<GeoPoint> poly = new ArrayList<GeoPoint>();
+		ArrayList<GeoPoint> poly = new ArrayList<>();
 		int index = 0, len = encoded.length();
 		int lat = 0, lng = 0;
 

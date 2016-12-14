@@ -20,14 +20,13 @@ import android.widget.TextView;
 
 public class MessageListAdapter extends BaseAdapter{
 	private LayoutInflater mInflater;
-	private Context mContext;
 	private ArrayList<MessageItem> mMessages;
-	private ArrayList<String> lstFbIdUsed = new ArrayList<String>();
-	private ArrayList<Bitmap> lstBitmapFbId = new ArrayList<Bitmap>();
+	private ArrayList<String> lstFbIdUsed = new ArrayList<>();
+	private ArrayList<Bitmap> lstBitmapFbId = new ArrayList<>();
 	
 	public MessageListAdapter(Context context, ArrayList<MessageItem> friends) {
 		super();
-		this.mContext = context;
+		Context mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.setmFriends(friends);
 	}
@@ -59,7 +58,7 @@ public class MessageListAdapter extends BaseAdapter{
 		}
 
 		try{
-			Bitmap user_fb_icon = null;
+			Bitmap user_fb_icon;
 			String user_fb_id = mMessages.get(position).getFbIdAva();
 			
 			

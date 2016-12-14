@@ -70,8 +70,8 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 			parser.require(XmlPullParser.START_TAG, null, "result");
 			if (parser.next() == XmlPullParser.TEXT) {
 				address = parser.getText();
-				if (address.indexOf(", "
-						+ context.getResources().getString(R.string.tp_hcm)) != -1)
+				if (address.contains(", "
+						+ context.getResources().getString(R.string.tp_hcm)))
 					address = address.substring(
 							0,
 							address.indexOf(", "
@@ -80,14 +80,8 @@ public class AddressParser extends AsyncTask<String, Void, String> {
 				
 			}
 			connection.close();
-		} catch (XmlPullParserException e) {
+		} catch (XmlPullParserException | NullPointerException | IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(NullPointerException e){
 			e.printStackTrace();
 		}
 		return address;

@@ -174,7 +174,7 @@ public class HttpManager {
                     public void onCompleted(Exception e, String result) {
                         if (e == null) {
                             try {
-                                callback.onCompleted(new JSONObject(result), null, e);
+                                callback.onCompleted(new JSONObject(result), null, null);
                             } catch (JSONException e1) {
                                 callback.onCompleted(null, null, e1);
                             }
@@ -186,7 +186,7 @@ public class HttpManager {
     }
 
     public static ArrayList<MessageItem> getListCommentTrip(String tripId) {
-        ArrayList<MessageItem> lstMessages = new ArrayList<MessageItem>();
+        ArrayList<MessageItem> lstMessages = new ArrayList<>();
         try {
             JSONArray response_json = new JSONArray();
             // http://traffic.hcmut.edu.vn/ITS/rest/user/login
@@ -196,7 +196,7 @@ public class HttpManager {
                     .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
                     .addFormDataPart("tripId", tripId)
                     .build();
-            String str_response = null;
+            String str_response;
 
             str_response = ApiCall.POST(client, URL_GET_COMMENTS_TRIP, requestBody);
             JSONObject jsonObj = new JSONObject(str_response);
@@ -208,10 +208,8 @@ public class HttpManager {
             // && !jsonObj.isNull("shareList")){
             for (int i = 0; i < response_json.length(); i++) {
                 JSONObject jObj = new JSONObject(response_json.getString(i));
-                if (null != jObj) {
-                    MessageItem item = new MessageItem(jObj.getString("content"), R.drawable.user1, true, 10, jObj.getString("userId"), jObj.getString("dateTime"));
-                    lstMessages.add(item);
-                }
+                MessageItem item = new MessageItem(jObj.getString("content"), R.drawable.user1, true, 10, jObj.getString("userId"), jObj.getString("dateTime"));
+                lstMessages.add(item);
             }
 
             //arrange the list according to dateTime
@@ -247,7 +245,7 @@ public class HttpManager {
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
                     .build();
-            String str_response = null;
+            String str_response;
 
             str_response = ApiCall.POST(client, URL_GET_FRIENDS, requestBody);
 
@@ -278,7 +276,7 @@ public class HttpManager {
                     .setCallback(new FutureCallback<String>() {
                         @Override
                         public void onCompleted(Exception e, String str_response) {
-                            final ArrayList<GeoPoint> lstGeoPoints = new ArrayList<GeoPoint>();
+                            final ArrayList<GeoPoint> lstGeoPoints = new ArrayList<>();
                             try {
                                 JSONArray listPoint = new JSONArray();
                                 JSONObject jsonObj = new JSONObject(str_response);
@@ -286,7 +284,7 @@ public class HttpManager {
                                     listPoint = new JSONArray(jsonObj.getString("listPoint"));
                                 }
 
-                                MapFragment.listMarkerTrip = new ArrayList<MapFragment.MyMarker>();
+                                MapFragment.listMarkerTrip = new ArrayList<>();
 
                                 for (int i = 0; i < listPoint.length(); i++) {
                                     JSONObject pointJson = new JSONObject(listPoint.getString(i));
@@ -333,7 +331,7 @@ public class HttpManager {
                         @Override
                         public void onCompleted(Exception e, String str_response) {
                             if (e == null) {
-                                JSONObject jsonObj = null;
+                                JSONObject jsonObj;
                                 try {
                                     jsonObj = new JSONObject(str_response);
                                     if (!jsonObj.isNull("listTrip")) {
@@ -371,9 +369,7 @@ public class HttpManager {
                 ex.printStackTrace();
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -433,7 +429,7 @@ public class HttpManager {
                         @Override
                         public void onCompleted(Exception e, String str_response) {
                             if (e == null) {
-                                JSONObject jsonObj = null;
+                                JSONObject jsonObj;
                                 try {
                                     jsonObj = new JSONObject(str_response);
                                     if (!jsonObj.isNull("listTrip")) {
@@ -533,7 +529,7 @@ public class HttpManager {
                     .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
                     .addFormDataPart("tripId", tripID)
                     .build();
-            String str_response = null;
+            String str_response;
 
             str_response = ApiCall.POST(client, URL_GET_TRIP_INFO, requestBody);
             JSONObject jsonObj = new JSONObject(str_response);
@@ -566,7 +562,7 @@ public class HttpManager {
                     public void onCompleted(Exception e, String str_response) {
                         if (e == null) {
                             try {
-                                callback.onCompleted(new JSONObject(str_response), null, e);
+                                callback.onCompleted(new JSONObject(str_response), null, null);
                             } catch (Exception ex) {
                                 callback.onCompleted(null, null, ex);
                             }
@@ -623,7 +619,7 @@ public class HttpManager {
                     .addFormDataPart("timezone", LoginManager.getInstance().getUser().getTimezone())
                     .addFormDataPart("imei", LoginManager.getInstance().getUser().getImei())
                     .build();
-            String str_response = null;
+            String str_response;
 
             str_response = ApiCall.POST(client, URL_LOGIN, requestBody);
             response_json = new JSONObject(str_response);
@@ -746,24 +742,21 @@ public class HttpManager {
     //TODO: DANHVT - CHANGE TO OKHTTP _ NOT CHECK
     public static JSONObject uploadImage(File file, String fileName, String MIME, String pointId) {
         String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
-        String POINT_ID = pointId;
         MediaType MEDIA_TYPE = MediaType.parse(MIME);
         String format = MIME.split("/")[1];
         JSONObject responseJson = new JSONObject();
         MultipartBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("filename", fileName)
-                .addFormDataPart("pointId", POINT_ID)
+                .addFormDataPart("pointId", pointId)
                 .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
                 .addFormDataPart("dataImage", fileName+"."+format, RequestBody.create(MEDIA_TYPE, file))
                 .build();
-        String str_response = null;
+        String str_response;
         try {
             str_response = ApiCall.POST(client, URL_UPLOAD, requestBody);
             responseJson = new JSONObject(str_response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return responseJson;

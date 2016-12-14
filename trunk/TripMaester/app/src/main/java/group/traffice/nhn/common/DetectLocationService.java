@@ -28,7 +28,6 @@ public class DetectLocationService extends Service implements LocationListener {
     }
 
     private LocationManager mLocationManager;
-    private boolean startLocationUpdates = false;
 
     @Override
     public void onCreate() {
@@ -50,7 +49,7 @@ public class DetectLocationService extends Service implements LocationListener {
         }
 
         //  Start locattion update
-        startLocationUpdates = startLocationUpdates();
+        boolean startLocationUpdates = startLocationUpdates();
         CommonFunction.getSavedBoolean(this, SharedPreferencesKeys.KEY_STARTLOCATIONUPDATES, startLocationUpdates);
 
     }
@@ -69,12 +68,9 @@ public class DetectLocationService extends Service implements LocationListener {
     /*  Start - LocationListener  */
     private final NetworkLocationIgnorer mIgnorer = new NetworkLocationIgnorer();
     private long mLastTime = 0; // milliseconds
-    private double mSpeed = 0.0; // km/h
-    private float mAzimuthAngleSpeed = 0.0f;
-    private double TIMER_DETECT_LOCATION = 1 * 10 * 1000; // 10s
 
     private GeoPoint mDeparture, mDestination;
-    private ArrayList<GeoPoint> mViaPoint = new ArrayList<GeoPoint>();
+    private ArrayList<GeoPoint> mViaPoint = new ArrayList<>();
 
     @Override
     public void onLocationChanged(Location location) {
@@ -84,6 +80,7 @@ public class DetectLocationService extends Service implements LocationListener {
 
         double dT = currentTime - mLastTime;
         //  Check if departure != null && difference time < TIMER_DETECT_LOCATION --> NOT save point
+        double TIMER_DETECT_LOCATION = 10 * 1000;
         if (null != mDeparture && dT < TIMER_DETECT_LOCATION){
             return;
         }
@@ -97,7 +94,7 @@ public class DetectLocationService extends Service implements LocationListener {
         Log.e("Xinh", "*** intent Update Current Location ***");
 
         GeoPoint newLocation = new GeoPoint(location);
-        mAzimuthAngleSpeed = location.getBearing();
+        float mAzimuthAngleSpeed = location.getBearing();
 
         // Check if mDeparture == null
         if(null == mDeparture){
@@ -125,7 +122,7 @@ public class DetectLocationService extends Service implements LocationListener {
 			mSpeed = d/dT*1000.0; // m/s
 			mSpeed = mSpeed * 3.6; //km/h
 			*/
-            mSpeed = location.getSpeed() * 3.6;
+            double mSpeed = location.getSpeed() * 3.6;
 
             //TODO: check if speed is not too small
             if (mSpeed >= 0.1) {

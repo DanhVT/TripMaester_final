@@ -16,7 +16,6 @@ import vn.edu.hcmut.its.tripmaester.R;
 public class ContextMenuAdapter extends BaseAdapter{
 	private Context context;
 	private List<ContextMenuItem> listContextMenuItems;
-	private LayoutInflater inflater;
 
 	public ContextMenuAdapter(Context context,List<ContextMenuItem> listContextMenuItems) {
 	    super();
@@ -33,7 +32,7 @@ public class ContextMenuAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 	    ViewHolder viewHolder;
 	    if (convertView == null) {
-	        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	        viewHolder = new ViewHolder();
 	        
 	        convertView = inflater.inflate(R.layout.warning_context_menu, parent, false);

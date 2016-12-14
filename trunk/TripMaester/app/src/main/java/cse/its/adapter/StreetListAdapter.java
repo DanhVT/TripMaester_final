@@ -1,6 +1,7 @@
 package cse.its.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,9 @@ public class StreetListAdapter extends ArrayAdapter<String> {
 
 	}
 
+	@NonNull
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 		ViewHolderItem viewHolderItem = new ViewHolderItem();
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context

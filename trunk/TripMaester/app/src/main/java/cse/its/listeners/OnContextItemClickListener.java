@@ -5,7 +5,6 @@ import cse.its.helper.PostWarningInfor;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class OnContextItemClickListener implements OnItemClickListener{

@@ -4,7 +4,6 @@
     android:layout_height="match_parent" >
 
     <LinearLayout
-        android:id="@+id/ll_map_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center" >
@@ -117,7 +116,7 @@
         <Button
             android:id="@+id/btn_start"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1.08"
             android:text="@string/btn_start"
             android:textSize="15sp" />

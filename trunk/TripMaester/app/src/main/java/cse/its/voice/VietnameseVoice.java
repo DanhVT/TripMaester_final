@@ -24,8 +24,8 @@ public class VietnameseVoice {
 
 	public VietnameseVoice(Context context, int direction, int number,
 			String desStreet) {
-		mpList = new ArrayList<MediaPlayer>();
-		textList = new ArrayList<String>();
+		mpList = new ArrayList<>();
+		textList = new ArrayList<>();
 
 		textList.add("gostraight");
 		// add distance
@@ -76,7 +76,7 @@ public class VietnameseVoice {
 	}
 
 	public void speak() {
-		cdTimerList = new ArrayList<CountDownTimer>();
+		cdTimerList = new ArrayList<>();
 		for (int i = mpList.size() - 1; i >= 0; --i) {
 			final int j = i;
 			//

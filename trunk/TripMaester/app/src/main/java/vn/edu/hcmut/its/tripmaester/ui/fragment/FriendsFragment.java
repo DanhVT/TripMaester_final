@@ -40,22 +40,16 @@ public class FriendsFragment extends Fragment {
     //TODO: TL: This should be convert to COMMON CONSTANTS
     String URL = "http://www.traffic.hcmut.edu.vn/";
     String result = "";
-    private ListView mListFriend;
     private ArrayList<FriendItem> mFriends;
     private FriendListAdapter mListAdapter;
-    //	boolean isLoadDone = false;
-    private ArrayList<FriendItem> friends;
-    private Button btn_Invite;
     private ProgressDialog dialog;
-    private CallbackManager callbackManager;
-    private GameRequestDialog requestDialog;
 
     public FriendsFragment() {
     }
 
     public void addListenerOnButton(View view) {
 
-        btn_Invite = (Button) view.findViewById(R.id.btn_invite);
+        Button btn_Invite = (Button) view.findViewById(R.id.btn_invite);
         btn_Invite.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -96,7 +90,7 @@ public class FriendsFragment extends Fragment {
      * @return
      */
     private ArrayList<FriendItem> getFriendsOfUser() {
-        mFriends = new ArrayList<FriendItem>();
+        mFriends = new ArrayList<>();
 
         if (LoginManager.getInstance().isLogin()) {
             dialog = new ProgressDialog(this.getActivity());
@@ -139,8 +133,8 @@ public class FriendsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        callbackManager = CallbackManager.Factory.create();
-        requestDialog = new GameRequestDialog(this);
+        CallbackManager callbackManager = CallbackManager.Factory.create();
+        GameRequestDialog requestDialog = new GameRequestDialog(this);
         requestDialog.registerCallback(callbackManager, new FacebookCallback<GameRequestDialog.Result>() {
             public void onCancel() {
             }
@@ -161,8 +155,8 @@ public class FriendsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        mListFriend = (ListView) rootView.findViewById(R.id.list_friends);
-        friends = getFriendsOfUser();
+        ListView mListFriend = (ListView) rootView.findViewById(R.id.list_friends);
+        ArrayList<FriendItem> friends = getFriendsOfUser();
 
         mListAdapter = new FriendListAdapter(this.getActivity().getApplicationContext(), friends);
         mListFriend.setAdapter(mListAdapter);

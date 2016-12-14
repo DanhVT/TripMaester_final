@@ -16,10 +16,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class MessageFragment extends Fragment {
-	
-	private ListView mMessageFriend;
+
 	private ArrayList<MessageItem> mMessages;
-	private MessageListAdapter mListAdapter;
 	private ListView mViewDialogContent;
 	private AlertDialog  mDialog = null;
 	private MessageListAdapter mMessageDetailAdapter;
@@ -30,7 +28,7 @@ public class MessageFragment extends Fragment {
 	 * @return
 	 */
 	private ArrayList<MessageItem> getMessagesOfUser(){
-		ArrayList<MessageItem> result = new ArrayList<MessageItem>();
+		ArrayList<MessageItem> result = new ArrayList<>();
 		
 		MessageItem item1 = new MessageItem(getActivity(),"Di choi cho vui di",R.drawable.user1, true, 10, "03 Mat","");
 		MessageItem item2 = new MessageItem(getActivity(),"Co di dau khong",R.drawable.user2, true, 1, "01 Feb","");
@@ -55,7 +53,7 @@ public class MessageFragment extends Fragment {
 	}
 	
 	private void loadMessageOfOneUser(int position){
-		ArrayList<MessageItem> result = new ArrayList<MessageItem>();
+		ArrayList<MessageItem> result = new ArrayList<>();
 		
 		MessageItem item = mMessages.get(position);
 		
@@ -79,12 +77,12 @@ public class MessageFragment extends Fragment {
             Bundle savedInstanceState) {
  
         View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
-         
-        mMessageFriend = (ListView)rootView.findViewById(R.id.list_messages);
+
+		ListView mMessageFriend = (ListView) rootView.findViewById(R.id.list_messages);
         
         //load friends
         ArrayList<MessageItem> messages = getMessagesOfUser();
-        mListAdapter = new MessageListAdapter(this.getActivity().getApplicationContext(), messages);
+		MessageListAdapter mListAdapter = new MessageListAdapter(this.getActivity().getApplicationContext(), messages);
         mMessageFriend.setAdapter(mListAdapter);
         mMessageFriend.setOnItemClickListener(new MessageItemClickListener());
         

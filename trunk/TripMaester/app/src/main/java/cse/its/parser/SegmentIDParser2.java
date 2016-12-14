@@ -51,10 +51,7 @@ public class SegmentIDParser2 extends AsyncTask<String, Void, Integer> {
 				segmentID = Integer.parseInt(response.substring(15, response.length() - 2));
 			} else
 				segmentID = 0;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch(NumberFormatException e){
+		} catch (IOException | NumberFormatException e) {
 			e.printStackTrace();
 		}
 

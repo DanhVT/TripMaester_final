@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class TripComment {
     private String mTripId;
     private String mCommentId;
-    private ArrayList<String> mListContent = new ArrayList<String>();
+    private ArrayList<String> mListContent = new ArrayList<>();
 
     public TripComment(String tripId) {
         mTripId = tripId;

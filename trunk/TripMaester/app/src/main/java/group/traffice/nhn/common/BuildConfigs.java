@@ -7,7 +7,7 @@ public class BuildConfigs {
 
     // true: draw road by list response from server
     // false: draw by point detected
-    public static boolean DRAW_ROAD_BY_CALL_API = !true;
+    public static boolean DRAW_ROAD_BY_CALL_API = false;
 
 
 }

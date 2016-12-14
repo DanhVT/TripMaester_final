@@ -21,13 +21,12 @@ public class RightMapMenuExpandableListAdapter extends BaseExpandableListAdapter
 
 //	private ArrayList<RightMenuGroup> mGroups;
 	public LayoutInflater mInflater;
-	private Context mContext;
 
 	/**
 	 * load menu content
 	 */
 	public RightMapMenuExpandableListAdapter(Context context, ArrayList<RightMenuGroup> groups) {
-		this.mContext = context;
+		Context mContext = context;
 //		this.mGroups = groups; // is null, do not use
 		this.mInflater = LayoutInflater.from(mContext);
 	}
@@ -181,7 +180,7 @@ public class RightMapMenuExpandableListAdapter extends BaseExpandableListAdapter
 	 * @return
 	 */
 	private int getImageVehicle(int position){
-		int result = -1;
+		int result;
 		switch(position){
 		case 0:
 			result = R.drawable.ic_car;
@@ -207,7 +206,7 @@ public class RightMapMenuExpandableListAdapter extends BaseExpandableListAdapter
 	 * @return
 	 */
 	private int getImageOfAlgorithm(int position){
-		int result = -1;
+		int result;
 		switch(position){
 		case 0:
 			result = R.drawable.ic_polyline;

@@ -2,7 +2,6 @@ package group.traffic.nhn.trip;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -44,7 +42,7 @@ public class TripsFragment extends Fragment {
     private Timer timerTrip;
     private ListView lstTripsInfor;
     private Button bAddtrip;
-    public static ArrayList<Trip> lst_user_trip = new ArrayList<Trip>();
+    public static ArrayList<Trip> lst_user_trip = new ArrayList<>();
     public void stopTimer() {
         if (timer != null) {
             timer.purge();
@@ -69,12 +67,11 @@ public class TripsFragment extends Fragment {
         }
 
         protected ArrayList<MessageItem> doInBackground(String... params) {
-            ArrayList<MessageItem> lstMessageTemp = HttpManager
+
+            return HttpManager
                     .getListCommentTrip(TripManager.lst_user_trip
                             .get(pos)
                             .getTripId());
-
-            return lstMessageTemp;
         }
 
         protected void onPostExecute(ArrayList<MessageItem> lsts) {

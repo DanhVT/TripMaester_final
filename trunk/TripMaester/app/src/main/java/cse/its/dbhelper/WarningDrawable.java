@@ -12,7 +12,7 @@ public class WarningDrawable {
 			this.timepost = obj.getString("timePost");
 			this.type = obj.getString("type");
 			
-		}catch(Exception ex){
+		}catch(Exception ignored){
 			
 		}
 	}

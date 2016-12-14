@@ -58,7 +58,6 @@ import vn.edu.hcmut.its.tripmaester.ui.IMainScreen;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.FriendsFragment;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 
-import static android.view.View.GONE;
 import static group.traffic.nhn.map.MapFragment.fileUri;
 import static group.traffic.nhn.map.MapFragment.isStart;
 
@@ -140,9 +139,9 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         FrameLayout layout = (FrameLayout)findViewById(R.id.fab_frameLayout);
         layout.setVisibility(View.GONE);
 
-        if(fab_current != null) fab_current.setVisibility(View.INVISIBLE);
-        if(fab_btn_capture != null) fab_btn_capture.setVisibility(View.INVISIBLE);
-        if(fab_search != null) fab_search.setVisibility(View.INVISIBLE);
+        if(fab_current != null) fab_current.setVisibility(View.GONE);
+        if(fab_btn_capture != null) fab_btn_capture.setVisibility(View.GONE);
+        if(fab_search != null) fab_search.setVisibility(View.GONE);
     }
     /**
      * display view by position
@@ -166,6 +165,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
                 if (mapFragment == null) {
+                    invisebleFloat();
                     mapFragment = new MapFragment();
                     isNew = true;
                 }
@@ -175,6 +175,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 if(fab_btn_capture == null) fab_btn_capture =(FloatingActionButton) findViewById(R.id.fab_btn_capture);
                 FrameLayout layout = (FrameLayout)findViewById(R.id.fab_frameLayout);
                 layout.setVisibility(View.VISIBLE);
+
                 if(isStart) { fab_btn_capture.setVisibility(View.VISIBLE);  }
                 break;
             case LEFT_MENU__TRIP:
@@ -197,10 +198,12 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
             default:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 if (mapFragment == null) {
+                    invisebleFloat();
                     mapFragment = new MapFragment();
+
                     isNew = true;
                 }
-
+                invisebleFloat();
                 break;
                 // fragment = new LoginFragment();
                 // break;
@@ -498,9 +501,11 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
 
         RightMenuListAdapter leftAdapter = new RightMenuListAdapter(getApplicationContext(), menuItemFriendTexts,
                 menuItemFriendIcons);
+
         mDrawerOtherMenu.setAdapter(leftAdapter);
 
         mDrawerOtherMenu.setOnItemClickListener(new DrawerRightMenuItemClickListener());
+//        menuItemFriendIcons.recycle();
     }
 
     /**
@@ -516,8 +521,10 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
 
         LeftMenuListAdapter leftAdapter = new LeftMenuListAdapter(getApplicationContext(), mLeftMenuItemTexts,
                 leftmenuIcons);
+
         mDrawerLeftMenu.setAdapter(leftAdapter);
         mDrawerLeftMenu.setOnItemClickListener(new DrawerLeftMenuItemClickListener());
+//        leftmenuIcons.recycle();
     }
 
     /**
@@ -543,8 +550,10 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
 
         RightMenuListAdapter leftAdapter = new RightMenuListAdapter(getApplicationContext(), menuItemMsgTexts,
                 menuItemMsgIcons);
+
         mDrawerOtherMenu.setAdapter(leftAdapter);
         mDrawerOtherMenu.setOnItemClickListener(new DrawerRightMenuItemClickListener());
+//        menuItemMsgIcons.recycle();
     }
 
     /**
@@ -614,8 +623,10 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
 
         RightMenuListAdapter leftAdapter = new RightMenuListAdapter(getApplicationContext(), menuItemTripTexts,
                 menuItemTripIcons);
+
         mDrawerOtherMenu.setAdapter(leftAdapter);
         mDrawerOtherMenu.setOnItemClickListener(new DrawerRightMenuItemClickListener());
+//        menuItemTripIcons.recycle();
 
     }
 

@@ -16,11 +16,10 @@ import android.widget.TextView;
 
 public class RightMenuListAdapter extends BaseAdapter{
 	private LayoutInflater mInflater;
-	private Context mContext;
 	private ArrayList<RightMenuItem> mMenuItems;
 	private TypedArray mMenuIcons;
 	private ArrayList<RightMenuItem> createItems(String [] itemsText){
-		ArrayList<RightMenuItem> result = new ArrayList<RightMenuItem>();
+		ArrayList<RightMenuItem> result = new ArrayList<>();
 		 
     	for(String strItem : itemsText){
     		RightMenuItem item = new RightMenuItem();
@@ -33,7 +32,7 @@ public class RightMenuListAdapter extends BaseAdapter{
 
 	public RightMenuListAdapter(Context context, String[] items, TypedArray icons) {
 		super();
-		this.mContext = context;
+		Context mContext = context;
 		this.mMenuItems =  createItems(items);
 		this.mMenuIcons = icons;
 		mInflater = LayoutInflater.from(mContext);

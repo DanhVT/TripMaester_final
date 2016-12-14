@@ -9,13 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import group.traffice.nhn.common.StaticVariable;
-import okhttp3.OkHttpClient;
 import vn.edu.hcmut.its.tripmaester.R;
-import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpConnection;
 
 /**

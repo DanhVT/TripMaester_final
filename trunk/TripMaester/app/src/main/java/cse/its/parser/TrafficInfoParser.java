@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -41,15 +42,14 @@ public class TrafficInfoParser extends
 	ArrayList<NodeDrawable> mNode;
 	ArrayList<SegDrawable> mSegment;
 	ArrayList<StrDrawable> mStreet;
-	private Cursor DBSegment;
 	DBTrafficSource dataSource;
-	HashMap<Long, Double> SegmentSpeed = new HashMap<Long, Double>();
-	HashMap<Long, Long> SegmentStreet = new HashMap<Long, Long>();
+	SparseArray<Long> SegmentSpeed = new SparseArray<>();
+	SparseArray<Long> SegmentStreet = new SparseArray<>();
 	double lon, lat;
 	int color;
 	int segment_count = 0;
-	ArrayList<Integer> segment_count_list = new ArrayList<Integer>();
-	public static ArrayList<PathOverlay> listPath = new ArrayList<PathOverlay>();
+	ArrayList<Integer> segment_count_list = new ArrayList<>();
+	public static ArrayList<PathOverlay> listPath = new ArrayList<>();
 	public static boolean finish_get_traffic_info = true;
 
 	public TrafficInfoParser() {
@@ -67,16 +67,17 @@ public class TrafficInfoParser extends
 		Log.wtf("TRAFFIC INFO REQUEST", "start: " + System.currentTimeMillis()
 				% 10000);
 		dataSource = new DBTrafficSource(context);
-		mSegment = new ArrayList<SegDrawable>();
-		mNode = new ArrayList<NodeDrawable>();
-		mStreet = new ArrayList<StrDrawable>();
+		mSegment = new ArrayList<>();
+		mNode = new ArrayList<>();
+		mStreet = new ArrayList<>();
 	}
 
+	@SuppressWarnings("UnusedAssignment")
 	@Override
 	protected ArrayList<PathOverlay> doInBackground(String... arg0) {
 		Log.i("ON DOINBACKFROUND", " ");
 		try {
-			String json = null;
+			String json;
 			String url = arg0[0];
 //			url = "http://221.133.13.113/hcm/rest/rectangleSpeed?latTL=10.754263363641192&lonTL=106.64312839508057&latTR=10.754263363641192&lonTR=106.69806003570557&latBL=10.739717260666932&lonBL=106.64312839508057&latBR=10.739717260666932&lonBR=106.69806003570557&zoom=15";
 			Log.i("Url: ", url);
@@ -163,7 +164,7 @@ public class TrafficInfoParser extends
 		 
 
 		mapView.getOverlays().removeAll(listPath);
-		listPath = new ArrayList<PathOverlay>();
+		listPath = new ArrayList<>();
 		PathOverlay path;
 		for (int i = 0; i < mSegment.size(); ++i) {
 			path = new PathOverlay(Color.GREEN, context);
@@ -232,17 +233,17 @@ public class TrafficInfoParser extends
 		finish_get_traffic_info = true;
 	}
 
-	ArrayList<View> listAnimationDraw = new ArrayList<View>();
+	ArrayList<View> listAnimationDraw = new ArrayList<>();
 
 	// static Animation animBlink;
 	//
 
 	private void addToList(HashMap<Long, Double> _SegmentSpeed) {
 		// chuyen List cac segment sang string
-		ArrayList<Long> segmentList = new ArrayList<Long>(
+		ArrayList<Long> segmentList = new ArrayList<>(
 				_SegmentSpeed.keySet());
 		// Log.i("Segment List: ", segmentList.toString());
-		DBSegment = dataSource.getSeg(buildString(segmentList));
+		Cursor DBSegment = dataSource.getSeg(buildString(segmentList));
 		Log.i("querry count", DBSegment.getCount() + " " + segmentList.size());
 		// lay data
 		if (DBSegment != null) {
@@ -280,8 +281,7 @@ public class TrafficInfoParser extends
 		if (_list.size() > 0)
 			builder.deleteCharAt(builder.length() - 1);
 		builder.append(")");
-		String list = builder.toString();
-		return list;
+		return builder.toString();
 	}
 
 	// Width stroke appropriate to zoom level
@@ -296,8 +296,9 @@ public class TrafficInfoParser extends
 	}
 
 	// method return speed state of a segment
+	@SuppressWarnings("UnusedAssignment")
 	private int getSpeedState(double speed) {
-		int r = 0, g = 0;
+		int r, g = 0;
 
 		if (speed < 10)
 			return Color.argb(150, 255, 0, 0);
@@ -309,8 +310,6 @@ public class TrafficInfoParser extends
 			} else if (speed < 30) {
 				r = 255;
 				g = 215;
-				r -= (speed - 15) * 7;
-				g += (speed - 15) * 3;
 			}
 		}
 		return Color.argb(100, 0, 255, 0);

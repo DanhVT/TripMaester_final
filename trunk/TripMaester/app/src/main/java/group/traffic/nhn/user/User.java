@@ -30,7 +30,7 @@ public class User {
 	String imei;
 	private String tokenId;
 	private boolean status;
-	private ArrayList<FriendItem> mFriends = new ArrayList<FriendItem>();
+	private ArrayList<FriendItem> mFriends = new ArrayList<>();
 	
 	public User(){
 		this.id = "";

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,12 +16,11 @@ import android.widget.TextView;
 public class EditTripListAdapter extends BaseAdapter{
 //public class EditTripListAdapter extends ArrayAdapter<TripItem4EditList>{
 	private LayoutInflater mInflater;
-	private Context mContext;
 	private ArrayList<TripItem4EditList> mTrips;
 	
 	public EditTripListAdapter(Context context, int layout, ArrayList<TripItem4EditList> trips) {
 //		super(context, layout, trips);
-		this.mContext = context;
+		Context mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);
 		this.mTrips = trips;
 	}

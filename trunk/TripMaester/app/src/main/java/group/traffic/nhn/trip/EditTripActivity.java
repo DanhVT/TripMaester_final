@@ -15,14 +15,10 @@ import android.widget.Toast;
 
 public class EditTripActivity extends Activity{
 
-	private ImageButton mImgCancel;
-	private ImageButton mImgOkie;
-	private ArrayList<TripItem4EditList> mListTripEdit;
-	private EditTripListAdapter mEditTripAdapter;
 	private ListView mListEdit;
 	private void initControls(){
-		mImgCancel = (ImageButton)findViewById(R.id.btn_edit_cancel);
-		mImgOkie = (ImageButton) findViewById(R.id.btn_edit_okie);
+		ImageButton mImgCancel = (ImageButton) findViewById(R.id.btn_edit_cancel);
+		ImageButton mImgOkie = (ImageButton) findViewById(R.id.btn_edit_okie);
 		mListEdit = (ListView)findViewById(R.id.edit_list_trips);
 
 	}
@@ -31,8 +27,8 @@ public class EditTripActivity extends Activity{
 	 * load trip for edit
 	 */
 	private void loadData(){
-		
-		mListTripEdit = new ArrayList<TripItem4EditList>();
+
+		ArrayList<TripItem4EditList> mListTripEdit = new ArrayList<>();
 		//TODO: KenK11 replace fake data with data from ITS server
 		TripItem4EditList item1 = new TripItem4EditList("Du lich ha long", "20/10/2014", "22/10/2014", "30/10/2014", "Ho Chi Minh", "Ha Long");
 		TripItem4EditList item2 = new TripItem4EditList("Vu tau cuoi tuan", "20/03/2015", "20/03/2015", "22/03/2015", "Ho Chi Minh", "Vung Tau");
@@ -45,9 +41,9 @@ public class EditTripActivity extends Activity{
 		mListTripEdit.add(item3);
 		mListTripEdit.add(item4);
 		mListTripEdit.add(item5);
-		
-		
-		mEditTripAdapter = new EditTripListAdapter(this.getApplicationContext(), R.layout.activity_edit_trips, mListTripEdit);
+
+
+		EditTripListAdapter mEditTripAdapter = new EditTripListAdapter(this.getApplicationContext(), R.layout.activity_edit_trips, mListTripEdit);
 		mListEdit.setAdapter(mEditTripAdapter);
 		mListEdit.setOnItemClickListener(new ItemClickListener());
 		

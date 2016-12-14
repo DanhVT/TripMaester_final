@@ -2,17 +2,10 @@ package vn.edu.hcmut.its.tripmaester.helper;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by danh-vo on 28/11/2016.
@@ -51,7 +44,6 @@ public class CameraHelper {
         double minDiff = Double.MAX_VALUE;
 
         // Target view height
-        int targetHeight = h;
 
         // Try to find a video size that matches aspect ratio and the target view size.
         // Iterate over all available sizes and pick the largest size that can fit in the view and
@@ -60,9 +52,9 @@ public class CameraHelper {
             double ratio = (double) size.width / size.height;
             if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
                 continue;
-            if (Math.abs(size.height - targetHeight) < minDiff && previewSizes.contains(size)) {
+            if (Math.abs(size.height - h) < minDiff && previewSizes.contains(size)) {
                 optimalSize = size;
-                minDiff = Math.abs(size.height - targetHeight);
+                minDiff = Math.abs(size.height - h);
             }
         }
 
@@ -70,9 +62,9 @@ public class CameraHelper {
         if (optimalSize == null) {
             minDiff = Double.MAX_VALUE;
             for (Camera.Size size : videoSizes) {
-                if (Math.abs(size.height - targetHeight) < minDiff && previewSizes.contains(size)) {
+                if (Math.abs(size.height - h) < minDiff && previewSizes.contains(size)) {
                     optimalSize = size;
-                    minDiff = Math.abs(size.height - targetHeight);
+                    minDiff = Math.abs(size.height - h);
                 }
             }
         }

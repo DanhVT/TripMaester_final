@@ -6,7 +6,6 @@
     android:orientation="horizontal" >
 
     <ImageView
-        android:id="@+id/bubble_image"
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:contentDescription="@string/btn_capture"
@@ -23,7 +22,6 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/bubble_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxEms="17"
@@ -32,7 +30,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/bubble_description"
             android:layout_width="153dp"
             android:layout_height="wrap_content"
             android:maxEms="17"
@@ -41,7 +38,6 @@
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/bubble_subdescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxEms="17"

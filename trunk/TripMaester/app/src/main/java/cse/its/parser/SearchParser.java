@@ -34,8 +34,8 @@ import cse.its.dbhelper.DBTrafficSource;
 public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 
 	Context context;
-	ArrayList<String> address_list = new ArrayList<String>();
-	ArrayList<Long> way_id_list = new ArrayList<Long>();
+	ArrayList<String> address_list = new ArrayList<>();
+	ArrayList<Long> way_id_list = new ArrayList<>();
 	DBTrafficSource dataSource;
 	MapView mapView;
 	ProgressDialog PD;
@@ -87,8 +87,8 @@ public class SearchParser extends AsyncTask<String, Void, ArrayList<String>> {
 
 					String address = link.text();
 
-					if (address.indexOf(", "+ context.getResources().getString(
-											R.string.tp_hcm)) != -1)
+					if (address.contains(", " + context.getResources().getString(
+							R.string.tp_hcm)))
 						address = address.substring(0,	address.indexOf(", "+ context.getResources().getString(
 												R.string.tp_hcm)));
 					address_list.add(address);

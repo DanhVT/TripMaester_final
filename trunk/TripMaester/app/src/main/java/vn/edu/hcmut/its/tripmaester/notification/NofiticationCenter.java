@@ -8,7 +8,6 @@ import de.greenrobot.event.EventBus;
  */
 public class NofiticationCenter {
     private static NofiticationCenter _INSTANCE;
-    private final EventBus mEventBus;
 
     public static NofiticationCenter getInstance() {
         if (_INSTANCE == null) {
@@ -22,6 +21,6 @@ public class NofiticationCenter {
     }
 
     private NofiticationCenter(){
-        mEventBus = new EventBus();
+        EventBus mEventBus = new EventBus();
     }
 }

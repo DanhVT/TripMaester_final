@@ -39,7 +39,7 @@ public class UploadAsync extends AsyncTask<File, Void, JSONObject> {
     @Override
     protected JSONObject doInBackground(File... files) {
         File mFile = files[0];
-        JSONObject jsonResponse = null;
+        JSONObject jsonResponse;
         jsonResponse = HttpManager.uploadImage(mFile, fileName, MIME, "");
         return jsonResponse;
     }

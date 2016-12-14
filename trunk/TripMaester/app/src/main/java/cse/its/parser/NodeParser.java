@@ -65,9 +65,7 @@ public class NodeParser extends AsyncTask<String, Void, Void> {
 				Toast.makeText(context, "Not found node", Toast.LENGTH_LONG).show();
 			}
 
-		}catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
+		}catch (IOException | ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
 			e.printStackTrace();

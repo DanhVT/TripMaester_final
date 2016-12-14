@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
  */
 public class SearchResultAdapter extends ArrayAdapter<String> {
 
-	HashMap<String, Integer> mIdMap = new HashMap <String, Integer>();
+	HashMap<String, Integer> mIdMap = new HashMap<>();
 
 	public SearchResultAdapter(Context context, int textViewResourceId,
 			ArrayList<String> objects) {

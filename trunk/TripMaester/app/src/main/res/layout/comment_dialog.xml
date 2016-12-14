@@ -19,8 +19,6 @@
             android:id="@+id/txt_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:ellipsize="end"
             android:ems="10"
             android:hint="@string/hint_comment"
@@ -34,8 +32,6 @@
             android:id="@+id/btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             android:text="@string/btn_comment"
             android:textSize="15sp" />
     </LinearLayout>

@@ -15,13 +15,12 @@ import android.util.Log;
  */
 public class LogFile {
 	private static final String TAG = "FOLLOW TRIP LOG";
-	
-	private Context mContext;
+
 	private static File mLocationFile;
 
 	
 	public LogFile(Context context) {
-		this.mContext = context;
+		Context mContext = context;
 		// create a File object for the parent directory
 		File navigateDirectory = new File(Environment.getExternalStorageDirectory().getPath() + Constants.FOLDER_FOLLOW_TRIP);
 		

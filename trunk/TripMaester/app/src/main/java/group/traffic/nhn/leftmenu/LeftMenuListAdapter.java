@@ -15,11 +15,10 @@ import vn.edu.hcmut.its.tripmaester.R;
 
 public class LeftMenuListAdapter extends BaseAdapter{
 	private LayoutInflater mInflater;
-	private Context mContext;
 	private ArrayList<LeftMenuItem> mMenuItems;
 	private TypedArray mMenuIcons;
 	private ArrayList<LeftMenuItem> createItems(String [] itemsText){
-		ArrayList<LeftMenuItem> result = new ArrayList<LeftMenuItem>();
+		ArrayList<LeftMenuItem> result = new ArrayList<>();
 		 
     	for(String strItem : itemsText){
     		LeftMenuItem item = new LeftMenuItem();
@@ -32,7 +31,7 @@ public class LeftMenuListAdapter extends BaseAdapter{
 
 	public LeftMenuListAdapter(Context context, String[] items, TypedArray icons) {
 		super();
-		this.mContext = context;
+		Context mContext = context;
 		this.mMenuItems =  createItems(items);
 		this.mMenuIcons = icons;
 		mInflater = LayoutInflater.from(mContext);

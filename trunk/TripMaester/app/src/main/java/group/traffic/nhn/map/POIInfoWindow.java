@@ -1,11 +1,9 @@
 package group.traffic.nhn.map;
 
 import vn.edu.hcmut.its.tripmaester.R;
-import android.content.Intent;
-import android.net.Uri;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.overlays.Marker;
@@ -20,9 +18,7 @@ import org.osmdroid.views.MapView;
  * @author M.Kergall
  */
 public class POIInfoWindow extends MarkerInfoWindow {
-	
-	private POI mSelectedPOI;
-	
+
 	public POIInfoWindow(MapView mapView) {
 		super(R.layout.bonuspack_bubble, mapView);
 		
@@ -42,7 +38,7 @@ public class POIInfoWindow extends MarkerInfoWindow {
 
 	@Override public void onOpen(Object item){
 		Marker marker = (Marker)item;
-		mSelectedPOI = (POI)marker.getRelatedObject();
+		POI mSelectedPOI = (POI) marker.getRelatedObject();
 		super.onOpen(item);
 		
 		//Fetch the thumbnail in background

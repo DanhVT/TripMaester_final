@@ -11,7 +11,7 @@ public class RightMenuGroup {
 
   public String text;
   public int icon;
-  public final List<String> children = new ArrayList<String>();
+  public final List<String> children = new ArrayList<>();
   int check_index = 0;
   public boolean check = false;
 

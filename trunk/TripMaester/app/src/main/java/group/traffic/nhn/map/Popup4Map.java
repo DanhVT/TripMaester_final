@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import org.osmdroid.util.GeoPoint;
 
 import vn.edu.hcmut.its.tripmaester.R;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
+
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,10 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 /**
  * this class create warning popup of map
@@ -28,11 +24,8 @@ import android.widget.Toast;
  *
  */
 public class Popup4Map extends DialogFragment {
-	private String TAG = "Popup for map";
-	private ArrayList<ContextMenuItem> mArrContextMenuItem = new ArrayList<ContextMenuItem>();
+	private ArrayList<ContextMenuItem> mArrContextMenuItem = new ArrayList<>();
 	private ListView mListView;
-	private String[] mMapPopItems;
-	private TypedArray mMapPopIcons;
 	private GeoPoint currentPoint = null;
 
 	private Context mContext;
@@ -58,9 +51,9 @@ public class Popup4Map extends DialogFragment {
 
 			mListView = (ListView) mListView.findViewById(R.id.listView_context_menu);
 
-			mMapPopItems = mContext.getResources().getStringArray(
+			String[] mMapPopItems = mContext.getResources().getStringArray(
 					R.array.map_pop_items);
-			mMapPopIcons = mContext.getResources().obtainTypedArray(
+			TypedArray mMapPopIcons = mContext.getResources().obtainTypedArray(
 					R.array.map_pop_icons);
 
 			int size = mMapPopIcons.length();
@@ -82,6 +75,7 @@ public class Popup4Map extends DialogFragment {
 		mListView.setItemChecked(pos, true);
 		double lat = currentPoint.getLatitude();
 		double lg = currentPoint.getLongitude();
+		String TAG = "Popup for map";
 		Log.e(TAG, "lat=" + lat + "lg=" + lg);
 		this.dismiss();
 

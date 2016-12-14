@@ -185,11 +185,16 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     protected FolderOverlay mRoadNodeMarkers;
     // activities
     RadiusMarkerClusterer mPoiMarkers;
-    ArrayList<Road> lstUserPassRoad = new ArrayList<>();
+    ArrayList<Road> lstUserPassRoad = new ArrayList<Road>();
     private Context mContext;
     private Context mContext_FLTrip;
+    private MapOverlayListener mMapOverlyListener;
     private LocationManager mLocationManager;
+    private Location mLastLocation;
+    private LogFile mLogFile;
     private TextToSpeech mTextToSpeech;
+    private Drawable mDrawablePosition;
+    private PathOverlay mPathOverlay;
     private int screen_width;
     private int screen_height;
     private int cross_line;
@@ -200,19 +205,24 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     /**
      * parameter for context menu item
      */
-    private List<ContextMenuItem> mContextMenuItems = new ArrayList<>();
+    private List<ContextMenuItem> mContextMenuItems = new ArrayList<ContextMenuItem>();
+    private LayoutInflater inflater;
+    private View child;
+    private ListView mListViewContext;
+    private ContextMenuAdapter contextMenuAdapter;
     private boolean start_marker_exist = false;
     private boolean des_marker_exist = false;
     private ItemizedOverlay<OverlayItem> startingPointOverlay;
     private ItemizedOverlay<OverlayItem> destinationOverlay;
     private ItemizedOverlay<OverlayItem> userLocationOverlay;
-    private List<Overlay> multipleOverlay = new ArrayList<>();
+    private List<Overlay> multipleOverlay = new ArrayList<Overlay>();
     private TextView tv_routing_mode;
-    private LinearLayout ll_routing_info;
+    private LinearLayout ll_routing_info, ll_distance_time_via,
+            ll_search_routing_mode;
+    private View ll_info_bar;
     private EditText et_search;
-    private ImageView iv_transportation;
-    private Animation slide_down;
-    private Animation slide_right;
+    private ImageView iv_search, iv_transportation;
+    private Animation slide_down, slide_up, slide_right;
     private Location lastLocation;
     private boolean add_des = false; // false: add starting point, true: add
     // destination
@@ -228,12 +238,18 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private Drawable gps_drawable, gps_follow_drawable;
     private int radius = 2500;
     private long lastTimeUpdateGPS = System.currentTimeMillis();
+    private long lastTimeReroute = System.currentTimeMillis();
     private LocationListener locationListener = new MyLocationListener();
     private Animation Move_Duoi, Move_Tren, Back_Duoi, Back_Tren;
     private  boolean move_back = false;
+    //===============
+    // map location listener
+    // private MapLocationListener mapLocationListener;
+    private ResourceProxy resourceProxy;
     // reading
     private List<GeoPoint> waypoints;
     private RoadManager roadManager;
+    private Polyline roadOverlay;
     private View rootView;
     // Required for camera operations in order to save the image file on resume.
     private static List<MyMarker> lst_markers;
@@ -244,6 +260,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private boolean isStartingText = true;
     private Date currentTime_start_trip;
     private Button btnStart, btnCurrentLocation;
+    private float mAzimuthAngleSpeed = 0.0f;
     private GeoPoint mDeparture, mDestination;// , mLastLocation;
     private List<Bitmap> lst_user_capture_bitmap;
     private boolean isCapturing;
@@ -420,12 +437,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         if (mContextMenuItems.size() > 0)
             return;
 
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
+        inflater = (LayoutInflater) getActivity().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-        View child = inflater.inflate(R.layout.listview_context_menu, null);
-        ListView mListViewContext = (ListView) child
+        child = inflater.inflate(R.layout.listview_context_menu, null);
+        mListViewContext = (ListView) child
                 .findViewById(R.id.listView_context_menu);
-        mContextMenuItems = new ArrayList<>();
+        mContextMenuItems = new ArrayList<ContextMenuItem>();
 
         // accident item
         mContextMenuItems.add(new ContextMenuItem(getResources().getDrawable(
@@ -457,7 +474,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 R.drawable.ic_police), getResources().getString(
                 R.string.it_police)));
 
-        ContextMenuAdapter contextMenuAdapter = new ContextMenuAdapter(mContext, mContextMenuItems);
+        contextMenuAdapter = new ContextMenuAdapter(mContext, mContextMenuItems);
         mListViewContext.setAdapter(contextMenuAdapter);
         mListViewContext.setOnItemClickListener(new OnContextItemClickListener(
                 getActivity().getApplicationContext()));
@@ -548,7 +565,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             updateUIWithRoad(mRoad);
             return;
         }
-        ArrayList<GeoPoint> waypoints = new ArrayList<>(2);
+        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>(2);
         waypoints.add(roadStartPoint);
         // add intermediate via points:
         for (GeoPoint p : viaPoints) {
@@ -577,7 +594,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         // Set up log file
         mLocationSender = new LocationSender(mContext);
-        LogFile mLogFile = new LogFile(mContext);
+        mLogFile = new LogFile(mContext);
 
         // log sender data
         Calendar c = Calendar.getInstance();
@@ -603,7 +620,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         slide_right = AnimationUtils
                 .loadAnimation(mContext, R.anim.slide_right);
         slide_down = AnimationUtils.loadAnimation(mContext, R.anim.slide_down);
-        Animation slide_up = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
+        slide_up = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
         slide_up.setAnimationListener(new AnimationListener() {
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -758,7 +775,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                 int which) {
                                                 // FIXME: save marker
                                                 isCapturing = false;
-                                                lst_user_capture_bitmap = new ArrayList<>();
+                                                lst_user_capture_bitmap = new ArrayList<Bitmap>();
 
                                             }
                                         }).setIcon(android.R.drawable.ic_dialog_alert)
@@ -948,7 +965,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         // mMapOverlyListener = new MapOverlayListener(getActivity()); // Add
         // Map overlay listener to catch touch event on map
 
-        MapOverlayListener mMapOverlyListener = new MapOverlayListener(getActivity());
+        mMapOverlyListener = new MapOverlayListener(getActivity()); // Add Map
         // overlay
         // listener
         // to catch
@@ -959,8 +976,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         mOverlays = mMapView.getOverlays();
         mOverlays.add(mMapOverlyListener);
 
-        PathOverlay mPathOverlay = new PathOverlay(Color.parseColor("#00FF0000"), mContext);
-        Drawable mDrawablePosition = getResources().getDrawable(R.drawable.ic_position);
+        mPathOverlay = new PathOverlay(Color.parseColor("#00FF0000"), mContext);
+        mDrawablePosition = getResources().getDrawable(R.drawable.ic_position);
 
         StaticVariable.ROUTING_PATH = new PathOverlay(Color.RED, getActivity()
                 .getApplicationContext());
@@ -982,7 +999,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     }
                 });
 
-        ImageView iv_search = (ImageView) root.findViewById(R.id.iv_search);
+        iv_search = (ImageView) root.findViewById(R.id.iv_search);
         iv_search.setImageResource(R.drawable.search);
         iv_search.setOnClickListener(new OnClickListener() {
 
@@ -993,7 +1010,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         });
 
         // ### set up view routing info
-        View ll_info_bar = root.findViewById(R.id.ll_info_bar);
+        ll_info_bar = root.findViewById(R.id.ll_info_bar);
         ll_info_bar.setBackgroundColor(Color.WHITE);
         if (Build.VERSION.SDK_INT > 10)
             ll_info_bar.setAlpha(0.7f);
@@ -1016,8 +1033,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         ll_routing_info = (LinearLayout) root.findViewById(R.id.ll_routing_info);
         ll_routing_info.setVisibility(View.GONE);
 
-        LinearLayout ll_distance_time_via = (LinearLayout) root.findViewById(R.id.ll_distance_time_via);
-        LinearLayout ll_search_routing_mode = (LinearLayout) root.findViewById(R.id.ll_search_routing_mode);
+        ll_distance_time_via = (LinearLayout) root.findViewById(R.id.ll_distance_time_via);
+        ll_search_routing_mode = (LinearLayout) root.findViewById(R.id.ll_search_routing_mode);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             ll_distance_time_via.setOrientation(LinearLayout.HORIZONTAL);
             ll_search_routing_mode.setOrientation(LinearLayout.HORIZONTAL);
@@ -1039,7 +1056,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                             .findViewById(R.id.lv_search_result);
                     ArrayList<String> streetNameList = RouteParser.mainStreetName;
                     if (streetNameList == null) {
-                        streetNameList = new ArrayList<>();
+                        streetNameList = new ArrayList<String>();
                         streetNameList.add(mContext.getResources().getString(
                                 R.string.route_not_found));
                     }
@@ -1308,11 +1325,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 //		mTextToSpeech = new TextToSpeech(mContext, new MapOnInitListener());
 
         // road overlays
-        waypoints = new ArrayList<>();
+        waypoints = new ArrayList<GeoPoint>();
         roadManager = new OSRMRoadManager();
 
-        lst_markers = new ArrayList<>();
-        lst_around_markers = new ArrayList<>();
+        lst_markers = new ArrayList<MyMarker>();
+        lst_around_markers = new ArrayList<MyMarker>();
 
         // ### init LoadMap View
 //		mMapView = (MapView) root.findViewById(R.id.openmapview);
@@ -1343,7 +1360,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         mDrawablePosition = getResources().getDrawable(R.drawable.ic_position);
 
         // Map location listener
-        ResourceProxy resourceProxy = new DefaultResourceProxyImpl(
+        resourceProxy = new DefaultResourceProxyImpl(
                 mainActivity.getApplicationContext());
         // mItemizedOverlay = new OsmMapsItemizedOverlay(
         // new ArrayList<OverlayItem>(), myOnItemGestureListener,
@@ -1395,12 +1412,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 if (!isStart) {
                     // create new trip
                     isStart = true;
-                    lstUserPassRoad = new ArrayList<>();
-                    viaPoints = new ArrayList<>();
+                    lstUserPassRoad = new ArrayList<Road>();
+                    viaPoints = new ArrayList<GeoPoint>();
                     MainActivity.fab_btn_capture.setVisibility(View.VISIBLE);
                     FrameLayout layout = (FrameLayout) mainActivity.findViewById(R.id.fab_frameLayout);
                     layout.setVisibility(View.VISIBLE);
-                    lstPassedPoint = new ArrayList<>();
+                    lstPassedPoint = new ArrayList<Location>();
                     Calendar c = Calendar.getInstance();
                     currentTime_start_trip = c.getTime();
                     // FIXME: =====================
@@ -1463,7 +1480,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             long hrs = (diffInSeconds = (diffInSeconds / 60)) >= 24 ? diffInSeconds % 24 : diffInSeconds;
                                             long days = (diffInSeconds = (diffInSeconds / 24)) >= 30 ? diffInSeconds % 30 : diffInSeconds;
                                             long months = (diffInSeconds = (diffInSeconds / 30)) >= 12 ? diffInSeconds % 12 : diffInSeconds;
-                                            long years = (diffInSeconds / 12);
+                                            long years = (diffInSeconds = (diffInSeconds / 12));
 
                                             if (years > 0) {
                                                 if (years == 1) {
@@ -1642,7 +1659,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
         mDeparture = null;
         mDestination = null;
-        viaPoints = new ArrayList<>();
+        viaPoints = new ArrayList<GeoPoint>();
 
         // ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(this);
         // map.getOverlays().add(scaleBarOverlay);
@@ -1675,6 +1692,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
         MainActivity.fab_current = (FloatingActionButton) mainActivity.findViewById(R.id.fab_current);
         MainActivity.fab_search = (FloatingActionButton) mainActivity.findViewById(R.id.fab_search);
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
         MainActivity.fab_search.setVisibility(View.INVISIBLE);
         MainActivity.fab_current.setVisibility(View.VISIBLE);
@@ -1688,7 +1709,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!move_back) Move();
+                if(move_back == false) Move();
                 else Back();
                 move_back = !move_back;
             }
@@ -1902,7 +1923,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     public boolean onMarkerClick(Marker arg0, MapView arg1) {
 
                         GeoPoint curr_marker_pos = arg0.getPosition();
-                        lst_around_markers = new ArrayList<>();
+                        lst_around_markers = new ArrayList<MyMarker>();
                         for (int i = 0; i < lst_markers.size(); i++) {
                             MyMarker marker = lst_markers.get(i);
 
@@ -1984,7 +2005,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         @Override
                         public boolean onMarkerClick(Marker arg0, MapView arg1) {
                             GeoPoint curr_marker_pos = arg0.getPosition();
-                            lst_around_markers = new ArrayList<>();
+                            lst_around_markers = new ArrayList<MyMarker>();
                             for (int j = 0; j < listMarkerTrip.size(); j++) {
                                 MyMarker marker = listMarkerTrip.get(j);
 
@@ -2058,7 +2079,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
     private void showChoiceDialogMarker(final List<MyMarker> lstMarker) {
         // lay danh sach Long Lat cua marker xung quanh de hien thi
-        ArrayList<String> lstString = new ArrayList<>();
+        ArrayList<String> lstString = new ArrayList<String>();
         for (int i = 0; i < lstMarker.size(); i++) {
             lstString.add(String.valueOf("Lat: "
                     + lstMarker.get(i).getMarker().getPosition().getLatitude())
@@ -2182,7 +2203,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
      * update current location
      */
     private void updateCurrentLocation() {
-        Location mLastLocation = mLocationManager
+        mLastLocation = mLocationManager
                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (null != mLastLocation) {
             GeoPoint locGeoPoint = new GeoPoint(mLastLocation.getLatitude(),
@@ -2229,10 +2250,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public void updateMarker(Drawable marker, double lat, double lon, int mode) {
         ResourceProxy mResourceProxy = new DefaultResourceProxyImpl(
                 getActivity().getApplicationContext());
-        ArrayList<OverlayItem> items = new ArrayList<>();
+        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
         GeoPoint point = new GeoPoint(lat, lon);
         items.add(new OverlayItem("Here", "My location", point));
-        ItemizedOverlay<OverlayItem> tmpOverlay = new ItemizedIconOverlay<>(
+        ItemizedOverlay<OverlayItem> tmpOverlay = new ItemizedIconOverlay<OverlayItem>(
                 items, marker,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
@@ -2296,7 +2317,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         waypoints.add(aPoint);
 
         if (waypoints.size() > 1) {
-            ArrayList<GeoPoint> lst2LastPoint = new ArrayList<>();
+            ArrayList<GeoPoint> lst2LastPoint = new ArrayList<GeoPoint>();
             lst2LastPoint.add(waypoints.get(waypoints.size() - 1));
             lst2LastPoint.add(waypoints.get(waypoints.size() - 2));
             Road road = roadManager.getRoad(lst2LastPoint);
@@ -2307,7 +2328,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         Toast.LENGTH_SHORT).show();
             }
 //				roadOverlay.setColor(Color.parseColor("#00FF0000"));
-            Polyline roadOverlay = RoadManager.buildRoadOverlay(road,
+            roadOverlay = RoadManager.buildRoadOverlay(road,
                     this.mainActivity.getApplicationContext());
             mMapView.getOverlays().add(roadOverlay);
 
@@ -2400,7 +2421,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     }
 
     //FIXME ===========updateUIWithRoad
-    @SuppressWarnings("UnusedAssignment")
     void updateUIWithRoad(Road road) {
         mRoadNodeMarkers.getItems().clear();
         // TextView textView = (TextView)findViewById(R.id.routeInfo);
@@ -2483,11 +2503,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         try {
             Context context = getActivity().getApplicationContext();
             ResourceProxy mResourceProxy = new DefaultResourceProxyImpl(context);
-            ArrayList<OverlayItem> items = new ArrayList<>();
+            ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
             GeoPoint point = new GeoPoint(lat, lon);
             items.add(new OverlayItem("Here", "My location", point));
             mOverlays.remove(userLocationOverlay);
-            userLocationOverlay = new ItemizedIconOverlay<>(
+            userLocationOverlay = new ItemizedIconOverlay<OverlayItem>(
                     items,
                     marker,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -2512,7 +2532,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             else
                 mOverlays.add(userLocDynamicOverlay);
             mMapView.invalidate();
-        } catch (NoSuchElementException | IndexOutOfBoundsException err) {
+        } catch (NoSuchElementException err) {
+            Log.e("updateUserLocationMarker", err.toString());
+        } catch (IndexOutOfBoundsException err) {
             Log.e("updateUserLocationMarker", err.toString());
         }
 
@@ -2707,7 +2729,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     myLocationOverlay.setLocation(newLocation);
                     myLocationOverlay.setAccuracy(Accuracy);
 
-                    float mAzimuthAngleSpeed = data.getFloatExtra(
+                    mAzimuthAngleSpeed = data.getFloatExtra(
                             FlagUpdates.FlagUpdate_AZIMUTHANGLE, 0.0f);
                     // keep the map view centered on current location:
 //					mLastLocation = newLocation;
@@ -2761,7 +2783,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         protected Road doInBackground(Object... params) {
             @SuppressWarnings("unchecked")
             ArrayList<GeoPoint> waypoints = (ArrayList<GeoPoint>) params[0];
-            RoadManager roadManager;
+            RoadManager roadManager = null;
             roadManager = new OSRMRoadManager();
             return roadManager.getRoad(waypoints);
         }
@@ -3001,7 +3023,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     StaticVariable.START_SEG_ID_STATUS = false;
                     if (StaticVariable.DES_NODE != null)
                         new SegmentIDParser(mContext, mMapView, SegmentIDParser.REROUTE_MODE).execute(urlStartSegID);
-                    long lastTimeReroute = loc.getTime();
+                    lastTimeReroute = loc.getTime();
                 }
                 lastTimeUpdateGPS = loc.getTime();
             }

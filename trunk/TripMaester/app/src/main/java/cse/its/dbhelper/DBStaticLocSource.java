@@ -39,9 +39,8 @@ public class DBStaticLocSource {
 	}
 
 	public Cursor getStreet() {
-		Cursor cursor = database.query(DBStaticLocHelper.TABLE, SegColumns, null,
+		return database.query(DBStaticLocHelper.TABLE, SegColumns, null,
 				null, null, null, null);
-		return cursor;
 	}
 
 	public int getCount() {
@@ -55,17 +54,15 @@ public class DBStaticLocSource {
 	}
 
 	public Cursor getObjectName(Long streetID) {
-		Cursor cursor = database.query(DBStaticLocHelper.TABLE, SegColumns,
+		return database.query(DBStaticLocHelper.TABLE, SegColumns,
 				DBStaticLocHelper.OBJECTID + " =" + streetID, null, null, null, null);
-		return cursor;
 	}
 
 	public Cursor getObjectName(String type, Long ObjectId) {
-		Cursor cursor = database.query(DBStaticLocHelper.TABLE, SegColumns,
+		return database.query(DBStaticLocHelper.TABLE, SegColumns,
 				DBStaticLocHelper.OBJECTID + " = " + ObjectId + " AND "
 						+ DBStaticLocHelper.TYPE + " = " + "'" + type + "'", null, null, null,
 				null);
-		return cursor;
 	}
 
 }

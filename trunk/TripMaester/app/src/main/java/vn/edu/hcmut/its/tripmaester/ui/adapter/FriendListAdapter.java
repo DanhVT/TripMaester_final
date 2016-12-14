@@ -21,12 +21,11 @@ import group.traffic.nhn.user.FriendItem;
 
 public class FriendListAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
-    private Context mContext;
     private ArrayList<FriendItem> mFriends;
 
     public FriendListAdapter(Context context, ArrayList<FriendItem> friends) {
         super();
-        this.mContext = context;
+        Context mContext = context;
         this.mInflater = LayoutInflater.from(mContext);
         this.mFriends = friends;
     }

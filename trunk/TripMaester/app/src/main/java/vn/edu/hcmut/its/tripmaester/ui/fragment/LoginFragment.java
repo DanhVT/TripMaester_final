@@ -21,7 +21,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
@@ -37,6 +36,7 @@ import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
 /**
  * // TODO: 12/24/15 Why there are 2 login function in the LoginFragment & MainActivity?
  */
+@SuppressWarnings("ConstantConditions")
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
     private static final String[] PERMISSIONS = {"public_profile", "email", "user_friends"};

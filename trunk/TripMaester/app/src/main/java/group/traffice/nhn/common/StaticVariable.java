@@ -51,7 +51,7 @@ public class StaticVariable {
 	public static boolean SHOW_WARNING_INFO = false; // the flag control showing
 														// warning information
 
-	public static final ArrayList<RightMenuGroup> GROUP_MAP_MENU_ITEMS = new ArrayList<RightMenuGroup>();
+	public static final ArrayList<RightMenuGroup> GROUP_MAP_MENU_ITEMS = new ArrayList<>();
 
 	public static ImageView IV_ROUTE;
 
@@ -88,8 +88,8 @@ public class StaticVariable {
 	// public static List<Overlay> MAP_OVERLAY_LIST;
 	public static boolean START_NEW_PATH = false;
 
-	public static List<NodeDrawable> LIST_MULTIPLE_POINT = new ArrayList<NodeDrawable>();
-	public static Hashtable<String, Drawable> WARNING_ICON = new Hashtable<String, Drawable>();
+	public static List<NodeDrawable> LIST_MULTIPLE_POINT = new ArrayList<>();
+	public static Hashtable<String, Drawable> WARNING_ICON = new Hashtable<>();
 	public static Drawable STARTING_MAKER;
 
 	public static WarningDrawable WARNING_POINT = null;

@@ -37,22 +37,19 @@ public class DBTrafficSource {
 	}
 
 	public Cursor getSeg(String segID){
-		Cursor cursor = database.query(DBTrafficHelper.SEGMENT,
+		return database.query(DBTrafficHelper.SEGMENT,
 		        SegColumns, DBTrafficHelper.SEGMENT_ID + " IN" + segID, null, null, null, null);
-		return cursor;
 	}
 	public Cursor getSegbyStreetID(Long streetID){
 //		database = dbHelper.getReadableDatabase();
-		Cursor cursor = database.query(DBTrafficHelper.SEGMENT,
-		        SegColumns, DBTrafficHelper.SEGMENT_STREET_ID + " =" + streetID, null, null, null, null);
 
-		return cursor;
+		return database.query(DBTrafficHelper.SEGMENT,
+		        SegColumns, DBTrafficHelper.SEGMENT_STREET_ID + " =" + streetID, null, null, null, null);
 	}
 	
 	public Cursor getSegmentbyID( String ID){
-		Cursor cursor = database.query(DBTrafficHelper.SEGMENT,
+		return database.query(DBTrafficHelper.SEGMENT,
 		        SegColumns, DBTrafficHelper.SEGMENT_ID + " =" + ID, null, null, null, null);
-		return cursor;
 	}
 	
 }

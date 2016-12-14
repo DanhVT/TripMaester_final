@@ -1,7 +1,6 @@
 package group.traffic.nhn.message;
 
 import android.app.Activity;
-import vn.edu.hcmut.its.tripmaester.R;
 
 public class MessageItem {
 	private String content;
@@ -37,7 +36,7 @@ public class MessageItem {
 	}
 	
 	public MessageItem(String title, int icon, boolean flagnew, int number, String fbId,String date){
-		String content = "";
+		String content;
 		try{
 			content = new String(title.getBytes(), "UTF-8");
 		}catch(Exception ex){

@@ -18,8 +18,8 @@ import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 
 public class TripManager {
-    public static ArrayList<Trip> lst_user_trip = new ArrayList<Trip>();
-    public static ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
+    public static ArrayList<Trip> lst_user_trip = new ArrayList<>();
+    public static ArrayList<MessageItem> lstMessage = new ArrayList<>();
     // for demo only
     public static void addDataTrip(final Context context, final ITripCallback callback) {
         //load trip
@@ -61,17 +61,15 @@ public class TripManager {
                                     if (!LikeInfo.isNull("LikeInfo")) {
                                         JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
                                         trip1.setNumberLikeTrip(listLiker.length() + " likes");
-                                        ArrayList<String> likers = new ArrayList<String>();
+                                        ArrayList<String> likers = new ArrayList<>();
                                         for (int k =0; k< listLiker.length() ; k++){
                                             JSONObject json = new JSONObject(listLiker.getString(k));
                                             likers.add(json.getString("userId"));
                                         }
                                         trip1.setLsitUserIdLike(likers);
                                     }
-                                } catch (JSONException e1) {
+                                } catch (JSONException | NullPointerException e1) {
                                     e1.printStackTrace();
-                                } catch(NullPointerException ex){
-                                    ex.printStackTrace();
                                 }
 
                             }
@@ -136,17 +134,15 @@ public class TripManager {
                                             JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
                                             trip1.setNumberLikeTrip(listLiker.length() + " likes");
 
-                                            ArrayList<String> likers = new ArrayList<String>();
+                                            ArrayList<String> likers = new ArrayList<>();
                                             for (int k =0; k< listLiker.length() ; k++){
                                                 JSONObject json = new JSONObject(listLiker.getString(k));
                                                 likers.add(json.getString("userId"));
                                             }
                                             trip1.setLsitUserIdLike(likers);
                                     }
-                                } catch (JSONException e1) {
+                                } catch (JSONException | NullPointerException e1) {
                                     e1.printStackTrace();
-                                }catch (NullPointerException ex){
-                                    ex.printStackTrace();
                                 }
 
                             }
@@ -229,7 +225,7 @@ public class TripManager {
                                             if (!LikeInfo.isNull("LikeInfo")) {
                                                     JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
                                                     trip1.setNumberLikeTrip(listLiker.length() + " likes");
-                                                    ArrayList<String> likers = new ArrayList<String>();
+                                                    ArrayList<String> likers = new ArrayList<>();
                                                     for (int k =0; k< listLiker.length() ; k++){
                                                         JSONObject json = new JSONObject(listLiker.getString(k));
                                                         likers.add(json.getString("userId"));
@@ -237,10 +233,8 @@ public class TripManager {
                                                     trip1.setLsitUserIdLike(likers);
 
                                             }
-                                        } catch (JSONException e1) {
+                                        } catch (JSONException | NullPointerException e1) {
                                             e1.printStackTrace();
-                                        }catch (NullPointerException ex){
-                                            ex.printStackTrace();
                                         }
 
                                     }

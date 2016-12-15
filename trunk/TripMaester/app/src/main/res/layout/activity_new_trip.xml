@@ -63,7 +63,7 @@
 		<EditText
 	        android:id="@+id/editTextTripName"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="0dp"
 	        android:layout_weight="1"
 	        android:ems="10" 
 	        android:hint="@string/enter_name_trip">
@@ -76,7 +76,7 @@
     <LinearLayout
         android:id="@+id/layout_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@+id/layout_trip_name"
         android:layout_marginTop="@dimen/split_size_vertical" 
         android:orientation="horizontal"
@@ -226,7 +226,7 @@
         <EditText
               android:id="@+id/editTextDescription"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="0dp"
               android:layout_weight="1"
               android:paddingLeft="10dp"
               android:paddingRight="10dp"

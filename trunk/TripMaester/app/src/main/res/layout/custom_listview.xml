@@ -6,7 +6,7 @@
 
 <ImageView
     android:id="@+id/list_priority_img"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="92dp"
     android:layout_gravity="center_vertical"
     android:layout_margin="5dip"

@@ -18,7 +18,7 @@ public class MapLocationListener implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location arg0) {
-		if (mapFragment.isStart) {
+		if (MapFragment.isStart) {
 			//Location Listener
 			
 			mapFragment.lstPassedPoint.add(arg0);

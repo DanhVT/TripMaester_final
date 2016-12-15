@@ -505,7 +505,7 @@ public class HttpManager {
                                 for (int i = 0; i < jsonObjArray.length(); i++) {
                                     JSONObject jObj = new JSONObject(jsonObjArray.getString(i));
 
-                                    lstShareTrip.add(new FriendItem(null, "", jObj.getString("userId"), false, ""));
+                                    lstShareTrip.add(new FriendItem(null, jObj.getString("userId"), false, ""));
                                 }
                                 callback.onCompleted(lstShareTrip, null, null);
                             } catch (JSONException e1) {

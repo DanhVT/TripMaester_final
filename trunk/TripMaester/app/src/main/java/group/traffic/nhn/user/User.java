@@ -154,7 +154,7 @@ public class User {
 					try {
 						JSONObject friend = objects.getJSONObject(i);
 						if (friend != null) {
-							FriendItem item = new FriendItem(null, "", friend.getString("id"), false, friend.getString("name"));
+							FriendItem item = new FriendItem(null, friend.getString("id"), false, friend.getString("name"));
 							mFriends.add(item);
 						}
 					} catch (JSONException e) {

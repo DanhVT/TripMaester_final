@@ -2,8 +2,6 @@ package group.traffice.nhn.common;
 
 import org.osmdroid.util.GeoPoint;
 
-import android.provider.Settings.Secure;
-
 public class Constants {
 	public final static String LEFT_MENU_MODE = "leftmenumode"; 
 	public final static String LEFT_MENU_SHARE ="leftmenushare";

@@ -1,7 +1,5 @@
 package vn.edu.hcmut.its.tripmaester.helper;
 
-import android.util.Log;
-
 import java.io.IOException;
 
 import okhttp3.HttpUrl;

@@ -1,16 +1,14 @@
 package group.traffic.nhn.map;
 
-import vn.edu.hcmut.its.tripmaester.R;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
 import org.osmdroid.views.MapView;
+
+import vn.edu.hcmut.its.tripmaester.R;
 
 /**
  * A customized InfoWindow handling POIs. 

@@ -47,7 +47,7 @@ public class EditTripActivity extends Activity{
 		mListTripEdit.add(item5);
 		
 		
-		mEditTripAdapter = new EditTripListAdapter(this.getApplicationContext(), R.layout.activity_edit_trips, mListTripEdit);
+		mEditTripAdapter = new EditTripListAdapter(this.getApplicationContext(), mListTripEdit);
 		mListEdit.setAdapter(mEditTripAdapter);
 		mListEdit.setOnItemClickListener(new ItemClickListener());
 		

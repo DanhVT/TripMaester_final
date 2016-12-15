@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.LongSparseArray;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -43,8 +44,8 @@ public class WarningInfoParser extends
 	ArrayList<WarningDrawable> mWarning;
 	
 	DBTrafficSource dataSource;
-	HashMap<Long, Double> SegmentSpeed = new HashMap<Long, Double>();
-	HashMap<Long, Long> SegmentStreet = new HashMap<Long, Long>();
+	LongSparseArray SegmentSpeed = new LongSparseArray();
+	LongSparseArray SegmentStreet = new LongSparseArray();
 	double lon, lat;
 	int color;
 	int segment_count = 0;

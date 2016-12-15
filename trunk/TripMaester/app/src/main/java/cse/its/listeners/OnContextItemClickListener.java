@@ -1,12 +1,12 @@
 package cse.its.listeners;
 
-import group.traffice.nhn.common.StaticVariable;
-import cse.its.helper.PostWarningInfor;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+
+import cse.its.helper.PostWarningInfor;
+import group.traffice.nhn.common.StaticVariable;
 
 public class OnContextItemClickListener implements OnItemClickListener{
 	private Context context;

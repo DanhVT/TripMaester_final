@@ -1,12 +1,5 @@
 package group.traffic.nhn.map;
 
-import java.util.ArrayList;
-
-import org.osmdroid.util.GeoPoint;
-
-import vn.edu.hcmut.its.tripmaester.R;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.Toast;
+
+import org.osmdroid.util.GeoPoint;
+
+import java.util.ArrayList;
+
+import vn.edu.hcmut.its.tripmaester.R;
 
 /**
  * this class create warning popup of map

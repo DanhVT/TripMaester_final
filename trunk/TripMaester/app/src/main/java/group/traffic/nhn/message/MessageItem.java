@@ -1,7 +1,6 @@
 package group.traffic.nhn.message;
 
 import android.app.Activity;
-import vn.edu.hcmut.its.tripmaester.R;
 
 public class MessageItem {
 	private String content;

@@ -42,12 +42,12 @@ public class FriendItem {
         }
     }
 
-    public FriendItem(Activity act, String title, String fb_id, boolean visible, String friendName) {
-        this.setContent(title);
+    public FriendItem(Activity act, String fb_id, boolean visible, String friendName) {
+        this.setContent("");
         this._fb_id = fb_id;
-        this.isInviteVisible = visible;
+        this.isInviteVisible = false;
         this.setFriendName(friendName);
-        if (visible && null != act) {
+        if (false && null != act) {
             invitemessage = act.getResources().getString(R.string.msg_invite_install);
         }
     }

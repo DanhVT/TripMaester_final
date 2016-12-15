@@ -2,17 +2,10 @@ package vn.edu.hcmut.its.tripmaester.helper;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by danh-vo on 28/11/2016.
@@ -78,6 +71,7 @@ public class CameraHelper {
         }
         return optimalSize;
     }
+
     public static Camera getDefaultCameraInstance() {
         return Camera.open();
     }

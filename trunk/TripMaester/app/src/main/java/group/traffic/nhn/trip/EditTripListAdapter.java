@@ -1,18 +1,16 @@
 package group.traffic.nhn.trip;
 
-import vn.edu.hcmut.its.tripmaester.R;
-
-import java.util.ArrayList;
-
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import vn.edu.hcmut.its.tripmaester.R;
 
 public class EditTripListAdapter extends BaseAdapter{
 //public class EditTripListAdapter extends ArrayAdapter<TripItem4EditList>{
@@ -20,7 +18,7 @@ public class EditTripListAdapter extends BaseAdapter{
 	private Context mContext;
 	private ArrayList<TripItem4EditList> mTrips;
 	
-	public EditTripListAdapter(Context context, int layout, ArrayList<TripItem4EditList> trips) {
+	public EditTripListAdapter(Context context, ArrayList<TripItem4EditList> trips) {
 //		super(context, layout, trips);
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(mContext);

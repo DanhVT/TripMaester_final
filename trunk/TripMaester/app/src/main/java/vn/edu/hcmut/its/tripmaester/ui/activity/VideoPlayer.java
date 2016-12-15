@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,11 +21,13 @@ import com.google.android.exoplayer.ExoPlayer;
 import com.google.android.exoplayer.MediaCodecAudioTrackRenderer;
 import com.google.android.exoplayer.MediaCodecSelector;
 import com.google.android.exoplayer.MediaCodecVideoTrackRenderer;
+import com.google.android.exoplayer.MediaFormat;
 import com.google.android.exoplayer.extractor.ExtractorSampleSource;
 import com.google.android.exoplayer.upstream.Allocator;
 import com.google.android.exoplayer.upstream.DataSource;
 import com.google.android.exoplayer.upstream.DefaultAllocator;
 import com.google.android.exoplayer.upstream.DefaultUriDataSource;
+import com.google.android.exoplayer.util.MimeTypes;
 
 import java.util.Formatter;
 import java.util.Locale;
@@ -41,6 +46,7 @@ public class VideoPlayer extends AppCompatActivity {
     private ImageButton btnPrev;
     private ImageButton btnRew;
     private ImageButton btnNext;
+    private ImageButton btnSettings;
     private RelativeLayout loadingPanel;
     private int RENDERER_COUNT = 300000;
     private int minBufferMs =    250000;
@@ -103,7 +109,41 @@ public class VideoPlayer extends AppCompatActivity {
         initPrev();
         initRew();
         initNext();
+        initSetting();
 
+    }
+
+    private void initSetting() {
+        btnSettings = (ImageButton) findViewById(R.id.setting);
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(VideoPlayer.this, view);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        exoPlayer.setSelectedTrack(0, (item.getItemId() - 1));
+                        return false;
+                    }
+                });
+                Menu menu = popup.getMenu();
+                menu.add(Menu.NONE, 0, 0, "Video Quality");
+                for (int i = 0; i < exoPlayer.getTrackCount(0); i++) {
+                    MediaFormat format = exoPlayer.getTrackFormat(0, i);
+                    if (MimeTypes.isVideo(format.mimeType)) {
+                        if (format.adaptive) {
+                            menu.add(1, (i + 1), (i + 1), "Auto");
+                        } else {
+                            menu.add(1, (i + 1), (i + 1), format.width + "p");
+                        }
+                    }
+                }
+                menu.setGroupCheckable(1, true, true);
+                menu.findItem((exoPlayer.getSelectedTrack(0) + 1)).setChecked(true);
+                popup.show();
+            }
+        });
     }
 
     private void initNext() {

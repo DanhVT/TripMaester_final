@@ -200,6 +200,9 @@ public class LoginFragment extends Fragment {
         // .setMessage("Come play this level with me")
         // .build();
         // requestDialog.show(content);
+        if(!LoginManager.getInstance().isLogin()){
+            com.facebook.login.LoginManager.getInstance().logOut();
+        }
     }
 
 

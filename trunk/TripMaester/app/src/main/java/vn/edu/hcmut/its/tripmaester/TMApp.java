@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import io.fabric.sdk.android.Fabric;
 import vn.edu.hcmut.its.tripmaester.controller.ControllerFactory;
@@ -35,6 +36,8 @@ public class TMApp extends Application {
 
         //initial Facebook
         FacebookSdk.sdkInitialize(this);
+        AppEventsLogger.activateApp(this);
+
         ImageLoaderHelper.init(this);
         //initial Preference
         TMPref.initialize(this);

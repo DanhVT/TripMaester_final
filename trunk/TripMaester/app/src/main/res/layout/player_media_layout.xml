@@ -14,10 +14,14 @@
         android:orientation="horizontal">
 
         <ImageButton android:id="@+id/prev"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             style="@android:style/MediaButton.Previous"
             />
 
         <ImageButton android:id="@+id/rew"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             style="@android:style/MediaButton.Rew"
             />
 
@@ -27,20 +31,26 @@
 
         <ImageButton
             android:id="@+id/btn_pause"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:visibility="gone"
             style="@android:style/MediaButton.Pause"/>
 
         <ImageButton android:id="@+id/ffwd"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             style="@android:style/MediaButton.Ffwd"
             />
 
         <ImageButton android:id="@+id/next"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             style="@android:style/MediaButton.Next"
             />
         <ImageButton android:id="@+id/setting"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/hplib_ic_settings"    />
+            android:src="@drawable/setting_50"    />
 
     </LinearLayout>
 

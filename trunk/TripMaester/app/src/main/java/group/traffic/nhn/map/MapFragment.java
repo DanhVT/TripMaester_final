@@ -611,8 +611,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 new TextToSpeech.OnInitListener() {
                     @Override
                     public void onInit(int status) {
-                        StaticVariable.TEXT_TO_SPEECH.setLanguage(Locale.US);
-                        StaticVariable.TEXT_TO_SPEECH.setSpeechRate(0.7f);
+                        try{
+                            StaticVariable.TEXT_TO_SPEECH.setLanguage(Locale.US);
+                            StaticVariable.TEXT_TO_SPEECH.setSpeechRate(0.7f);
+                        }
+                        catch(NullPointerException ex){
+                            ex.printStackTrace();
+                        }
+
                     }
                 });
 

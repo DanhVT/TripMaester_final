@@ -58,9 +58,9 @@ import vn.edu.hcmut.its.tripmaester.ui.IMainScreen;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.FriendsFragment;
 import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 
-import static android.view.View.GONE;
 import static group.traffic.nhn.map.MapFragment.fileUri;
 import static group.traffic.nhn.map.MapFragment.isStart;
+import static vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment.PARAMETERS;
 
 // TODO: 12/16/15 Not review yet
 public class MainActivity extends FragmentActivity implements IMainScreen {
@@ -246,6 +246,8 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     }
 
     private void initFB() {
+
+        Log.d("login", "Danh");
         // FB tracker
         accessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -254,17 +256,19 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 // if users logout
                 LoginManager.getInstance().setUserToken(currentAccessToken);
                 if (currentAccessToken == null) {
+                    Log.d("login", "Danh1");
                     final TextView name = (TextView) findViewById(R.id.txt_select_account);
                     if (name != null) {
                         name.setText(R.string.login_prompt_select_account);
                     }
                     LoginManager.getInstance().setUser(null);
                 } else {
+                    Log.d("login", "Danh2");
                     GraphRequest request = GraphRequest.newMeRequest(LoginManager.getInstance().getUserToken(),
                             new GraphRequest.GraphJSONObjectCallback() {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
-                                    Log.d("user", object.toString());
+                                    Log.d("loginActivity", object.toString());
                                     try {
                                         //TODO: VULAM Change this using GSON
                                         if (object != null) {
@@ -344,10 +348,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                                 }
                             });
                     Bundle parameters = new Bundle();
-                    // parameters.putString("fields",
-                    // "id,name,email,gender, birthday,first_name");
-                    // parameters.putString("permission",
-                    // "user_friends");
+                    parameters.putString("fields", PARAMETERS);
                     request.setParameters(parameters);
                     request.executeAsync();
                 }

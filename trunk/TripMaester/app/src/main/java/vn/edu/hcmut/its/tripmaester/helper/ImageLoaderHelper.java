@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -13,8 +12,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
-import vn.edu.hcmut.its.tripmaester.R;
 
 /**
  * Created by AnTD on 11/25/2016.
@@ -37,6 +34,7 @@ public class ImageLoaderHelper {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheOnDisc(true).cacheInMemory(true)
                 .imageScaleType(ImageScaleType.EXACTLY)
+                .resetViewBeforeLoading()
                 .displayer(new FadeInBitmapDisplayer(300)).build();
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)

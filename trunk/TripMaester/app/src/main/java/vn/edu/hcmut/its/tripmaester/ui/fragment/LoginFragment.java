@@ -21,7 +21,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
@@ -39,8 +38,8 @@ import vn.edu.hcmut.its.tripmaester.utility.FacebookHelper;
  */
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
-    private static final String[] PERMISSIONS = {"public_profile", "email", "user_friends"};
-    private static final String PARAMETERS = "id,name,cover,timezone,email,picture,first_name,last_name,gender,birthday,location";
+    private static final String[] PERMISSIONS = {"public_profile", "email", "user_friends", "user_birthday"};
+    public static final String PARAMETERS = "id,name,cover,timezone,email,picture,first_name,last_name,gender,birthday,location";
     //    GameRequestDialog requestDialog;
 //    AccessTokenTracker accessTokenTracker;
     CallbackManager mCallbackManager;
@@ -59,7 +58,7 @@ public class LoginFragment extends Fragment {
                 LoginManager.getInstance().getUserToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.i("LoginActivity", response.toString());
+                        Log.d("LoginFragment", response.toString());
                         try {
                             if (object != null) {
                                 // set permission to get picture
@@ -165,7 +164,7 @@ public class LoginFragment extends Fragment {
 
          FacebookSdk.sdkInitialize(this.getActivity().getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
-
+        Log.d("loginFragment", "danh4");
         if(AccessToken.getCurrentAccessToken()==null){
             com.facebook.login.LoginManager.getInstance().logOut();
         }
@@ -200,9 +199,9 @@ public class LoginFragment extends Fragment {
         // .setMessage("Come play this level with me")
         // .build();
         // requestDialog.show(content);
-        if(!LoginManager.getInstance().isLogin()){
-            com.facebook.login.LoginManager.getInstance().logOut();
-        }
+//        if(!LoginManager.getInstance().isLogin()){
+//            com.facebook.login.LoginManager.getInstance().logOut();
+//        }
     }
 
 
@@ -219,7 +218,7 @@ public class LoginFragment extends Fragment {
         authButton.setReadPermissions(PERMISSIONS);
 
         authButton.setFragment(this);
-
+        Log.d("loginFragment", "danh3");
         // Callback registration
         authButton.registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {

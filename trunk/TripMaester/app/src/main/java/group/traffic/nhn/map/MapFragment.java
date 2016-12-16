@@ -531,7 +531,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         sb.append(", ");
                     sb.append(address.getAddressLine(i));
                 }
-                theAddress = new String(sb.toString());
+                theAddress = sb.toString();
             } else {
                 theAddress = null;
             }
@@ -1492,64 +1492,64 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                 if (years == 1) {
                                                     sb.append("a year");
                                                 } else {
-                                                    sb.append(years + " years");
+                                                    sb.append(years).append(" years");
                                                 }
                                                 if (years <= 6 && months > 0) {
                                                     if (months == 1) {
                                                         sb.append(" and a month");
                                                     } else {
-                                                        sb.append(" and " + months + " months");
+                                                        sb.append(" and ").append(months).append(" months");
                                                     }
                                                 }
                                             } else if (months > 0) {
                                                 if (months == 1) {
                                                     sb.append("a month");
                                                 } else {
-                                                    sb.append(months + " months");
+                                                    sb.append(months).append(" months");
                                                 }
                                                 if (months <= 6 && days > 0) {
                                                     if (days == 1) {
                                                         sb.append(" and a day");
                                                     } else {
-                                                        sb.append(" and " + days + " days");
+                                                        sb.append(" and ").append(days).append(" days");
                                                     }
                                                 }
                                             } else if (days > 0) {
                                                 if (days == 1) {
                                                     sb.append("a day");
                                                 } else {
-                                                    sb.append(days + " days");
+                                                    sb.append(days).append(" days");
                                                 }
                                                 if (days <= 3 && hrs > 0) {
                                                     if (hrs == 1) {
                                                         sb.append(" and an hour");
                                                     } else {
-                                                        sb.append(" and " + hrs + " hours");
+                                                        sb.append(" and ").append(hrs).append(" hours");
                                                     }
                                                 }
                                             } else if (hrs > 0) {
                                                 if (hrs == 1) {
                                                     sb.append("an hour");
                                                 } else {
-                                                    sb.append(hrs + " hours");
+                                                    sb.append(hrs).append(" hours");
                                                 }
                                                 if (min > 1) {
-                                                    sb.append(" and " + min + " minutes");
+                                                    sb.append(" and ").append(min).append(" minutes");
                                                 }
                                             } else if (min > 0) {
                                                 if (min == 1) {
                                                     sb.append("a minute");
                                                 } else {
-                                                    sb.append(min + " minutes");
+                                                    sb.append(min).append(" minutes");
                                                 }
                                                 if (sec > 1) {
-                                                    sb.append(" and " + sec + " seconds");
+                                                    sb.append(" and ").append(sec).append(" seconds");
                                                 }
                                             } else {
                                                 if (sec <= 1) {
                                                     sb.append("about a second");
                                                 } else {
-                                                    sb.append("about " + sec + " seconds");
+                                                    sb.append("about ").append(sec).append(" seconds");
                                                 }
                                             }
                                             trip1.setDateTime(sb.toString());
@@ -2536,9 +2536,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 mOverlays.add(userLocDynamicOverlay);
             mMapView.invalidate();
         } catch (NoSuchElementException err) {
-            Log.e("updateUserLocationMarker", err.toString());
+            Log.e("updateLocationMarker", err.toString());
         } catch (IndexOutOfBoundsException err) {
-            Log.e("updateUserLocationMarker", err.toString());
+            Log.e("updateLocationMarker", err.toString());
         }
 
     }

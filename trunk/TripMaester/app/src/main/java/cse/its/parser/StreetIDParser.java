@@ -56,7 +56,7 @@ public class StreetIDParser extends AsyncTask<String, Void, Void> {
 					 * break; } }
 					 */
 
-				Cursor cursor = new DBStaticLocSource(context).getObjectName("way", current_streetid);
+				Cursor cursor = new DBStaticLocSource(context).getObjectName(current_streetid);
 				if (cursor.moveToFirst()) {
 					// Log.wtf("NEW STREET", cursor.getString(cursor
 					// .getColumnIndex(DBStaticLocHelper.NAME)));

@@ -103,7 +103,7 @@ public class DBTrafficHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-		String drop_segment_table = String.format("DROP TABLE IF EXISTS "+ SEGMENT);
+		String drop_segment_table = "DROP TABLE IF EXISTS "+ SEGMENT;
 		db.execSQL(drop_segment_table);
 
 

@@ -74,7 +74,7 @@
                     android:contentDescription="@string/description"
                     android:gravity="center"
                     android:textColor="#FF0000"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,7 +136,7 @@
                     android:contentDescription="@string/description"
                     android:gravity="center"
                     android:textColor="#FF0000"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 

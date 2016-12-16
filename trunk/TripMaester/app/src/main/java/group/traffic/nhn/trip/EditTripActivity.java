@@ -58,7 +58,7 @@ public class EditTripActivity extends Activity{
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Toast.makeText(getApplicationContext(), "you click item " + position, Toast.LENGTH_LONG);
+			Toast.makeText(getApplicationContext(), "you click item " + position, Toast.LENGTH_LONG).show();
 		}
 		
 	}

@@ -22,7 +22,6 @@ import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import cse.its.dbhelper.DBTrafficSource;

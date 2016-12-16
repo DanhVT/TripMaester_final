@@ -197,7 +197,7 @@ public class RouteParser extends AsyncTask<String, Void, PathOverlay> {
 						// "street_name");
 						long id = Long.parseLong(jsonPath.getJSONObject(i).getString("street_id"));
 						mainStreetId.add(id);
-						cursor = dbStaticSource.getObjectName("way", id);
+						cursor = dbStaticSource.getObjectName(id);
 						if (cursor.moveToFirst()) {
 							// Log.wtf("NEW STREET", cursor.getString(cursor
 							// .getColumnIndex(DBStaticLocHelper.NAME)));

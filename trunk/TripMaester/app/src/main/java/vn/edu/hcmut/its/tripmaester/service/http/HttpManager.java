@@ -41,7 +41,7 @@ import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
 public class HttpManager {
-    static final String URL_GET_LIKE_INFO_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/like/GetLikeInfoOnTrip";
+    static final String URL_GET_LIKE_INFO_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/like/GetListLikerOnTrip";
     static final String URL_CREATE_POINT_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/tripdetails/CreatePointOnTrip";
     static final String URL_CREATE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/CreateTrip";// tokenID/[list
     static final String URL_GET_COMMENTS_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/comment/GetListCommentOnTrip";
@@ -50,6 +50,7 @@ public class HttpManager {
     static final String URL_GET_LIST_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListShareTrip";
     static final String URL_GET_LIST_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListTrip";
     static final String URL_GET_LIST_PRIVATE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListPrivateTrip";
+    static final String URL_GET_LIST_PUBLIC_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListPublicTrip";
     static final String URL_GET_LIST_TRP_SEARCH = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListTripSearch";
     static final String URL_GET_LOGIN = HttpConstants.HOST_NAME + "/ITS/rest/user/GETlogin/";
     static final String URL_GET_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/share/GetShareOnTrip";
@@ -350,6 +351,33 @@ public class HttpManager {
         }
     }
 
+    public static void getListPublicTrip(Context context, final ICallback<JSONArray> callback) {
+        if(context !=null) {
+            Ion.with(context).load(URL_GET_LIST_PUBLIC_TRIP)
+                    .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String str_response) {
+                            if (e == null) {
+                                JSONObject jsonObj = null;
+                                try {
+                                    jsonObj = new JSONObject(str_response);
+                                    if (!jsonObj.isNull("listTrip")) {
+                                        callback.onCompleted(new JSONArray(jsonObj.getString("listTrip")), null, null);
+                                    }
+                                } catch (JSONException e1) {
+                                    callback.onCompleted(null, null, e1);
+                                }
+                            } else {
+                                callback.onCompleted(null, null, e);
+                            }
+                        }
+                    });
+        }
+    }
+
+
     public static void searchTrip(String startPlace, String endPlace, String privacy, final ICallback<JSONArray> callback){
         MultipartBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -585,17 +613,17 @@ public class HttpManager {
 	 */
     public static void likeTrip(String tripID, Context context) {
         Ion.with(context).load(URL_LIKE_TRIP)
-                .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                .setBodyParameter("tripId", tripID)
-                .asString()
-                .setCallback(new FutureCallback<String>() {
-                    @Override
-                    public void onCompleted(Exception e, String str_response) {
-                        if (e != null) {
-                            Log.e(TAG, "likeTrip", e);
-                        }
+            .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+            .setBodyParameter("tripId", tripID)
+            .asString()
+            .setCallback(new FutureCallback<String>() {
+                @Override
+                public void onCompleted(Exception e, String str_response) {
+                    if (e != null) {
+                        Log.e(TAG, "likeTrip", e);
                     }
-                });
+                }
+            });
     }
 
     // service login

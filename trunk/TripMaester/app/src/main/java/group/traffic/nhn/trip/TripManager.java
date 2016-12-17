@@ -22,9 +22,7 @@ public class TripManager {
     public static ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
     // for demo only
     public static void addDataTrip(final Context context, final ITripCallback callback) {
-        //load trip
-//		 lst_user_trip = new ArrayList<Trip>();
-        //get list trip's of user
+
         HttpManager.getListTrip(context, new ICallback<JSONArray>() {
             @Override
             public void onCompleted(JSONArray jsonarray, Object tag, Exception e) {
@@ -50,23 +48,23 @@ public class TripManager {
                         if (!jsonobject.isNull("tripId")) {
                             trip1.setTripId(jsonobject.getString("tripId"));
                         }
-
-                        trip1.setUserName(LoginManager.getInstance().getUser().getName());
+                        if (!jsonobject.isNull("userName")) {
+                            trip1.setUserName(jsonobject.getString("userName"));
+                        }
                         trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
 
                         HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                             @Override
                             public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
                                 try {
-                                    if (!LikeInfo.isNull("LikeInfo")) {
-                                        JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
+                                    if (!LikeInfo.isNull("listLiker")) {
+                                        JSONArray listLiker =  new JSONArray(LikeInfo.getString("listLiker"));
                                         trip1.setNumberLikeTrip(listLiker.length() + " likes");
                                         ArrayList<String> likers = new ArrayList<String>();
                                         for (int k =0; k< listLiker.length() ; k++){
                                             JSONObject json = new JSONObject(listLiker.getString(k));
                                             likers.add(json.getString("userId"));
                                         }
-                                        trip1.setLsitUserIdLike(likers);
                                     }
                                 } catch (JSONException e1) {
                                     e1.printStackTrace();
@@ -130,22 +128,18 @@ public class TripManager {
                             @Override
                             public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
                                 try {
-                                    if (!LikeInfo.isNull("LikeInfo")) {
-
-    //                                        trip1.setNumberLikeTrip(LikeInfo.getString("numLike") + " likes");
-                                            JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
-                                            trip1.setNumberLikeTrip(listLiker.length() + " likes");
-
-                                            ArrayList<String> likers = new ArrayList<String>();
-                                            for (int k =0; k< listLiker.length() ; k++){
-                                                JSONObject json = new JSONObject(listLiker.getString(k));
-                                                likers.add(json.getString("userId"));
-                                            }
-                                            trip1.setLsitUserIdLike(likers);
+                                    if (!LikeInfo.isNull("listLiker")) {
+                                        JSONArray listLiker =  new JSONArray(LikeInfo.getString("listLiker"));
+                                        trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                        ArrayList<String> likers = new ArrayList<String>();
+                                        for (int k =0; k< listLiker.length() ; k++){
+                                            JSONObject json = new JSONObject(listLiker.getString(k));
+                                            likers.add(json.getString("userId"));
+                                        }
                                     }
                                 } catch (JSONException e1) {
                                     e1.printStackTrace();
-                                }catch (NullPointerException ex){
+                                } catch(NullPointerException ex){
                                     ex.printStackTrace();
                                 }
 
@@ -220,21 +214,19 @@ public class TripManager {
                                     }
                                 });
 
-                                //FIXME: get count comments, count of likes
-//					HttpManager.getListCommentTrip(trip1.getTripId());
                                 HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
                                     @Override
                                     public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
                                         try {
-                                            if (!LikeInfo.isNull("LikeInfo")) {
-                                                    JSONArray listLiker =  new JSONArray(LikeInfo.getString("LikeInfo"));
-                                                    trip1.setNumberLikeTrip(listLiker.length() + " likes");
-                                                    ArrayList<String> likers = new ArrayList<String>();
-                                                    for (int k =0; k< listLiker.length() ; k++){
-                                                        JSONObject json = new JSONObject(listLiker.getString(k));
-                                                        likers.add(json.getString("userId"));
-                                                    }
-                                                    trip1.setLsitUserIdLike(likers);
+                                            if (!LikeInfo.isNull("listLiker")) {
+                                                JSONArray listLiker =  new JSONArray(LikeInfo.getString("listLiker"));
+                                                trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                                ArrayList<String> likers = new ArrayList<String>();
+                                                for (int k =0; k< listLiker.length() ; k++){
+                                                    JSONObject json = new JSONObject(listLiker.getString(k));
+                                                    likers.add(json.getString("userId"));
+                                                }
+                                                trip1.setLsitUserIdLike(likers);
 
                                             }
                                         } catch (JSONException e1) {
@@ -262,7 +254,88 @@ public class TripManager {
                 });
 
         //FIXME: get list public trip
+        HttpManager
+                .getListPublicTrip(context, new ICallback<JSONArray>() {
 
+                    @Override
+                    public void onCompleted(JSONArray jsonarray, Object tag, Exception e) {
+                        try {
+                            for (int i = 0; i < jsonarray.length(); i++) {
+                                JSONObject jsonobject = jsonarray.getJSONObject(i);
+                                final Trip trip1 = new Trip();
+
+                                if (!jsonobject.isNull("startTime")) {
+                                    trip1.setTimeStartTrip(jsonobject.getString("startTime"));
+                                }
+                                if (!jsonobject.isNull("fromDescription")) {
+                                    trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+                                }
+                                if (!jsonobject.isNull("endTime")) {
+                                    trip1.setTimeEndTrip(jsonobject.getString("endTime"));
+                                }
+                                if (!jsonobject.isNull("tripName")) {
+                                    trip1.setDateOpenTrip(jsonobject.getString("tripName"));
+                                }
+                                if (!jsonobject.isNull("toDescription")) {
+                                    trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
+                                }
+                                if (!jsonobject.isNull("tripId")) {
+                                    trip1.setTripId(jsonobject.getString("tripId"));
+                                }
+                                if (!jsonobject.isNull("userId")) {
+                                    trip1.setUserIdOwner(jsonobject.getString("userId"));
+                                }
+
+                                HttpManager.getUserInfo(trip1.getUserIdOwner(), context, new ICallback<JSONObject>() {
+                                    @Override
+                                    public void onCompleted(JSONObject jsonobjOwner,  Object tag,Exception e) {
+                                        String ownerName = "";
+                                        if (!jsonobjOwner.isNull("name")) {
+                                            try {
+                                                ownerName = jsonobjOwner.getString("name");
+                                            } catch (JSONException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+                                        trip1.setUserName(ownerName);
+                                        trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
+
+                                    }
+                                });
+
+                                HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
+                                    @Override
+                                    public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
+                                        try {
+                                            if (!LikeInfo.isNull("listLiker")) {
+                                                JSONArray listLiker =  new JSONArray(LikeInfo.getString("listLiker"));
+                                                trip1.setNumberLikeTrip(listLiker.length() + " likes");
+                                                ArrayList<String> likers = new ArrayList<String>();
+                                                for (int k =0; k< listLiker.length() ; k++){
+                                                    JSONObject json = new JSONObject(listLiker.getString(k));
+                                                    likers.add(json.getString("userId"));
+                                                }
+                                                trip1.setLsitUserIdLike(likers);
+
+                                            }
+                                        } catch (JSONException e1) {
+                                            e1.printStackTrace();
+                                        }catch (NullPointerException ex){
+                                            ex.printStackTrace();
+                                        }
+
+                                    }
+                                });//numLike
+                                lstMessage = HttpManager.getListCommentTrip(trip1.getTripId());
+                                trip1.setNumberCommentTrip(lstMessage.size()+ " comments");
+                                addTrip(trip1);
+                            }
+                        }
+                        catch (Exception ex){
+                            Log.i("tag", "error json array");
+                        }
+                    }
+                });
     }
 
     public interface ITripCallback {

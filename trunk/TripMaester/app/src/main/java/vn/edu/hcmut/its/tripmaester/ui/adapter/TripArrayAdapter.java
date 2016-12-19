@@ -3,6 +3,7 @@ package vn.edu.hcmut.its.tripmaester.ui.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             rowView = mInflater.inflate(R.layout.trip_item, null, false);
 
             viewHolder = new ViewHolder();
+            viewHolder.txtTripName = (TextView) rowView.findViewById(R.id.txtTripName);
             viewHolder.txtUserNameCreateTrip = (TextView) rowView
                     .findViewById(R.id.txtUserNameCreateTrip);
             viewHolder.txtDateCreateTrip = (TextView) rowView
@@ -98,7 +100,9 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     .findViewById(R.id.likeButton);
             viewHolder.txtNumberCommentsTrip = (TextView) rowView
                     .findViewById(R.id.txt_item_list_trip_number_comments);
-
+            viewHolder.txt_emotion = (TextView) rowView
+                    .findViewById(R.id.txt_emotion);
+//            viewHolder.txt_emotion.setTextColor();
             rowView.setTag(viewHolder);
 
         } else {
@@ -107,6 +111,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
         //KenK11 update trip's info
         Trip mTrip = getTrips().get(position);
+        viewHolder.txtTripName.setText(mTrip.getTripName());
         viewHolder.txtUserNameCreateTrip.setText(mTrip.getUserName());
         viewHolder.txtDateCreateTrip.setText(mTrip.getDateOpenTrip());
         viewHolder.txtTimeStartTrip.setText(mTrip.getTimeStartTrip());
@@ -114,8 +119,9 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
         viewHolder.txtPlaceEndTrip.setText(mTrip.getPlaceEndTrip());
         viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
-
         viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
+
+        viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
 
         if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
             viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
@@ -338,8 +344,8 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         // ================
         //TODO: KenK11 change LinearLayout to Button
         // View route of trip on map
-        Button viewOnMap = (Button) rowView
-                .findViewById(R.id.btn_view_on_map);
+        LinearLayout viewOnMap = (LinearLayout) rowView
+                .findViewById(R.id.item_list_trip_button_view);
         viewOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -390,6 +396,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
     }
 
     private class ViewHolder {
+        TextView txtTripName;
         TextView txtUserNameCreateTrip;
         TextView txtDateCreateTrip;
         TextView txtTimeStartTrip;
@@ -400,5 +407,6 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
         TextView txtNumberCommentsTrip;
         ImageView imgAvaUserCreateTrip;
         TextView likeButton;
+        TextView txt_emotion;
     }
 }

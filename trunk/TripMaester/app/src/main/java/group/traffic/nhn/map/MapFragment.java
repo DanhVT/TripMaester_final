@@ -1453,12 +1453,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
                     // set prompts.xml to alertdialog builder
                     alertDialogBuilder.setView(promptsView);
-
+                    final EditText txt_nameTrip = (EditText) promptsView
+                            .findViewById(R.id.txtNameTrip);
                     final EditText txt_startPlace = (EditText) promptsView
                             .findViewById(R.id.txtStartPlace);
                     final EditText txt_endPlace = (EditText) promptsView
                             .findViewById(R.id.txtEndPlace);
                     final Spinner spinner_trip_privacy = (Spinner) promptsView.findViewById(R.id.spinner_trip_privacy);
+                    final Spinner spinner_trip_emotion = (Spinner) promptsView.findViewById(R.id.spinner_trip_emotion);
+
                     // set dialog message
                     alertDialogBuilder
                             .setCancelable(false)
@@ -1565,11 +1568,13 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     + intMonth + "/" + year);
                                             trip1.setTimeEndTrip(day + "/"
                                                     + intMonth + "/" + year);
+                                            trip1.setTripName(txt_nameTrip.getText().toString());
                                             trip1.setPlaceStartTrip(txt_startPlace.getText().toString());
                                             trip1.setPlaceEndTrip(txt_endPlace.getText().toString());
                                             trip1.setNumberLikeTrip(mainActivity.getString(R.string.default_like));
                                             trip1.setNumberCommentTrip(mainActivity.getString(R.string.default_comment));
                                             trip1.setPrivacy(spinner_trip_privacy.getSelectedItem().toString());
+                                            trip1.setEmotion(spinner_trip_emotion.getSelectedItem().toString());
                                             //send trip to server
                                             HttpManager.createTrip(trip1, getActivity(), new ICallback<JSONObject>() {
                                                 @Override
@@ -1587,17 +1592,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                     GeoPoint geoPoint = viaPoints
                                                                             .get(j);
                                                                     PointItem pointItem = new PointItem();
-                                                                    pointItem
-                                                                            .setX_Lat(geoPoint
+                                                                    pointItem.setX_Lat(geoPoint
                                                                                     .getLatitudeE6());
-                                                                    pointItem
-                                                                            .setY_Long(geoPoint
+                                                                    pointItem.setY_Long(geoPoint
                                                                                     .getLongitudeE6());
                                                                     // FIXME: set trip
                                                                     // id
                                                                     final int finalJ = j;
-                                                                    HttpManager
-                                                                            .createPointOnTrip(
+                                                                    HttpManager.createPointOnTrip(
                                                                                     trip1.getTripId(),
                                                                                     pointItem, getActivity(), new ICallback<JSONObject>() {
                                                                                         @Override

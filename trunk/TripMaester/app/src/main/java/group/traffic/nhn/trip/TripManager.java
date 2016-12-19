@@ -30,11 +30,14 @@ public class TripManager {
                     for (int i = 0; i < jsonarray.length(); i++) {
                         JSONObject jsonobject = jsonarray.getJSONObject(i);
                         final Trip trip1 = new Trip();
+                        if (!jsonobject.isNull("tripName")) {
+                            trip1.setTripName(jsonobject.getString("tripName"));
+                        }
                         if (!jsonobject.isNull("startTime")) {
                             trip1.setTimeStartTrip(jsonobject.getString("startTime"));
                         }
-                        if (!jsonobject.isNull("fromDescription")) {
-                            trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+                        if (!jsonobject.isNull("fromLocationName")) {
+                            trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
                         }
                         if (!jsonobject.isNull("endTime")) {
                             trip1.setTimeEndTrip(jsonobject.getString("endTime"));
@@ -42,14 +45,17 @@ public class TripManager {
                         if (!jsonobject.isNull("tripName")) {
                             trip1.setDateOpenTrip(jsonobject.getString("tripName"));
                         }
-                        if (!jsonobject.isNull("toDescription")) {
-                            trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
+                        if (!jsonobject.isNull("toLocationName")) {
+                            trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                         }
                         if (!jsonobject.isNull("tripId")) {
                             trip1.setTripId(jsonobject.getString("tripId"));
                         }
                         if (!jsonobject.isNull("userName")) {
                             trip1.setUserName(jsonobject.getString("userName"));
+                        }
+                        if (!jsonobject.isNull("emotion")) {
+                            trip1.setEmotion(jsonobject.getString("emotion"));
                         }
                         trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
 
@@ -102,11 +108,14 @@ public class TripManager {
                     for (int i = 0; i < jsonarray.length(); i++) {
                         JSONObject jsonobject = jsonarray.getJSONObject(i);
                         final Trip trip1 = new Trip();
+                        if (!jsonobject.isNull("tripName")) {
+                            trip1.setTripName(jsonobject.getString("tripName"));
+                        }
                         if (!jsonobject.isNull("startTime")) {
                             trip1.setTimeStartTrip(jsonobject.getString("startTime"));
                         }
-                        if (!jsonobject.isNull("fromDescription")) {
-                            trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+                        if (!jsonobject.isNull("fromLocationName")) {
+                            trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
                         }
                         if (!jsonobject.isNull("endTime")) {
                             trip1.setTimeEndTrip(jsonobject.getString("endTime"));
@@ -114,13 +123,15 @@ public class TripManager {
                         if (!jsonobject.isNull("tripName")) {
                             trip1.setDateOpenTrip(jsonobject.getString("tripName"));
                         }
-                        if (!jsonobject.isNull("toDescription")) {
-                            trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
+                        if (!jsonobject.isNull("toLocationName")) {
+                            trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                         }
                         if (!jsonobject.isNull("tripId")) {
                             trip1.setTripId(jsonobject.getString("tripId"));
                         }
-
+                        if (!jsonobject.isNull("emotion")) {
+                            trip1.setEmotion(jsonobject.getString("emotion"));
+                        }
                         trip1.setUserName(LoginManager.getInstance().getUser().getName());
                         trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
 
@@ -175,11 +186,14 @@ public class TripManager {
                             for (int i = 0; i < jsonarray.length(); i++) {
                                 JSONObject jsonobject = jsonarray.getJSONObject(i);
                                 final Trip trip1 = new Trip();
+                                if (!jsonobject.isNull("tripName")) {
+                                    trip1.setTripName(jsonobject.getString("tripName"));
+                                }
                                 if (!jsonobject.isNull("startTime")) {
                                     trip1.setTimeStartTrip(jsonobject.getString("startTime"));
                                 }
-                                if (!jsonobject.isNull("fromDescription")) {
-                                    trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+                                if (!jsonobject.isNull("fromLocationName")) {
+                                    trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
                                 }
                                 if (!jsonobject.isNull("endTime")) {
                                     trip1.setTimeEndTrip(jsonobject.getString("endTime"));
@@ -187,8 +201,8 @@ public class TripManager {
                                 if (!jsonobject.isNull("tripName")) {
                                     trip1.setDateOpenTrip(jsonobject.getString("tripName"));
                                 }
-                                if (!jsonobject.isNull("toDescription")) {
-                                    trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
+                                if (!jsonobject.isNull("toLocationName")) {
+                                    trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                                 }
                                 if (!jsonobject.isNull("tripId")) {
                                     trip1.setTripId(jsonobject.getString("tripId"));
@@ -196,7 +210,9 @@ public class TripManager {
                                 if (!jsonobject.isNull("userId")) {
                                     trip1.setUserIdOwner(jsonobject.getString("userId"));
                                 }
-
+                                if (!jsonobject.isNull("emotion")) {
+                                    trip1.setEmotion(jsonobject.getString("emotion"));
+                                }
                                 HttpManager.getUserInfo(trip1.getUserIdOwner(), context, new ICallback<JSONObject>() {
                                     @Override
                                     public void onCompleted(JSONObject jsonobjOwner,  Object tag,Exception e) {
@@ -264,6 +280,10 @@ public class TripManager {
                                 JSONObject jsonobject = jsonarray.getJSONObject(i);
                                 final Trip trip1 = new Trip();
 
+                                if (!jsonobject.isNull("tripName")) {
+                                    trip1.setTripName(jsonobject.getString("tripName"));
+                                }
+
                                 if (!jsonobject.isNull("startTime")) {
                                     trip1.setTimeStartTrip(jsonobject.getString("startTime"));
                                 }
@@ -284,6 +304,9 @@ public class TripManager {
                                 }
                                 if (!jsonobject.isNull("userId")) {
                                     trip1.setUserIdOwner(jsonobject.getString("userId"));
+                                }
+                                if (!jsonobject.isNull("emotion")) {
+                                    trip1.setEmotion(jsonobject.getString("emotion"));
                                 }
 
                                 HttpManager.getUserInfo(trip1.getUserIdOwner(), context, new ICallback<JSONObject>() {

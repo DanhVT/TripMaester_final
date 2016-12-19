@@ -18,10 +18,4 @@
     <style name="dlg_priority" parent="android:Theme.Dialog">
         <item name = "android:windowNoTitle"> true </item>
     </style>
-    <style name="floating_action_button">
-        <item name="android:layout_marginLeft">0dp</item>
-        <item name="android:layout_marginTop">0dp</item>
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_marginBottom">0dp</item>
-    </style>
 </resources>

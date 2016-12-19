@@ -13,7 +13,6 @@
     android:theme="@style/AppTheme">
 
     <ImageView
-        android:id="@+id/imageViewUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
@@ -27,7 +26,6 @@
         android:textAppearance="@style/AppTheme" />
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hoàng Dũng"

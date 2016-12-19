@@ -14,15 +14,17 @@ import java.util.ArrayList;
 
 @SuppressWarnings("serial")
 public class Trip implements Serializable {
-    String userName;
-    String dateOpenTrip;
-    String timeStartTrip;
-    String timeEndTrip;
-    String placeStartTrip;
-    String placeEndTrip;
-    String numberLikeTrip;
-    String numberCommentTrip;
-    String privacy;
+    private String userName;
+    private String dateOpenTrip;
+    private String timeStartTrip;
+    private String timeEndTrip;
+    private String placeStartTrip;
+    private String placeEndTrip;
+    private String numberLikeTrip;
+    private String numberCommentTrip;
+    private String privacy;
+    private String tripName;
+    private String emotion;
 
     int avaUserCreateTrip;
     private String tripId;
@@ -30,6 +32,7 @@ public class Trip implements Serializable {
     private String userIdOwner;
     private ArrayList<GeoPoint> lstWayPoints = new ArrayList<>();
     public ArrayList<String> lstUserIdLike = new ArrayList<>();
+
     public int getAvaUserCreateTrip() {
         return avaUserCreateTrip;
     }
@@ -65,6 +68,12 @@ public class Trip implements Serializable {
         return placeEndTrip;
     }
 
+    public void setTripName(String name){
+        this.tripName = name;
+    }
+    public String getTripName(){
+        return this.tripName;
+    }
     public String getPlaceStartTrip() {
         return placeStartTrip;
     }
@@ -151,9 +160,14 @@ public class Trip implements Serializable {
     public void setPrivacy(String privacy) {
         this.privacy = privacy;
     }
-
+    public void setEmotion(String emotion) {
+        this.emotion = emotion;
+    }
     public String getPrivacy() {
         return privacy;
+    }
+    public String getEmotion() {
+        return emotion;
     }
 
     public void setLsitUserIdLike(ArrayList<String> lstUserIdLike){

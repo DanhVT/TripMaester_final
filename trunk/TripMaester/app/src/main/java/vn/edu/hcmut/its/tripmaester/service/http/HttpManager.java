@@ -163,12 +163,14 @@ public class HttpManager {
     public static void createTrip(Trip trip_item, Context context, final ICallback<JSONObject> callback) {
         Ion.with(context).load(URL_CREATE_TRIP)
                 .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .setBodyParameter("tripName", trip_item.getTripName())
                 .setBodyParameter("startTime", trip_item.getTimeStartTrip())
                 .setBodyParameter("endTime", trip_item.getTimeEndTrip())
-                .setBodyParameter("fromDescription", trip_item.getPlaceStartTrip())
-                .setBodyParameter("toDescription", trip_item.getPlaceEndTrip())
+                .setBodyParameter("fromLocationName", trip_item.getPlaceStartTrip())
+                .setBodyParameter("toLocationName", trip_item.getPlaceEndTrip())
                 .setBodyParameter("tripName", trip_item.getDateTime())//span time of trip
                 .setBodyParameter("privacy", trip_item.getPrivacy())
+                .setBodyParameter("emotion", trip_item.getEmotion())
                 .asString()
                 .setCallback(new FutureCallback<String>() {
                     @Override

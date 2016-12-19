@@ -21,7 +21,6 @@
             android:layout_marginRight="10dp" />
 
         <LinearLayout
-            android:id="@+id/linerItemTripListUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -34,6 +33,14 @@
                 android:textStyle="normal|bold"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/map_item_trip_blue" />
+            <TextView
+                android:id="@+id/txtTripName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trip Name"
+                android:textStyle="normal|bold"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/com_facebook_likeview_text_color" />
 
             <TextView
                 android:id="@+id/txtDateCreateTrip"
@@ -128,7 +135,6 @@
 
     <!-- Content_status_trip -->
     <LinearLayout
-        android:id="@+id/item_list_trip_Content_status_trip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
@@ -136,60 +142,31 @@
         android:padding="@dimen/trip_spacing_normal"
         android:weightSum="3">
 
-        <!-- number likes -->
-        <LinearLayout
-            android:id="@+id/item_list_trip_number_likes"
+        <TextView
+            android:id="@+id/txt_item_list_trip_number_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start">
+            android:text="40 likes"
+            android:textColor="@color/map_item_trip_gray"></TextView>
 
-            <TextView
-                android:id="@+id/txt_item_list_trip_number_likes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="40 likes"
-                android:textColor="@color/map_item_trip_gray"></TextView>
-        </LinearLayout>
 
         <!-- number comment -->
-        <LinearLayout
-            android:id="@+id/item_list_trip_number_comments"
+
+        <TextView
+            android:id="@+id/txt_item_list_trip_number_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start">
+            android:text="10 comments"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/map_item_trip_gray"></TextView>
 
-            <TextView
-                android:id="@+id/txt_item_list_trip_number_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10 comments"
-                android:textColor="@color/map_item_trip_gray"></TextView>
-        </LinearLayout>
-
-        <!-- continue reading -->
-        <LinearLayout
-            android:id="@+id/item_list_trip_continue_reading"
+        <TextView
+            android:id="@+id/txt_emotion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:onClick="showActivityManagerTripContentFull">
-
-            <Button
-                android:id="@+id/btn_view_on_map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/view_on_map"/>
-
-            <!--<TextView-->
-            <!--android:id="@+id/txtViewOnMap"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/view_on_map"-->
-            <!--android:textColor="@color/gray_opac"></TextView>-->
-        </LinearLayout>
+            android:text="10 comments"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/map_item_trip_gray"></TextView>
     </LinearLayout>
 
     <View
@@ -248,7 +225,7 @@
 
         <!-- button comment -->
         <LinearLayout
-            android:id="@+id/item_list_trip_button_comm"
+            android:id="@+id/item_list_trip_button_view"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

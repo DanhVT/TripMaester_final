@@ -100,286 +100,289 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     .findViewById(R.id.likeButton);
             viewHolder.txtNumberCommentsTrip = (TextView) rowView
                     .findViewById(R.id.txt_item_list_trip_number_comments);
-            viewHolder.txt_emotion = (TextView) rowView
-                    .findViewById(R.id.txt_emotion);
-//            viewHolder.txt_emotion.setTextColor();
+            viewHolder.txt_emotion = (TextView) rowView.findViewById(R.id.txt_emotion);
+
+
             rowView.setTag(viewHolder);
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        try{
+            //KenK11 update trip's info
+            Trip mTrip = getTrips().get(position);
+            viewHolder.txtTripName.setText(mTrip.getTripName());
+            viewHolder.txtUserNameCreateTrip.setText(mTrip.getUserName());
+            viewHolder.txtDateCreateTrip.setText(mTrip.getDateOpenTrip());
+            viewHolder.txtTimeStartTrip.setText(mTrip.getTimeStartTrip());
+            viewHolder.txtTimeEndTrip.setText(mTrip.getTimeEndTrip());
+            viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
+            viewHolder.txtPlaceEndTrip.setText(mTrip.getPlaceEndTrip());
+            viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
+            viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
 
-        //KenK11 update trip's info
-        Trip mTrip = getTrips().get(position);
-        viewHolder.txtTripName.setText(mTrip.getTripName());
-        viewHolder.txtUserNameCreateTrip.setText(mTrip.getUserName());
-        viewHolder.txtDateCreateTrip.setText(mTrip.getDateOpenTrip());
-        viewHolder.txtTimeStartTrip.setText(mTrip.getTimeStartTrip());
-        viewHolder.txtTimeEndTrip.setText(mTrip.getTimeEndTrip());
-        viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
-        viewHolder.txtPlaceEndTrip.setText(mTrip.getPlaceEndTrip());
-        viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
-        viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
+//            viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
+            int[] colorsEmotion = mContext.getResources().getIntArray(R.array.colorsEmotion);
+//            viewHolder.txt_emotion.setTextColor(colorsEmotion[Integer.parseInt(mTrip.getEmotion().substring(0,1))]);
 
-        viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
-
-        if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
-            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
-        }
-        else{
-            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_like);
-        }
+            if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
+                viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
+            }
+            else{
+                viewHolder.likeButton.setBackgroundResource(R.drawable.ic_like);
+            }
 
 
-        viewHolder.imgAvaUserCreateTrip.setImageResource(mTrip
-                .getAvaUserCreateTrip());
+            viewHolder.imgAvaUserCreateTrip.setImageResource(mTrip
+                    .getAvaUserCreateTrip());
 
-        //share trip to friends
-        LinearLayout share_button = (LinearLayout) rowView
-                .findViewById(R.id.item_list_trip_button_share);
-        share_button.setOnClickListener(new View.OnClickListener() {
+            //share trip to friends
+            LinearLayout share_button = (LinearLayout) rowView
+                    .findViewById(R.id.item_list_trip_button_share);
+            share_button.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // convert list string to char sequence
-                // get all friend's user in app
-                final ArrayList<FriendItem> mFriends = LoginManager.getInstance().getUser().getFriends();
-                // get list friend not share of trip
+                @Override
+                public void onClick(View v) {
+                    // convert list string to char sequence
+                    // get all friend's user in app
+                    final ArrayList<FriendItem> mFriends = LoginManager.getInstance().getUser().getFriends();
+                    // get list friend not share of trip
 
-                // get list shared friend of trip
-                HttpManager.getShareOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<FriendItem>>() {
-                    @Override
-                    public void onCompleted(ArrayList<FriendItem> lstFriendShared, Object tag, Exception e) {
-                        if (e == null) {
-                            final ArrayList<FriendItem> mListFriendsNotShare = new ArrayList<FriendItem>();
-                            for (int i = 0; i < mFriends.size(); i++) {
-                                if (lstFriendShared.size() > 0) {
-                                    boolean isAddShareList = true;
-                                    for (int j = 0; j < lstFriendShared.size(); j++) {
-                                        if (mFriends.get(i).getFBId()
-                                                .equals(lstFriendShared.get(j).getFBId())) {
-                                            isAddShareList = false;
-                                            break;
+                    // get list shared friend of trip
+                    HttpManager.getShareOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<FriendItem>>() {
+                        @Override
+                        public void onCompleted(ArrayList<FriendItem> lstFriendShared, Object tag, Exception e) {
+                            if (e == null) {
+                                final ArrayList<FriendItem> mListFriendsNotShare = new ArrayList<FriendItem>();
+                                for (int i = 0; i < mFriends.size(); i++) {
+                                    if (lstFriendShared.size() > 0) {
+                                        boolean isAddShareList = true;
+                                        for (int j = 0; j < lstFriendShared.size(); j++) {
+                                            if (mFriends.get(i).getFBId()
+                                                    .equals(lstFriendShared.get(j).getFBId())) {
+                                                isAddShareList = false;
+                                                break;
+                                            }
                                         }
-                                    }
-                                    if (isAddShareList) {
+                                        if (isAddShareList) {
+                                            mListFriendsNotShare.add(mFriends.get(i));
+                                        }
+                                    } else {
                                         mListFriendsNotShare.add(mFriends.get(i));
                                     }
-                                } else {
-                                    mListFriendsNotShare.add(mFriends.get(i));
                                 }
-                            }
-                            List<String> listItems = new ArrayList<String>();
-                            for (int i = 0; i < mListFriendsNotShare.size(); i++) {
-                                listItems.add(mListFriendsNotShare.get(i).getFriendName());
-                            }
-                            final CharSequence[] charSequenceItems = listItems
-                                    .toArray(new CharSequence[listItems.size()]);
+                                List<String> listItems = new ArrayList<String>();
+                                for (int i = 0; i < mListFriendsNotShare.size(); i++) {
+                                    listItems.add(mListFriendsNotShare.get(i).getFriendName());
+                                }
+                                final CharSequence[] charSequenceItems = listItems
+                                        .toArray(new CharSequence[listItems.size()]);
 
-                            new AlertDialog.Builder(parentViewGroup.getContext())
-                                    .setTitle("SHARE")
-                                    .setMultiChoiceItems(
-                                            charSequenceItems,
-                                            //TODO: TL: WTF IS THIS?
-                                            new boolean[]{false, false, false, false, false, false, false},
-                                            new DialogInterface.OnMultiChoiceClickListener() {
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int whichButton,
-                                                        boolean isChecked) {
+                                new AlertDialog.Builder(parentViewGroup.getContext())
+                                        .setTitle("SHARE")
+                                        .setMultiChoiceItems(
+                                                charSequenceItems,
+                                                //TODO: TL: WTF IS THIS?
+                                                new boolean[]{false, false, false, false, false, false, false},
+                                                new DialogInterface.OnMultiChoiceClickListener() {
+                                                    public void onClick(
+                                                            DialogInterface dialog,
+                                                            int whichButton,
+                                                            boolean isChecked) {
 
-                                                    mListFriendsNotShare.get(whichButton).setChecked(isChecked);
-                                                }
-                                            })
-                                    .setPositiveButton(R.string.alert_dialog_share,
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int whichButton) {
-
-                                                    // call share api
-                                                    List<String> lstUserSharedId = new ArrayList<String>();
-                                                    for (int i = 0; i < mListFriendsNotShare.size(); i++) {
-                                                        if (mListFriendsNotShare.get(i).isChecked()) {
-                                                            lstUserSharedId
-                                                                    .add(mListFriendsNotShare
-                                                                            .get(i)
-                                                                            .getFBId());
-                                                        }
+                                                        mListFriendsNotShare.get(whichButton).setChecked(isChecked);
                                                     }
-                                                    HttpManager.saveShareTrip(
-                                                            lstUserSharedId, getTrips().get(pos).getTripId(),
-                                                            getContext(),
-                                                            new ICallback<JSONObject>() {
-                                                                @Override
-                                                                public void onCompleted(JSONObject data, Object tag, Exception e) {
-                                                                    if (e != null) {
-                                                                        Log.e(TAG, "saveShareTrip", e);
+                                                })
+                                        .setPositiveButton(R.string.alert_dialog_share,
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(
+                                                            DialogInterface dialog,
+                                                            int whichButton) {
+
+                                                        // call share api
+                                                        List<String> lstUserSharedId = new ArrayList<String>();
+                                                        for (int i = 0; i < mListFriendsNotShare.size(); i++) {
+                                                            if (mListFriendsNotShare.get(i).isChecked()) {
+                                                                lstUserSharedId
+                                                                        .add(mListFriendsNotShare
+                                                                                .get(i)
+                                                                                .getFBId());
+                                                            }
+                                                        }
+                                                        HttpManager.saveShareTrip(
+                                                                lstUserSharedId, getTrips().get(pos).getTripId(),
+                                                                getContext(),
+                                                                new ICallback<JSONObject>() {
+                                                                    @Override
+                                                                    public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                                                        if (e != null) {
+                                                                            Log.e(TAG, "saveShareTrip", e);
+                                                                        }
                                                                     }
-                                                                }
-                                                            });
-                                                }
-                                            })
-                                    .setNegativeButton(R.string.alert_dialog_cancel,
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(
-                                                        DialogInterface dialog,
-                                                        int whichButton) {
+                                                                });
+                                                    }
+                                                })
+                                        .setNegativeButton(R.string.alert_dialog_cancel,
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(
+                                                            DialogInterface dialog,
+                                                            int whichButton) {
 
 										/* User clicked No so do some stuff */
-                                                }
-                                            }).show();
+                                                    }
+                                                }).show();
 
-                        } else {
-                            Log.e(TAG, "Can not getShareOnTrip", e);
-                        }
-                    }
-                });// mTrips.get(position).getLstFriendsShared();
-
-
-                // show multi-checkboxes dialog
-            }
-        });
-        // ================
-
-        //like button
-        final LinearLayout likeButton = (LinearLayout) rowView.findViewById(R.id.item_list_trip_button_like);
-
-        likeButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String strLike = getTrips().get(pos).getNumberLikeTrip();
-                String[] temp = strLike.split(" ");
-                if (temp.length > 1) {
-                    int trip = Integer.parseInt(temp[0]);
-//                    if(likeButton.getResources().getDrawable())
-                    trip++;
-                    String tmpStr10 = String.valueOf(trip);
-                    viewHolder.txtNumberLikesTrip.setText(tmpStr10 + " likes");
-
-                    HttpManager.likeTrip(getTrips().get(pos).getTripId(), getContext());
-                    getTrips().get(pos).setNumberLikeTrip(String.valueOf(trip) + " likes");
-                }
-
-            }
-        });
-
-        // button commnent click
-        LinearLayout comment_button = (LinearLayout) rowView.findViewById(R.id.item_list_trip_button_comment);
-        comment_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View comment_dialog = mInflater.inflate(R.layout.comment_dialog, null);
-                final ListView mViewDialogContent = (ListView) comment_dialog.findViewById(R.id.context_menu_comment);
-
-                ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
-                final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(mContext, lstMessage);
-
-                mViewDialogContent.setAdapter(mMessageDetailAdapter);
-                tripsFragment.runAsyncTask(mMessageDetailAdapter, pos);
-                Button btn_comment = (Button) comment_dialog.findViewById(R.id.btn_comment);
-
-                final EditText txt_comment = (EditText) comment_dialog
-                        .findViewById(R.id.txt_comment);
-
-                btn_comment.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // FIXME: Service to run in background
-                        String content = txt_comment.getText().toString();
-                        HttpManager.commentTrip(getTrips().get(pos)
-                                .getTripId(), content, getContext(), new ICallback<JSONObject>() {
-                            @Override
-                            public void onCompleted(JSONObject data, Object tag, Exception e) {
-                                if (e == null) {
-
-                                } else {
-                                    Log.e(TAG, "Cannot comment trip", e);
-                                }
+                            } else {
+                                Log.e(TAG, "Can not getShareOnTrip", e);
                             }
-                        });
+                        }
+                    });// mTrips.get(position).getLstFriendsShared();
+
+
+                    // show multi-checkboxes dialog
+                }
+            });
+            // ================
+
+            //like button
+            final LinearLayout likeButton = (LinearLayout) rowView.findViewById(R.id.item_list_trip_button_like);
+
+            likeButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    String strLike = getTrips().get(pos).getNumberLikeTrip();
+                    String[] temp = strLike.split(" ");
+                    if (temp.length > 1) {
+                        int trip = Integer.parseInt(temp[0]);
+//                    if(likeButton.getResources().getDrawable())
+                        trip++;
+                        String tmpStr10 = String.valueOf(trip);
+                        viewHolder.txtNumberLikesTrip.setText(tmpStr10 + " likes");
+
+                        HttpManager.likeTrip(getTrips().get(pos).getTripId(), getContext());
+                        getTrips().get(pos).setNumberLikeTrip(String.valueOf(trip) + " likes");
+                    }
+
+                }
+            });
+
+            // button commnent click
+            LinearLayout comment_button = (LinearLayout) rowView.findViewById(R.id.item_list_trip_button_comment);
+            comment_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View comment_dialog = mInflater.inflate(R.layout.comment_dialog, null);
+                    final ListView mViewDialogContent = (ListView) comment_dialog.findViewById(R.id.context_menu_comment);
+
+                    ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
+                    final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(mContext, lstMessage);
+
+                    mViewDialogContent.setAdapter(mMessageDetailAdapter);
+                    tripsFragment.runAsyncTask(mMessageDetailAdapter, pos);
+                    Button btn_comment = (Button) comment_dialog.findViewById(R.id.btn_comment);
+
+                    final EditText txt_comment = (EditText) comment_dialog
+                            .findViewById(R.id.txt_comment);
+
+                    btn_comment.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // FIXME: Service to run in background
+                            String content = txt_comment.getText().toString();
+                            HttpManager.commentTrip(getTrips().get(pos)
+                                    .getTripId(), content, getContext(), new ICallback<JSONObject>() {
+                                @Override
+                                public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                    if (e == null) {
+
+                                    } else {
+                                        Log.e(TAG, "Cannot comment trip", e);
+                                    }
+                                }
+                            });
 //
 //						ArrayList<MessageItem> lstMessage = HttpManager
 //								.getListCommentTrip(getTrips().get(pos)
 //										.getTripId());
 //
 //						mMessageDetailAdapter.setmFriends(lstMessage);
-                    }
-                });
-
-                AlertDialog.Builder alter = new AlertDialog.Builder(
-                        parentViewGroup.getContext());
-                alter.setTitle(R.string.title_friend_msg);
-
-                // FIXME: Load trip message
-//				loadMessageOfOneUser(pos, lstMessage);
-                lstMessage = HttpManager.getListCommentTrip(getTrips().get(pos).getTripId());
-
-                // comment_dialog = mInflater.inflate(
-                // R.layout.comment_dialog, null);
-                // if (!flag) {
-                alter.setView(comment_dialog).setNegativeButton(
-                        R.string.alert_dialog_close,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int whichButton) {
-                                tripsFragment.stopTimer();
-                            }
-                        });
-                flag = false;
-                AlertDialog mDialog = alter.create();
-                mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-				mViewDialogContent.setAdapter(mMessageDetailAdapter); //Change DANH_VO
-
-                mMessageDetailAdapter.notifyDataSetChanged();
-
-                mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                mDialog.show();
-                // }
-
-            }
-        });
-        // ================
-        //TODO: KenK11 change LinearLayout to Button
-        // View route of trip on map
-        LinearLayout viewOnMap = (LinearLayout) rowView
-                .findViewById(R.id.item_list_trip_button_view);
-        viewOnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-        HttpManager.getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
-                    @Override
-                    public void onCompleted(ArrayList<GeoPoint> waypoints, Object tag, Exception e) {
-                        if (waypoints.size() > 0) {
-                            getTrips().get(pos).setLstWayPoints(waypoints);
-                            ArrayList<Road> lstRoads = new ArrayList<Road>();
-                            Road road1 = new Road(getTrips().get(pos).getLstWayPoints());
-                            lstRoads.add(road1);
-                            mainActivity.changeToMapFragments(getTrips().get(pos));
-                        } else {
-                            new AlertDialog.Builder(parentViewGroup.getContext())
-                                    .setTitle("View Trip On Map Error")
-                                    .setMessage("No trip's road data.")
-                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // do nothing
-                                        }
-                                    })
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .show();
                         }
-                        // ================
+                    });
 
-                    }
-                });
+                    AlertDialog.Builder alter = new AlertDialog.Builder(
+                            parentViewGroup.getContext());
+                    alter.setTitle(R.string.title_friend_msg);
+
+                    // FIXME: Load trip message
+//				loadMessageOfOneUser(pos, lstMessage);
+                    lstMessage = HttpManager.getListCommentTrip(getTrips().get(pos).getTripId());
+
+                    // comment_dialog = mInflater.inflate(
+                    // R.layout.comment_dialog, null);
+                    // if (!flag) {
+                    alter.setView(comment_dialog).setNegativeButton(
+                            R.string.alert_dialog_close,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int whichButton) {
+                                    tripsFragment.stopTimer();
+                                }
+                            });
+                    flag = false;
+                    AlertDialog mDialog = alter.create();
+                    mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+                    mViewDialogContent.setAdapter(mMessageDetailAdapter); //Change DANH_VO
+
+                    mMessageDetailAdapter.notifyDataSetChanged();
+
+                    mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                    mDialog.show();
+                    // }
+
+                }
+            });
+            // ================
+            //TODO: KenK11 change LinearLayout to Button
+            // View route of trip on map
+            LinearLayout viewOnMap = (LinearLayout) rowView
+                    .findViewById(R.id.item_list_trip_button_view);
+            viewOnMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HttpManager.getListPointOnTrip(getTrips().get(pos).getTripId(), getContext(), new ICallback<ArrayList<GeoPoint>>() {
+                        @Override
+                        public void onCompleted(ArrayList<GeoPoint> waypoints, Object tag, Exception e) {
+                            if (waypoints.size() > 0) {
+                                getTrips().get(pos).setLstWayPoints(waypoints);
+                                ArrayList<Road> lstRoads = new ArrayList<Road>();
+                                Road road1 = new Road(getTrips().get(pos).getLstWayPoints());
+                                lstRoads.add(road1);
+                                mainActivity.changeToMapFragments(getTrips().get(pos));
+                            } else {
+                                new AlertDialog.Builder(parentViewGroup.getContext())
+                                        .setTitle("View Trip On Map Error")
+                                        .setMessage("No trip's road data.")
+                                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // do nothing
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
+                            }
+                            // ================
+
+                        }
+                    });
 
 
-            }
-        });
-
-
+                }
+            });
+        }catch (NullPointerException ex){
+            ex.printStackTrace();
+        }
         return rowView;
     }
 

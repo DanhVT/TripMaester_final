@@ -426,7 +426,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         StaticVariable.DES_SEG_ID_STATUS = false;
         StaticVariable.PATH_OVERLAY_EXIST = false;
 
-
         clearRoutingInfo();
     }
 
@@ -623,8 +622,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 });
 
         // ###Setup animation
-        slide_right = AnimationUtils
-                .loadAnimation(mContext, R.anim.slide_right);
+        slide_right = AnimationUtils.loadAnimation(mContext, R.anim.slide_right);
         slide_down = AnimationUtils.loadAnimation(mContext, R.anim.slide_down);
         slide_up = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
         slide_up.setAnimationListener(new AnimationListener() {
@@ -718,8 +716,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
-
     //===============
 
     /**
@@ -743,8 +739,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     Bitmap imageBitmap = decodeSampledBitmapFromFile(filePath, 400, 600);// BitmapFactory.decodeFile(filePath,
                     // options);
                     if (lastLocation == null) {
-                        lastLocation = mLocationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        lastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 //					updateCurrentLocation();
                     }
 
@@ -803,6 +798,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             }
             else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
                 if (resultCode == Activity.RESULT_OK) {
+                    long minRunningMemory = (12024 * 12024);
+                    Runtime runtime = Runtime.getRuntime();
+                    if (runtime.freeMemory() < minRunningMemory)
+                        System.gc();
+
                     Log.d("cature", "video");
                     String filePath = fileUri.getPath();
                     Bitmap bmThumbnail;
@@ -1200,17 +1200,17 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             // ### REQUEST ROUTING
             @Override
             public void onClick(View v) {
-                if (StaticVariable.DES_SEG_ID_STATUS
-                        && StaticVariable.FINISH_ROUTING) {
-                    LogFile.writeToFile(mDeviceId + " #2 ROUTING BUTTON");
-                    mLocationSender = new LocationSender(mContext);
+            if (StaticVariable.DES_SEG_ID_STATUS
+                    && StaticVariable.FINISH_ROUTING) {
+                LogFile.writeToFile(mDeviceId + " #2 ROUTING BUTTON");
+                mLocationSender = new LocationSender(mContext);
 //					mLocationSender.execute(" #2 ROUTING BUTTON ");
 //					requestRouting(getActivity().getWindow().getContext(), mMapView, false);
-                    requestRouting(mContext, mMapView, false);
+                requestRouting(mContext, mMapView, false);
 
-                }
-                StaticVariable.START_NEW_PATH = true;
-                start_marker_exist = false;
+            }
+            StaticVariable.START_NEW_PATH = true;
+            start_marker_exist = false;
             }
         });
 
@@ -1256,7 +1256,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         else
                             trafficHandler.postDelayed(trafficRunnable, Constant.TIME_TRAFFIC_INFO_UPDATE);
                     }
-
                 }
 
                 if (StaticVariable.SHOW_WARNING_INFO) {
@@ -1700,10 +1699,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
         MainActivity.fab_current = (FloatingActionButton) mainActivity.findViewById(R.id.fab_current);
         MainActivity.fab_search = (FloatingActionButton) mainActivity.findViewById(R.id.fab_search);
+        MainActivity.fab_rate = (FloatingActionButton) mainActivity.findViewById(R.id.fab_rate);
 
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
         MainActivity.fab_search.setVisibility(View.INVISIBLE);
         MainActivity.fab_current.setVisibility(View.VISIBLE);
+        MainActivity.fab_rate.setVisibility(View.VISIBLE);
 
         Move_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.move_duoi);
         Move_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.move_tren);
@@ -1740,6 +1741,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             }
         });
         isCapturing = false;
+        MainActivity.fab_rate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     // @Override

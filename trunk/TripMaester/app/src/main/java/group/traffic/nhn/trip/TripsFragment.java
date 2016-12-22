@@ -135,50 +135,50 @@ public class TripsFragment extends Fragment {
                                         String endPlace = txt_endPlace.getText().toString();
                                         String privacy = spinner_trip_privacy.getSelectedItem().toString();
 
-                                        HttpManager.searchTrip(startPlace, endPlace, privacy, new ICallback<JSONArray>(){
-                                            @Override
-                                            public void onCompleted(JSONArray data, Object tag, Exception e) {
-                                                try {
-                                                    for (int i = 0; i < data.length(); i++) {
-                                                        JSONObject jsonobject = data.getJSONObject(i);
-                                                        final Trip trip1 = new Trip();
-                                                        if (!jsonobject.isNull("startTime")) {
-                                                            trip1.setTimeStartTrip(jsonobject.getString("startTime"));
-                                                        }
-                                                        if (!jsonobject.isNull("fromDescription")) {
-                                                            trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
-                                                        }
-                                                        if (!jsonobject.isNull("endTime")) {
-                                                            trip1.setTimeEndTrip(jsonobject.getString("endTime"));
-                                                        }
-                                                        if (!jsonobject.isNull("tripName")) {
-                                                            trip1.setDateOpenTrip(jsonobject.getString("tripName"));
-                                                        }
-                                                        if (!jsonobject.isNull("toDescription")) {
-                                                            trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
-                                                        }
-                                                        if (!jsonobject.isNull("tripId")) {
-                                                            trip1.setTripId(jsonobject.getString("tripId"));
-                                                        }
-
-                                                        trip1.setUserName(LoginManager.getInstance().getUser().getName());
-                                                        trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
-                                                        lst_user_trip.add(trip1);
-                                                    }
-                                                    tripAdapter[0] = new TripArrayAdapter(getActivity()
-                                                            .getApplicationContext(),
-                                                            R.id.list_trips_infor,
-                                                            lst_user_trip);
-
-                                                } catch (JSONException e1) {
-                                                    Log.i("tag", "error json array");
-                                                }
-                                                catch (NullPointerException ex){
-                                                    ex.printStackTrace();
-                                                    Toast.makeText(getActivity(), "Can't get list search trip", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
+//                                        HttpManager.searchTrip(startPlace, endPlace, privacy, new ICallback<JSONArray>(){
+//                                            @Override
+//                                            public void onCompleted(JSONArray data, Object tag, Exception e) {
+//                                                try {
+//                                                    for (int i = 0; i < data.length(); i++) {
+//                                                        JSONObject jsonobject = data.getJSONObject(i);
+//                                                        final Trip trip1 = new Trip();
+//                                                        if (!jsonobject.isNull("startTime")) {
+//                                                            trip1.setTimeStartTrip(jsonobject.getString("startTime"));
+//                                                        }
+//                                                        if (!jsonobject.isNull("fromDescription")) {
+//                                                            trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+//                                                        }
+//                                                        if (!jsonobject.isNull("endTime")) {
+//                                                            trip1.setTimeEndTrip(jsonobject.getString("endTime"));
+//                                                        }
+//                                                        if (!jsonobject.isNull("tripName")) {
+//                                                            trip1.setDateOpenTrip(jsonobject.getString("tripName"));
+//                                                        }
+//                                                        if (!jsonobject.isNull("toDescription")) {
+//                                                            trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
+//                                                        }
+//                                                        if (!jsonobject.isNull("tripId")) {
+//                                                            trip1.setTripId(jsonobject.getString("tripId"));
+//                                                        }
+//
+//                                                        trip1.setUserName(LoginManager.getInstance().getUser().getName());
+//                                                        trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
+//                                                        lst_user_trip.add(trip1);
+//                                                    }
+//                                                    tripAdapter[0] = new TripArrayAdapter(getActivity()
+//                                                            .getApplicationContext(),
+//                                                            R.id.list_trips_infor,
+//                                                            lst_user_trip);
+//
+//                                                } catch (JSONException e1) {
+//                                                    Log.i("tag", "error json array");
+//                                                }
+//                                                catch (NullPointerException ex){
+//                                                    ex.printStackTrace();
+//                                                    Toast.makeText(getActivity(), "Can't get list search trip", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            }
+//                                        });
                                     }
                                 })
                         .setNegativeButton("Cancel",

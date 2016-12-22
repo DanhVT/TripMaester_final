@@ -1420,6 +1420,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     lstUserPassRoad = new ArrayList<Road>();
                     viaPoints = new ArrayList<GeoPoint>();
                     MainActivity.fab_btn_capture.setVisibility(View.VISIBLE);
+                    MainActivity.fab_rate.setVisibility(View.VISIBLE);
                     FrameLayout layout = (FrameLayout) mainActivity.findViewById(R.id.fab_frameLayout);
                     layout.setVisibility(View.VISIBLE);
                     lstPassedPoint = new ArrayList<Location>();
@@ -1744,7 +1745,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_rate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                LayoutInflater li = LayoutInflater.from(mainActivity);
+                View promptsView = li.inflate(
+                        R.layout.rate_dialog, null);
 
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        mainActivity);
+
+                // set prompts.xml to alertdialog builder
+                alertDialogBuilder.setView(promptsView);
             }
         });
     }

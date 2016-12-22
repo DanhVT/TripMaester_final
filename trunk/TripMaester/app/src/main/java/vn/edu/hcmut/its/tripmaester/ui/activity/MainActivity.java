@@ -144,6 +144,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         if(fab_current != null) fab_current.setVisibility(View.INVISIBLE);
         if(fab_btn_capture != null) fab_btn_capture.setVisibility(View.INVISIBLE);
         if(fab_search != null) fab_search.setVisibility(View.INVISIBLE);
+        if(fab_rate != null) fab_rate.setVisibility(View.INVISIBLE);
     }
     /**
      * display view by position
@@ -174,9 +175,10 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 if(fab_current == null) fab_current =(FloatingActionButton) findViewById(R.id.fab_current);
                 fab_current.setVisibility(View.VISIBLE);
                 if(fab_btn_capture == null) fab_btn_capture =(FloatingActionButton) findViewById(R.id.fab_btn_capture);
+                if(fab_rate == null) fab_rate =(FloatingActionButton) findViewById(R.id.fab_rate);
                 FrameLayout layout = (FrameLayout)findViewById(R.id.fab_frameLayout);
                 layout.setVisibility(View.VISIBLE);
-                if(isStart) { fab_btn_capture.setVisibility(View.VISIBLE);  }
+                if(isStart) { fab_btn_capture.setVisibility(View.VISIBLE);  fab_rate.setVisibility(View.VISIBLE); }
                 break;
             case LEFT_MENU__TRIP:
                 mDrawerLayoutMain.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Comment"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_weight="0.46"
+        style="@style/Widget.AppCompat.AutoCompleteTextView" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rate"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageButton
+            android:text="Button"
+            android:layout_width="192dp"
+            android:background="@drawable/ic_like"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3" />
+        <ImageButton
+            android:text="Button"
+            android:layout_width="195dp"
+            android:background="@drawable/ic_mood_bad_blue_grey_500_24dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button2" />
+
+    </LinearLayout>
+
+</LinearLayout>

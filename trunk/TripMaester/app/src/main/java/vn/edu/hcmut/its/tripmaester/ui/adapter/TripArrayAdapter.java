@@ -121,9 +121,9 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
             viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
 
-//            viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
+            viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
             int[] colorsEmotion = mContext.getResources().getIntArray(R.array.colorsEmotion);
-//            viewHolder.txt_emotion.setTextColor(colorsEmotion[Integer.parseInt(mTrip.getEmotion().substring(0,1))]);
+            viewHolder.txt_emotion.setTextColor(colorsEmotion[Integer.parseInt(mTrip.getEmotion().substring(0,1))]);
 
             if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
                 viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);

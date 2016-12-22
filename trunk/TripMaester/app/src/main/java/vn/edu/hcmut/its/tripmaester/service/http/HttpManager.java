@@ -168,7 +168,7 @@ public class HttpManager {
                 .setBodyParameter("endTime", trip_item.getTimeEndTrip())
                 .setBodyParameter("fromLocationName", trip_item.getPlaceStartTrip())
                 .setBodyParameter("toLocationName", trip_item.getPlaceEndTrip())
-                .setBodyParameter("tripName", trip_item.getDateTime())//span time of trip
+                .setBodyParameter("dateTime", trip_item.getDateTime())//span time of trip
                 .setBodyParameter("privacy", trip_item.getPrivacy())
                 .setBodyParameter("emotion", trip_item.getEmotion())
                 .asString()

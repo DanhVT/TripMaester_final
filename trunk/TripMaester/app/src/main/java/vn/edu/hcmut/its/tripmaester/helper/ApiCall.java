@@ -35,6 +35,9 @@ public class ApiCall {
     public static String POST(OkHttpClient client, HttpUrl url, RequestBody body) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
+                .header("User-Agent", "OkHttp Headers.java")
+                .addHeader("Accept", "application/json; q=0.5")
+                .addHeader("Accept", "application/vnd.github.v3+json")
                 .method("POST", RequestBody.create(null, new byte[0]))
                 .post(body)
                 .build();

@@ -340,6 +340,7 @@ public class HttpManager {
                                 try {
                                     jsonObj = new JSONObject(str_response);
                                     if (!jsonObj.isNull("listTrip")) {
+                                        Log.d("listPrivate", jsonObj.getString("listTrip"));
                                         callback.onCompleted(new JSONArray(jsonObj.getString("listTrip")), null, null);
                                     }
                                 } catch (JSONException e1) {
@@ -425,7 +426,9 @@ public class HttpManager {
                                 try {
                                     JSONObject jsonObj = new JSONObject(str_response);
                                     if (!jsonObj.isNull("listTrip")) {
+                                        Log.d("listTrip ", jsonObj.getString("listTrip"));
                                         response_json = new JSONArray(jsonObj.getString("listTrip"));
+
                                         callback.onCompleted(response_json, null, null);
                                     }
                                     // if (response_json.isNull("tokenID")) {
@@ -656,8 +659,10 @@ public class HttpManager {
             String str_response = null;
 
             str_response = ApiCall.POST(client, URL_LOGIN, requestBody);
+            Log.d("loginTest", str_response);
             response_json = new JSONObject(str_response);
 
+            return response_json;
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
             // StaticVariable.user.setTokenId(tokenId);
@@ -667,9 +672,11 @@ public class HttpManager {
             // StaticVariable.user.setStatus(status);
             // }
         } catch (Exception ex) {
+            Log.d("loginTest", "Login fail");
             Log.i(TAG, ex.getMessage());
+            return response_json;
         }
-        return response_json;
+
     }
 
     // service logout

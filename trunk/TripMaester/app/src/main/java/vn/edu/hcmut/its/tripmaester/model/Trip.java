@@ -25,6 +25,7 @@ public class Trip implements Serializable {
     private String privacy;
     private String tripName;
     private String emotion;
+    private String linkImage;
 
     int avaUserCreateTrip;
     private String tripId;
@@ -109,6 +110,12 @@ public class Trip implements Serializable {
         this.avaUserCreateTrip = avaUserCreateTrip;
     }
 
+    public void setLinkImage(String linkImage){
+        this.linkImage = linkImage;
+    }
+    public String getLinkImage(){
+        return this.linkImage;
+    }
     public void setDateOpenTrip(String dateOpenTrip) {
         this.dateOpenTrip = dateOpenTrip;
     }

@@ -1577,6 +1577,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             trip1.setPrivacy(spinner_trip_privacy.getSelectedItem().toString());
                                             trip1.setEmotion(spinner_trip_emotion.getSelectedItem().toString());
                                             //send trip to server
+
                                             HttpManager.createTrip(trip1, getActivity(), new ICallback<JSONObject>() {
                                                 @Override
                                                 public void onCompleted(JSONObject jsonobject, Object tag, Exception ex) {

@@ -61,7 +61,6 @@ public class EditTripListAdapter extends BaseAdapter{
 		 
 //		icon.setImageResource(item.getIcon());
 		tripname.setText(item.getmTripName());
-		createddate.setText(item.getmCreatedDate());
 			
 		startdate.setText(item.getmStartDate());
 		finishdate.setText(item.getmFinishDate());

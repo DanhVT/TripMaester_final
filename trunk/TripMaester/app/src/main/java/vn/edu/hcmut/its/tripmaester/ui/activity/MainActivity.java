@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -52,6 +53,7 @@ import group.traffice.nhn.common.Constants;
 import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.setting.TMPref;
@@ -514,6 +516,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         //
         mDrawerLeftMenu = (ListView) findViewById(R.id.left_drawer_menu);
         View header = getLayoutInflater().inflate(R.layout.header, null);
+
         mDrawerLeftMenu.addHeaderView(header);
         mLeftMenuItemTexts = getResources().getStringArray(R.array.left_meunu_items);
         TypedArray leftmenuIcons = getResources().obtainTypedArray(R.array.left_menu_icons);

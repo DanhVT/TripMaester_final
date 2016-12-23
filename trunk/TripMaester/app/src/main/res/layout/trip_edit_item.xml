@@ -32,7 +32,7 @@
 	            android:text="Di ha long"
 	            android:textColor="@color/map_item_trip_blue" 
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
+
 	        <TextView
 	            android:id="@+id/edit_trip_created_date"
 	            android:layout_width="wrap_content"

@@ -33,7 +33,7 @@ public class UserFragment extends Fragment {
         if (LoginManager.getInstance().isLogin()) {
             textViewBirthday.setText(LoginManager.getInstance().getUser().getBirthday());
             textViewEmail.setText(LoginManager.getInstance().getUser().getEmail());
-            textViewNameUser.setText(LoginManager.getInstance().getUser().getFirst_name() + LoginManager.getInstance().getUser().getLast_name());
+            textViewNameUser.setText(LoginManager.getInstance().getUser().getLast_name() +" "+ LoginManager.getInstance().getUser().getFirst_name());
             textViewGender.setText(LoginManager.getInstance().getUser().gender);
             ImageLoaderHelper.displayImage(LoginManager.getInstance().getUser().picture, imageViewAvartaUser);
             ImageLoaderHelper.displayImage(LoginManager.getInstance().getUser().cover, imgcover);

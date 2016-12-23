@@ -12,12 +12,11 @@
         android:textSize="18dp"/>
 
     <RatingBar
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
         android:numStars="5"
-        android:stepSize="1.0"
-        android:layout_weight="0.02" />
+        android:stepSize="1.0"/>
 
     <TextView
         android:text="Feedback"
@@ -31,7 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Give me your feedback about this location"
         android:ems="10"
         android:id="@+id/editText"
         android:layout_weight="0.14"

@@ -22,12 +22,14 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import group.traffic.nhn.user.User;
 import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
@@ -125,15 +127,34 @@ public class LoginFragment extends Fragment {
 //								//http://traffic.hcmut.edu.vn/ITS/rest/user/login
 //								String str_response = Utilities
 //										.readStringFromInputStream(response_stream);
-                                JSONObject json_result = HttpManager.login();
-                                if (!json_result.isNull("tokenId")) {
-                                    String tokenId = json_result.get("tokenId").toString();
-                                    LoginManager.getInstance().getUser().setTokenId(tokenId);
-                                }
-                                if (!json_result.isNull("status")) {
-                                    boolean status = json_result.getBoolean("status");
-                                    LoginManager.getInstance().getUser().setStatus(status);
-                                }
+                                HttpManager.login(getActivity(), new ICallback<JSONObject>(){
+
+                                    @Override
+                                    public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                        if (e != null || data == null){
+                                            Log.e(TAG,"Error when login",e);
+                                        }
+                                        if (!data.isNull("tokenId")) {
+                                            String tokenId = null;
+                                            try {
+                                                tokenId = data.get("tokenId").toString();
+                                            } catch (JSONException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                            LoginManager.getInstance().getUser().setTokenId(tokenId);
+                                        }
+                                        if (!data.isNull("status")) {
+                                            boolean status = false;
+                                            try {
+                                                status = data.getBoolean("status");
+                                            } catch (JSONException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                            LoginManager.getInstance().getUser().setStatus(status);
+                                        }
+                                    }
+                                });
+
                                 //get list friend-in-app of user
                                 LoginManager.getInstance().getUser().getListFriend();
 

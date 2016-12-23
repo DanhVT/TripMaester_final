@@ -1,6 +1,5 @@
 package vn.edu.hcmut.its.tripmaester.ui.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +28,7 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.routing.Road;
 
@@ -52,8 +51,8 @@ import group.traffic.nhn.user.UserFragment;
 import group.traffice.nhn.common.Constants;
 import group.traffice.nhn.common.StaticVariable;
 import vn.edu.hcmut.its.tripmaester.R;
+import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
-import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.setting.TMPref;
@@ -334,16 +333,33 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                                             LoginManager.getInstance().setUser(new User("", user_fb_id, name, first_name, last_name, cover,picture,
                                                     birthday, email, updated_time, gender, local, verified, timezone, link,
                                                     imei, false));
-                                            JSONObject json_result = HttpManager.login();
-                                            if (!json_result.isNull("tokenId")) {
-                                                String tokenId = json_result.get("tokenId").toString();
-                                                LoginManager.getInstance().getUser().setTokenId(tokenId);
-                                            }
-                                            if (!json_result.isNull("status")) {
-                                                boolean status = json_result.getBoolean("status");
-                                                LoginManager.getInstance().getUser().setStatus(status);
-                                            }
+                                            HttpManager.login(MainActivity.this, new ICallback<JSONObject>(){
 
+                                                @Override
+                                                public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                                    if (e != null || data == null){
+                                                        Log.e("Main Activity","Error when login",e);
+                                                    }
+                                                    if (!data.isNull("tokenId")) {
+                                                        String tokenId = null;
+                                                        try {
+                                                            tokenId = data.get("tokenId").toString();
+                                                        } catch (JSONException e1) {
+                                                            e1.printStackTrace();
+                                                        }
+                                                        LoginManager.getInstance().getUser().setTokenId(tokenId);
+                                                    }
+                                                    if (!data.isNull("status")) {
+                                                        boolean status = false;
+                                                        try {
+                                                            status = data.getBoolean("status");
+                                                        } catch (JSONException e1) {
+                                                            e1.printStackTrace();
+                                                        }
+                                                        LoginManager.getInstance().getUser().setStatus(status);
+                                                    }
+                                                }
+                                            });
                                             LoginManager.getInstance().getUser().getListFriend();
                                         }
                                     } catch (Exception e) {

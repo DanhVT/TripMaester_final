@@ -637,32 +637,59 @@ public class HttpManager {
  	   + Response data: {tokenId:“...”, status:“...”
 	 */
     @Deprecated
-    public static JSONObject login() {
+    public static void login(Context context, final ICallback<JSONObject> callback) {
         JSONObject response_json = new JSONObject();
         try {
-            MultipartBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("name", LoginManager.getInstance().getUser().getName())
-                    .addFormDataPart("userId", LoginManager.getInstance().getUser().getId())
-                    .addFormDataPart("firstName", LoginManager.getInstance().getUser().getFirst_name())
-                    .addFormDataPart("lastName", LoginManager.getInstance().getUser().getLast_name())
-                    .addFormDataPart("birthday", LoginManager.getInstance().getUser().getBirthday())
-                    .addFormDataPart("email", LoginManager.getInstance().getUser().getEmail())
-                    .addFormDataPart("updatedime", LoginManager.getInstance().getUser().getUpdated_time())
-                    .addFormDataPart("gender", LoginManager.getInstance().getUser().getGender())
-                    .addFormDataPart("local", LoginManager.getInstance().getUser().getLocal())
-                    .addFormDataPart("verified", LoginManager.getInstance().getUser().getVerified())
-                    .addFormDataPart("link", LoginManager.getInstance().getUser().getLink())
-                    .addFormDataPart("timezone", LoginManager.getInstance().getUser().getTimezone())
-                    .addFormDataPart("imei", LoginManager.getInstance().getUser().getImei())
-                    .build();
-            String str_response = null;
+//            MultipartBody requestBody = new MultipartBody.Builder()
+//                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart("name", LoginManager.getInstance().getUser().getName())
+//                    .addFormDataPart("userId", LoginManager.getInstance().getUser().getId())
+//                    .addFormDataPart("firstName", LoginManager.getInstance().getUser().getFirst_name())
+//                    .addFormDataPart("lastName", LoginManager.getInstance().getUser().getLast_name())
+//                    .addFormDataPart("birthday", LoginManager.getInstance().getUser().getBirthday())
+//                    .addFormDataPart("email", LoginManager.getInstance().getUser().getEmail())
+//                    .addFormDataPart("updatedime", LoginManager.getInstance().getUser().getUpdated_time())
+//                    .addFormDataPart("gender", LoginManager.getInstance().getUser().getGender())
+//                    .addFormDataPart("local", LoginManager.getInstance().getUser().getLocal())
+//                    .addFormDataPart("verified", LoginManager.getInstance().getUser().getVerified())
+//                    .addFormDataPart("link", LoginManager.getInstance().getUser().getLink())
+//                    .addFormDataPart("timezone", LoginManager.getInstance().getUser().getTimezone())
+//                    .addFormDataPart("imei", LoginManager.getInstance().getUser().getImei())
+//                    .build();
+//            String str_response = null;
+//
+//            str_response = ApiCall.POST(client, URL_LOGIN, requestBody);
+            Ion.with(context).load(URL_LOGIN)
+                    .setBodyParameter("name", LoginManager.getInstance().getUser().getName())
+                    .setBodyParameter("userId", LoginManager.getInstance().getUser().getId())
+                    .setBodyParameter("firstName", LoginManager.getInstance().getUser().getFirst_name())
+                    .setBodyParameter("lastName", LoginManager.getInstance().getUser().getLast_name())
+                    .setBodyParameter("birthday", LoginManager.getInstance().getUser().getBirthday())
+                    .setBodyParameter("email", LoginManager.getInstance().getUser().getEmail())
+                    .setBodyParameter("updatedime", LoginManager.getInstance().getUser().getUpdated_time())
+                    .setBodyParameter("gender", LoginManager.getInstance().getUser().getGender())
+                    .setBodyParameter("local", LoginManager.getInstance().getUser().getLocal())
+                    .setBodyParameter("verified", LoginManager.getInstance().getUser().getVerified())
+                    .setBodyParameter("link", LoginManager.getInstance().getUser().getLink())
+                    .setBodyParameter("timezone", LoginManager.getInstance().getUser().getTimezone())
+                    .setBodyParameter("imei", LoginManager.getInstance().getUser().getImei())
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String str_response) {
+                            if (e == null) {
+                                try {
+                                    Log.d("loginTest", str_response);
+                                    callback.onCompleted(new JSONObject(str_response), null, e);
+                                } catch (Exception ex) {
+                                    callback.onCompleted(null, null, ex);
+                                }
+                            } else {
+                                callback.onCompleted(null, null, e);
+                            }
+                        }
+                    });
 
-            str_response = ApiCall.POST(client, URL_LOGIN, requestBody);
-            Log.d("loginTest", str_response);
-            response_json = new JSONObject(str_response);
-
-            return response_json;
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
             // StaticVariable.user.setTokenId(tokenId);
@@ -674,7 +701,6 @@ public class HttpManager {
         } catch (Exception ex) {
             Log.d("loginTest", "Login fail");
             Log.i(TAG, ex.getMessage());
-            return response_json;
         }
 
     }

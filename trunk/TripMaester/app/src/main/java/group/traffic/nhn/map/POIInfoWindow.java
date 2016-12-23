@@ -2,6 +2,7 @@ package group.traffic.nhn.map;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.overlays.Marker;

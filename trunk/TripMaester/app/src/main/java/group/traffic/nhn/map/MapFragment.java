@@ -58,6 +58,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1705,7 +1706,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
         MainActivity.fab_search.setVisibility(View.INVISIBLE);
         MainActivity.fab_current.setVisibility(View.VISIBLE);
-        MainActivity.fab_rate.setVisibility(View.VISIBLE);
+        MainActivity.fab_rate.setVisibility(View.INVISIBLE);
 
         Move_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.move_duoi);
         Move_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.move_tren);
@@ -1746,7 +1747,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             @Override
             public void onClick(View view) {
                 LayoutInflater li = LayoutInflater.from(mainActivity);
-                View promptsView = li.inflate(
+                final View promptsView = li.inflate(
                         R.layout.rate_dialog, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -1754,6 +1755,36 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
                 // set prompts.xml to alertdialog builder
                 alertDialogBuilder.setView(promptsView);
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog, int id) {
+                                            EditText message = (EditText) promptsView.findViewById(R.id.editText);
+                                            RatingBar rating = (RatingBar) promptsView.findViewById(R.id.ratingBar);
+                                            float rateValue = rating.getRating();
+                                            String textComment = message.getText().toString();
+                                            if (lastLocation == null) {
+                                                lastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                            }
+                                            setMarkerForRate( textComment,rateValue, new GeoPoint(lastLocation) );
+
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
             }
         });
     }
@@ -2055,6 +2086,76 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             mMapView.getOverlays().add(listMarkerTrip.get(i).getMarker());
         }
 
+        mMapView.invalidate();
+    }
+
+    public void setMarkerForRate(String message, float rate, GeoPoint geoPoint ){
+        final MyMarker startMarker = new MyMarker(mMapView);
+        startMarker.getMarker().setPosition(geoPoint);
+        startMarker.getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+        String timeStamp = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy",
+                Locale.getDefault()).format(new Date());
+        startMarker.getMarker().setSubDescription(message);
+        startMarker.getMarker().setTitle(timeStamp);
+        ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
+                R.layout.itinerary_bubble_white, mMapView, null, mainActivity) {
+            @Override
+            public void onClickRemovePoint(int p) {
+
+            }
+        };
+        startMarker.getMarker().setInfoWindow(viaPOIInfoWindow);
+        startMarker.getMarker().setDraggable(false);
+        if(rate > 4){
+            startMarker.getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_yellow_700_24dp));
+        }else if(rate >=3){
+            startMarker.getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_yellow_400_24dp));
+        }
+        else if(rate >=1 ){
+            startMarker.getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_yellow_200_24dp));
+        }
+        else{
+            startMarker.getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_amber_50_24dp));
+        }
+        startMarker.getMarker()
+                .setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+
+                    @Override
+                    public boolean onMarkerClick(Marker arg0, MapView arg1) {
+
+                        GeoPoint curr_marker_pos = arg0.getPosition();
+                        lst_around_markers = new ArrayList<MyMarker>();
+                        for (int i = 0; i < lst_markers.size(); i++) {
+                            MyMarker marker = lst_markers.get(i);
+
+                            double distance = Utilities.distanceInKm(
+                                    curr_marker_pos, marker.getMarker().getPosition());
+                            if (Math.abs(distance) <= 2) {
+                                lst_around_markers.add(marker);
+                            }
+                        }
+
+                        if (lst_around_markers.size() > 1
+                                && !isShowDialogMarker) {
+                            isShowDialogMarker = true;
+                            showChoiceDialogMarker(lst_around_markers);
+                            // return false;
+                        } else if(lst_around_markers.size() <= 1
+                                && !isShowDialogMarker) {
+                            lst_markers.get(startMarker.getIndex()).getMarker()
+                                    .showInfoWindow();
+                            previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()));
+
+                        }
+                        return false;
+                    }
+                });
+        startMarker.setIndex(lst_markers.size());
+        startMarker.setPointIndex(viaPoints.size());
+        startMarker.setType(3);
+        lst_markers.add(startMarker);
+        mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();
     }
 

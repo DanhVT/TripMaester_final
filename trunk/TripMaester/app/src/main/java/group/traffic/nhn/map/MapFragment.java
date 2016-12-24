@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -1556,6 +1557,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     sb.append("about ").append(sec).append(" seconds");
                                                 }
                                             }
+                                            Log.d("DateTime", sb.toString());
                                             trip1.setDateTime(sb.toString());
 
                                             String intMonth = (String) android.text.format.DateFormat
@@ -1577,6 +1579,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             trip1.setPrivacy(spinner_trip_privacy.getSelectedItem().toString());
                                             trip1.setEmotion(spinner_trip_emotion.getSelectedItem().toString());
                                             //send trip to server
+                                            final ProgressDialog PG = new ProgressDialog(mContext);
+                                            PG.setTitle("Create Trip");
+                                            PG.setMessage("Please wait...");
+                                            PG.setCancelable(false);
+                                            PG.show();
+                                            final int[] count = {0};
 
                                             HttpManager.createTrip(trip1, getActivity(), new ICallback<JSONObject>() {
                                                 @Override
@@ -1600,6 +1608,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                     .getLongitudeE6());
                                                                     // FIXME: set trip
                                                                     // id
+                                                                    PG.setMessage("Create point "+ geoPoint.getLatitudeE6()+", "+geoPoint
+                                                                            .getLongitudeE6());
                                                                     final int finalJ = j;
                                                                     HttpManager.createPointOnTrip(
                                                                                     trip1.getTripId(),
@@ -1618,7 +1628,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                                         if(lst_markers.get(k).pointIndex < finalJ) continue;
                                                                                                         String path = lst_markers.get(k).getData();
                                                                                                         HttpManager.uploadFile(path, pointId);
-                                                                                                        Toast.makeText(getActivity(), "upload media at " + pointItem, Toast.LENGTH_SHORT).show();
+                                                                                                        PG.setMessage("Create media at point " + finalJ);
+                                                                                                    }
+                                                                                                    count[0] = count[0] +1;
+                                                                                                    if(count[0] == viaPoints.size()){
+                                                                                                        PG.dismiss();
                                                                                                     }
                                                                                                 }
                                                                                                 catch(JSONException ex){
@@ -2021,7 +2035,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             ImageLoaderHelper.displayImage(Uri.fromFile(new File(startMarker.getData())).toString(), myImage);
             dialog.show();
 
-        } else {
+        } else if(type == MEDIA_TYPE_VIDEO){
             Intent intent = new Intent(getActivity(), VideoPlayer.class);
             intent.putExtra("URL", startMarker.getData());
             startActivity(intent);

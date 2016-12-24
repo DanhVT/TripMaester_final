@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:maxEms="17"
                 android:text="Title"
-                android:textColor="#FFFFFF" />
+                android:textColor="#387235" />
         </LinearLayout>
 
         <TextView
@@ -37,8 +37,8 @@
             android:layout_height="wrap_content"
             android:maxEms="17"
             android:text="Description"
-            android:textColor="#FFFFFF"
-            android:textSize="12dp" />
+            android:textColor="#323522"
+            android:textSize="13dp" />
 
         <TextView
             android:id="@+id/bubble_subdescription"
@@ -46,8 +46,8 @@
             android:layout_height="wrap_content"
             android:maxEms="17"
             android:text="Address"
-            android:textColor="#FFFFFF"
-            android:textSize="10dp"
+            android:textColor="#434549"
+            android:textSize="12dp"
             android:visibility="gone" />
     </LinearLayout>
 

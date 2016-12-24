@@ -97,64 +97,64 @@ public class TripManager {
         });
 
 
-//        HttpManager.getListPrivateTrip(context, new ICallback<JSONArray>() {
-//            @Override
-//            public void onCompleted(JSONArray jsonarray,  Object tag,Exception e) {
-//                try {
-//                    for (int i = 0; i < jsonarray.length(); i++) {
-//                        JSONObject jsonobject = jsonarray.getJSONObject(i);
-//                        final Trip trip1 = new Trip();
-//                        if (null != jsonobject) {
-//                            if (!jsonobject.isNull("tripId")) {
-//                                trip1.setTripId(jsonobject.getString("tripId"));
-//                            }
-//                            if (!jsonobject.isNull("tripName")) {
-//                                trip1.setTripName(jsonobject.getString("tripName"));
-//                            }
-//                            if (!jsonobject.isNull("startTime")) {
-//                                trip1.setTimeStartTrip(jsonobject.getString("startTime"));
-//                            }
-//                            if (!jsonobject.isNull("endTime")) {
-//                                trip1.setTimeEndTrip(jsonobject.getString("endTime"));
-//                            }
-//                            if (!jsonobject.isNull("fromLocationName")) {
-//                                trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
-//                            }
-//                            if (!jsonobject.isNull("toLocationName")) {
-//                                trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
-//                            }
-//                            if (!jsonobject.isNull("dateTime")) {
-//                                trip1.setDateOpenTrip(jsonobject.getString("dateTime"));
-//                            }
-//                            if (!jsonobject.isNull("emotion")) {
-//                                trip1.setEmotion(jsonobject.getString("emotion"));
-//                            }
-//                            trip1.setUserName(LoginManager.getInstance().getUser().getName());
-//                            trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
-//
-//                            if(!jsonobject.isNull("listLiker")){
-//                                trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
-//                                trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
-//                            }
-//                            // FIXME: get list comment, count of likes
-//
-//                            if(!jsonobject.isNull("numComments")){
-//                                trip1.setNumberCommentTrip(jsonobject.getInt("numComments") + " comments");
-//                            }
-//
-//                            addTrip(trip1);
-////					lst_user_trip.addTrip(trip1);
-//                        }
-//                    }
-//                    callback.onDataUpdated();
-//                } catch (JSONException e1) {
-//                    Log.i("tag", "error json array");
-//                }
-//                catch (NullPointerException e1) {
-//                    Log.i("tag", "error null pointer");
-//                }
-//            }
-//        });
+        HttpManager.getListPrivateTrip(context, new ICallback<JSONArray>() {
+            @Override
+            public void onCompleted(JSONArray jsonarray,  Object tag,Exception e) {
+                try {
+                    for (int i = 0; i < jsonarray.length(); i++) {
+                        JSONObject jsonobject = jsonarray.getJSONObject(i);
+                        final Trip trip1 = new Trip();
+                        if (null != jsonobject) {
+                            if (!jsonobject.isNull("tripId")) {
+                                trip1.setTripId(jsonobject.getString("tripId"));
+                            }
+                            if (!jsonobject.isNull("tripName")) {
+                                trip1.setTripName(jsonobject.getString("tripName"));
+                            }
+                            if (!jsonobject.isNull("startTime")) {
+                                trip1.setTimeStartTrip(jsonobject.getString("startTime"));
+                            }
+                            if (!jsonobject.isNull("endTime")) {
+                                trip1.setTimeEndTrip(jsonobject.getString("endTime"));
+                            }
+                            if (!jsonobject.isNull("fromLocationName")) {
+                                trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
+                            }
+                            if (!jsonobject.isNull("toLocationName")) {
+                                trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
+                            }
+                            if (!jsonobject.isNull("dateTime")) {
+                                trip1.setDateOpenTrip(jsonobject.getString("dateTime"));
+                            }
+                            if (!jsonobject.isNull("emotion")) {
+                                trip1.setEmotion(jsonobject.getString("emotion"));
+                            }
+                            trip1.setUserName(LoginManager.getInstance().getUser().getName());
+                            trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
+
+                            if(!jsonobject.isNull("listLiker")){
+                                trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
+                                trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
+                            }
+                            // FIXME: get list comment, count of likes
+
+                            if(!jsonobject.isNull("numComments")){
+                                trip1.setNumberCommentTrip(jsonobject.getInt("numComments") + " comments");
+                            }
+
+                            addTrip(trip1);
+//					lst_user_trip.addTrip(trip1);
+                        }
+                    }
+                    callback.onDataUpdated();
+                } catch (JSONException e1) {
+                    Log.i("tag", "error json array");
+                }
+                catch (NullPointerException e1) {
+                    Log.i("tag", "error null pointer");
+                }
+            }
+        });
 
         //FIXME: get list share trip
         HttpManager
@@ -225,90 +225,90 @@ public class TripManager {
                 });
 
         //FIXME: get list public trip
-        HttpManager.getListPublicTrip(context, new ICallback<JSONArray>() {
-
-                     @Override
-                     public void onCompleted(JSONArray jsonarray, Object tag, Exception e) {
-                 try {
-                     for (int i = 0; i < jsonarray.length(); i++) {
-                         JSONObject jsonobject = jsonarray.getJSONObject(i);
-                         final Trip trip1 = new Trip();
-
-                         if (!jsonobject.isNull("tripId")) {
-                             trip1.setTripId(jsonobject.getString("tripId"));
-                         }
-                         if (!jsonobject.isNull("userId")) {
-                             trip1.setUserIdOwner(jsonobject.getString("userId"));
-                         }
-                         if (!jsonobject.isNull("tripName")) {
-                             trip1.setTripName(jsonobject.getString("tripName"));
-                         }
-                         if (!jsonobject.isNull("userName")) {
-                             trip1.setUserName(jsonobject.getString("userName"));
-                         }
-                         if (!jsonobject.isNull("link")) {
-                             trip1.setLinkImage(jsonobject.getString("link"));
-                         }
-                         if (!jsonobject.isNull("startTime")) {
-                             trip1.setTimeStartTrip(jsonobject.getString("startTime"));
-                         }
-                         if (!jsonobject.isNull("endTime")) {
-                             trip1.setTimeEndTrip(jsonobject.getString("endTime"));
-                         }
-                         if (!jsonobject.isNull("fromDescription")) {
-                             trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
-                         }
-                         if (!jsonobject.isNull("toLocationName")) {
-                             trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
-                         }
-                         if (!jsonobject.isNull("dateTime")) {
-                             trip1.setDateOpenTrip(jsonobject.getString("dateTime"));
-                         }
-                         if (!jsonobject.isNull("emotion")) {
-                             trip1.setEmotion(jsonobject.getString("emotion"));
-                         }
-
-                         if(!jsonobject.isNull("listLiker")){
-                             trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
-                             trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
-                         }
-                         if(!jsonobject.isNull("numComments")){
-                             trip1.setNumberCommentTrip(jsonobject.getInt("numComments") + " comments");
-                         }
-
-//                                 HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
-//                                     @Override
-//                                     public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
-//                                         try {
-//                                             if (!LikeInfo.isNull("listLiker")) {
-//                                                 JSONArray listLiker =  new JSONArray(LikeInfo.getString("listLiker"));
-//                                                 trip1.setNumberLikeTrip(listLiker.length() + " likes");
-//                                                 ArrayList<String> likers = new ArrayList<String>();
-//                                                 for (int k =0; k< listLiker.length() ; k++){
-//                                                     JSONObject json = new JSONObject(listLiker.getString(k));
-//                                                     likers.add(json.getString("userId"));
-//                                                 }
-//                                                 trip1.setLsitUserIdLike(likers);
+//        HttpManager.getListPublicTrip(context, new ICallback<JSONArray>() {
 //
-//                                             }
-//                                         } catch (JSONException e1) {
-//                                             e1.printStackTrace();
-//                                         }catch (NullPointerException ex){
-//                                             ex.printStackTrace();
-//                                         }
+//                     @Override
+//                     public void onCompleted(JSONArray jsonarray, Object tag, Exception e) {
+//                 try {
+//                     for (int i = 0; i < jsonarray.length(); i++) {
+//                         JSONObject jsonobject = jsonarray.getJSONObject(i);
+//                         final Trip trip1 = new Trip();
 //
-//                                     }
-//                                 });//numLike
-
-
-                                 addTrip(trip1);
-                             }
-                         }
-                         catch (Exception ex){
-                             Log.i("tag", "error json array");
-                         }
-                     }
-                 });
+//                         if (!jsonobject.isNull("tripId")) {
+//                             trip1.setTripId(jsonobject.getString("tripId"));
+//                         }
+//                         if (!jsonobject.isNull("userId")) {
+//                             trip1.setUserIdOwner(jsonobject.getString("userId"));
+//                         }
+//                         if (!jsonobject.isNull("tripName")) {
+//                             trip1.setTripName(new String(jsonobject.getString("tripName").getBytes("ISO-8859-1"), "UTF-8"));
+//                         }
+//                         if (!jsonobject.isNull("userName")) {
+//                             trip1.setUserName(jsonobject.getString("userName"));
+//                         }
+//                         if (!jsonobject.isNull("link")) {
+//                             trip1.setLinkImage(jsonobject.getString("link"));
+//                         }
+//                         if (!jsonobject.isNull("startTime")) {
+//                             trip1.setTimeStartTrip(jsonobject.getString("startTime"));
+//                         }
+//                         if (!jsonobject.isNull("endTime")) {
+//                             trip1.setTimeEndTrip(jsonobject.getString("endTime"));
+//                         }
+//                         if (!jsonobject.isNull("fromDescription")) {
+//                             trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+//                         }
+//                         if (!jsonobject.isNull("toLocationName")) {
+//                             trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
+//                         }
+//                         if (!jsonobject.isNull("dateTime")) {
+//                             trip1.setDateOpenTrip(jsonobject.getString("dateTime"));
+//                         }
+//                         if (!jsonobject.isNull("emotion")) {
+//                             trip1.setEmotion(jsonobject.getString("emotion"));
+//                         }
+//
+//                         if(!jsonobject.isNull("listLiker")){
+//                             trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
+//                             trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
+//                         }
+//                         if(!jsonobject.isNull("numComments")){
+//                             trip1.setNumberCommentTrip(jsonobject.getInt("numComments") + " comments");
+//                         }
+//
+////                                 HttpManager.getLikeInfoOnTrip(trip1.getTripId(), context, new ICallback<JSONObject>() {
+////                                     @Override
+////                                     public void onCompleted(JSONObject LikeInfo,  Object tag,Exception e) {
+////                                         try {
+////                                             if (!LikeInfo.isNull("listLiker")) {
+////                                                 JSONArray listLiker =  new JSONArray(LikeInfo.getString("listLiker"));
+////                                                 trip1.setNumberLikeTrip(listLiker.length() + " likes");
+////                                                 ArrayList<String> likers = new ArrayList<String>();
+////                                                 for (int k =0; k< listLiker.length() ; k++){
+////                                                     JSONObject json = new JSONObject(listLiker.getString(k));
+////                                                     likers.add(json.getString("userId"));
+////                                                 }
+////                                                 trip1.setLsitUserIdLike(likers);
+////
+////                                             }
+////                                         } catch (JSONException e1) {
+////                                             e1.printStackTrace();
+////                                         }catch (NullPointerException ex){
+////                                             ex.printStackTrace();
+////                                         }
+////
+////                                     }
+////                                 });//numLike
+//
+//
+//                                 addTrip(trip1);
+//                             }
+//                         }
+//                         catch (Exception ex){
+//                             Log.i("tag", "error json array");
+//                         }
+//                     }
+//                 });
 
     }
 

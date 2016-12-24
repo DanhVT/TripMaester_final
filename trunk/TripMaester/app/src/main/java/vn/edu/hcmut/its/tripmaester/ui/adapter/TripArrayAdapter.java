@@ -122,8 +122,6 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
 
             viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
-            int[] colorsEmotion = mContext.getResources().getIntArray(R.array.colorsEmotion);
-            viewHolder.txt_emotion.setTextColor(colorsEmotion[Integer.parseInt(mTrip.getEmotion().substring(0,1))]);
 
             if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
                 viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
@@ -256,12 +254,24 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     if (temp.length > 1) {
                         int trip = Integer.parseInt(temp[0]);
 //                    if(likeButton.getResources().getDrawable())
-                        trip++;
+//                        if(Use){
+//
+//                        }
+
+                        if(getTrips().get(pos).isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
+                            trip--;
+                            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_like);
+                        }
+                        else{
+                            trip++;
+                            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
+                        }
+
                         String tmpStr10 = String.valueOf(trip);
                         viewHolder.txtNumberLikesTrip.setText(tmpStr10 + " likes");
 
                         HttpManager.likeTrip(getTrips().get(pos).getTripId(), getContext());
-                        getTrips().get(pos).setNumberLikeTrip(String.valueOf(trip) + " likes");
+//                        getTrips().get(pos).setNumberLikeTrip(String.valueOf(trip) + " likes");
                     }
 
                 }

@@ -1584,16 +1584,16 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     if (ex != null || jsonobject == null){
                                                         Log.e(TAG,"Error when create trip",ex);
                                                     }
+                                                    Toast.makeText(getActivity(), "Create trip success", Toast.LENGTH_SHORT).show();
                                                     //save list passed point==================================
                                                     if (!jsonobject.isNull("tripId")) {
                                                         try {
                                                             trip1.setTripId(jsonobject.getString("tripId"));
                                                             if (Utilities.hasConnection(mContext)) {
-                                                                for (int j = 0; j < viaPoints
-                                                                        .size(); j++) {
+                                                                for (int j = 0; j < viaPoints.size(); j++) {
                                                                     GeoPoint geoPoint = viaPoints
                                                                             .get(j);
-                                                                    PointItem pointItem = new PointItem();
+                                                                    final PointItem pointItem = new PointItem();
                                                                     pointItem.setX_Lat(geoPoint
                                                                                     .getLatitudeE6());
                                                                     pointItem.setY_Long(geoPoint
@@ -1609,6 +1609,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                             if (e != null || data == null){
                                                                                                 Log.e(TAG,"Error when create trip",e);
                                                                                             }
+                                                                                            Toast.makeText(getActivity(), "Create point success, " + pointItem, Toast.LENGTH_SHORT).show();
                                                                                             if (!data.isNull("pointId")) {
                                                                                                 try{
                                                                                                     String pointId = data.getString("pointId");
@@ -1617,6 +1618,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                                         if(lst_markers.get(k).pointIndex < finalJ) continue;
                                                                                                         String path = lst_markers.get(k).getData();
                                                                                                         HttpManager.uploadFile(path, pointId);
+                                                                                                        Toast.makeText(getActivity(), "upload media at " + pointItem, Toast.LENGTH_SHORT).show();
                                                                                                     }
                                                                                                 }
                                                                                                 catch(JSONException ex){

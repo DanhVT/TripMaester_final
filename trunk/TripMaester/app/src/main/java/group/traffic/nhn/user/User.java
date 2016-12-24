@@ -143,6 +143,10 @@ public class User {
 		return link;
 	}
 
+	public String getPicture() {
+		return picture;
+	}
+
 	public void getListFriend() {
 		GraphRequest request = GraphRequest.newMyFriendsRequest(LoginManager.getInstance().getUserToken(), new GraphJSONArrayCallback() {
 

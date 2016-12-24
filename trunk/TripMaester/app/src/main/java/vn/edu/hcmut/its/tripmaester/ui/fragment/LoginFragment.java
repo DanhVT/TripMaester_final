@@ -78,6 +78,7 @@ public class LoginFragment extends Fragment {
                                 }
                                 if (!object.isNull("picture")) {
                                     picture = response.getJSONObject().getJSONObject("picture").getJSONObject("data").getString("url");
+
                                 }
                                 if (!object.isNull("id")) {
                                     user_fb_id = object.getString("id");

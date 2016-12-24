@@ -670,7 +670,7 @@ public class HttpManager {
                     .setBodyParameter("gender", LoginManager.getInstance().getUser().getGender())
                     .setBodyParameter("local", LoginManager.getInstance().getUser().getLocal())
                     .setBodyParameter("verified", LoginManager.getInstance().getUser().getVerified())
-                    .setBodyParameter("link", LoginManager.getInstance().getUser().getLink())
+                    .setBodyParameter("link", LoginManager.getInstance().getUser().getPicture())
                     .setBodyParameter("timezone", LoginManager.getInstance().getUser().getTimezone())
                     .setBodyParameter("imei", LoginManager.getInstance().getUser().getImei())
                     .asString()

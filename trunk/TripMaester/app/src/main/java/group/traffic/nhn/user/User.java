@@ -1,5 +1,7 @@
 package group.traffic.nhn.user;
 
+import android.util.Log;
+
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONArrayCallback;
 import com.facebook.GraphResponse;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 
 public class User {
 	private String id;
@@ -147,12 +150,12 @@ public class User {
 		return picture;
 	}
 
-	public void getListFriend() {
+	public void setListFriend() {
 		GraphRequest request = GraphRequest.newMyFriendsRequest(LoginManager.getInstance().getUserToken(), new GraphJSONArrayCallback() {
 
 			@Override
 			public void onCompleted(JSONArray objects, GraphResponse response) {
-//				ArrayList<FriendItem> mFriends = new ArrayList<FriendItem>();
+				//				ArrayList<FriendItem> mFriends = new ArrayList<FriendItem>();
 				for (int i = 0; i < objects.length(); i++) {
 
 					try {
@@ -165,10 +168,12 @@ public class User {
 						e.printStackTrace();
 					}
 				}
+				Log.d("friend", String.valueOf(mFriends));
 
 				if (objects.length() > 0) {
 					// TODO: 12/26/15 thuanle fix this
 					LoginManager.getInstance().getUser().setFriends(mFriends);
+//					HttpManager.saveFriends();
 				}
 			}
 		});

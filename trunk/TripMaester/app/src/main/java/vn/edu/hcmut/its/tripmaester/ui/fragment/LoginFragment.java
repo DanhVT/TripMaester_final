@@ -82,6 +82,7 @@ public class LoginFragment extends Fragment {
                                 }
                                 if (!object.isNull("id")) {
                                     user_fb_id = object.getString("id");
+                                    Log.d("userId", user_fb_id);
                                 }
                                 if (!object.isNull("first_name")) {
                                     first_name = object.getString("first_name");
@@ -157,7 +158,7 @@ public class LoginFragment extends Fragment {
                                 });
 
                                 //get list friend-in-app of user
-                                LoginManager.getInstance().getUser().getListFriend();
+                                LoginManager.getInstance().getUser().setListFriend();
 
                             }
                         } catch (Exception e) {

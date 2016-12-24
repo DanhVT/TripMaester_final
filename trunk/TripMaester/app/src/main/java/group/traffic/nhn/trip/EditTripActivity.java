@@ -39,7 +39,7 @@ public class EditTripActivity extends Activity{
 	 * load trip for edit
 	 */
 	private void loadData(){
-
+		mListTripEdit = new ArrayList<TripItem4EditList>();
 		//TODO: KenK11 replace fake data with data from ITS server
 //		TripItem4EditList item1 = new TripItem4EditList("Du lich ha long", "20/10/2014", "22/10/2014", "30/10/2014", "Ho Chi Minh", "Ha Long");
 //		TripItem4EditList item2 = new TripItem4EditList("Vu tau cuoi tuan", "20/03/2015", "20/03/2015", "22/03/2015", "Ho Chi Minh", "Vung Tau");
@@ -77,11 +77,11 @@ public class EditTripActivity extends Activity{
 									if (!jsonobject.isNull("endTime")) {
 										trip1.setmFinishDate(jsonobject.getString("endTime"));
 									}
-									if (!jsonobject.isNull("fromDescription")) {
-										trip1.setmStartPlace(jsonobject.getString("fromDescription"));
+									if (!jsonobject.isNull("fromLocationName")) {
+										trip1.setmStartPlace(jsonobject.getString("fromLocationName"));
 									}
-									if (!jsonobject.isNull("toDescription")) {
-										trip1.setmFinishPlace(jsonobject.getString("toDescription"));
+									if (!jsonobject.isNull("toLocationName")) {
+										trip1.setmFinishPlace(jsonobject.getString("toLocationName"));
 									}
 									if (!jsonobject.isNull("dateTime")) {
 										trip1.setmDateTime(jsonobject.getString("dateTime"));
@@ -92,6 +92,7 @@ public class EditTripActivity extends Activity{
 									//======
 //					lst_user_trip.addTrip(trip1);
 									mListTripEdit.add(trip1);
+									Log.d("trip1", String.valueOf(trip1));
 								}
 							}
 
@@ -100,7 +101,7 @@ public class EditTripActivity extends Activity{
 							mListEdit.setOnItemClickListener(new ItemClickListener());
 
 						} catch (Exception ex) {
-							Log.i("tag", "error json array");
+							Log.i("error json array", ex.getMessage());
 						}
 					}
 				});

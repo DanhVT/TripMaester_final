@@ -583,8 +583,11 @@ public class HttpManager {
             Log.i(TAG, ex.getMessage());
         }
         return response_json;
-    }
 
+    }
+//    1040954309383084
+
+//    10fd6aca-8cc3-44e0-9850-cbbb9040d1a4
     // service get user info
 	/*
 	 * + IRequest data (in json): { userId: "...", name: "...", frist_name:"...", last_name:"...",birthday:"...", email:"...", update_time:"...",gender:"...", local:"...", verified:"...", timezone:"...", link:"...", imei:"..."}
@@ -670,7 +673,7 @@ public class HttpManager {
                     .setBodyParameter("gender", LoginManager.getInstance().getUser().getGender())
                     .setBodyParameter("local", LoginManager.getInstance().getUser().getLocal())
                     .setBodyParameter("verified", LoginManager.getInstance().getUser().getVerified())
-                    .setBodyParameter("link", LoginManager.getInstance().getUser().getPicture())
+                    .setBodyParameter("link", "DANH")
                     .setBodyParameter("timezone", LoginManager.getInstance().getUser().getTimezone())
                     .setBodyParameter("imei", LoginManager.getInstance().getUser().getImei())
                     .asString()

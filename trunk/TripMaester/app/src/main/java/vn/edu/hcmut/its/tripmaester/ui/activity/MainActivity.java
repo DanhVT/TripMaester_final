@@ -265,114 +265,114 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                     if (name != null) {
                         name.setText(R.string.login_prompt_select_account);
                     }
-                    LoginManager.getInstance().setUser(null);
-                } else {
-                    Log.d("login", "Danh2");
-                    GraphRequest request = GraphRequest.newMeRequest(LoginManager.getInstance().getUserToken(),
-                            new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(JSONObject object, GraphResponse response) {
-                                    Log.d("loginActivity", object.toString());
-                                    try {
-                                        //TODO: VULAM Change this using GSON
-                                        if (object != null) {
-                                            // set permission to get picture
-                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll()
-                                                    .build();
-                                            StrictMode.setThreadPolicy(policy);
-
-                                            String name = "", picture ="", cover="",  user_fb_id = "", first_name = "", last_name = "", birthday = "",
-                                                    email = "", updated_time = "", gender = "", local = "", verified = "",
-                                                    timezone = "", link = "", imei = "";
-
-                                            if (!object.isNull("name")) {
-                                                name = object.getString("name");
-                                            }
-                                            if (!object.isNull("id")) {
-                                                user_fb_id = object.getString("id");
-                                            }
-                                            if (!object.isNull("first_name")) {
-                                                first_name = object.getString("first_name");
-                                            }
-                                            if (!object.isNull("last_name")) {
-                                                last_name = object.getString("last_name");
-                                            }
-                                            if (!object.isNull("birthday")) {
-                                                birthday = object.getString("birthday");
-                                            }
-                                            if (!object.isNull("email")) {
-                                                email = object.getString("email");
-                                            }
-                                            if (!object.isNull("updated_time")) {
-                                                updated_time = object.getString("updated_time");
-                                            }
-                                            if (!object.isNull("gender")) {
-                                                gender = object.getString("gender");
-                                            }
-                                            if (!object.isNull("local")) {
-                                                local = object.getString("local");
-                                            }
-                                            if (!object.isNull("verified")) {
-                                                verified = object.getString("verified");
-                                            }
-                                            if (!object.isNull("timezone")) {
-                                                timezone = object.getString("timezone");
-                                            }
-                                            if (!object.isNull("link")) {
-                                                link = object.getString("link");
-                                            }
-                                            if (!object.isNull("imei")) {
-                                                imei = object.getString("imei");
-                                            }
-                                            if (!object.isNull("cover")) {
-                                                cover = response.getJSONObject().getJSONObject("cover").getString("source");
-                                            }
-                                            if (!object.isNull("picture")) {
-                                                picture = response.getJSONObject().getJSONObject("picture").getJSONObject("data").getString("url");
-                                            }
-                                            LoginManager.getInstance().setUser(new User("", user_fb_id, name, first_name, last_name, cover,picture,
-                                                    birthday, email, updated_time, gender, local, verified, timezone, link,
-                                                    imei, false));
-                                            HttpManager.login(MainActivity.this, new ICallback<JSONObject>(){
-
-                                                @Override
-                                                public void onCompleted(JSONObject data, Object tag, Exception e) {
-                                                    if (e != null || data == null){
-                                                        Log.e("Main Activity","Error when login",e);
-                                                    }
-                                                    if (!data.isNull("tokenId")) {
-                                                        String tokenId = null;
-                                                        try {
-                                                            tokenId = data.get("tokenId").toString();
-                                                        } catch (JSONException e1) {
-                                                            e1.printStackTrace();
-                                                        }
-                                                        LoginManager.getInstance().getUser().setTokenId(tokenId);
-                                                    }
-                                                    if (!data.isNull("status")) {
-                                                        boolean status = false;
-                                                        try {
-                                                            status = data.getBoolean("status");
-                                                        } catch (JSONException e1) {
-                                                            e1.printStackTrace();
-                                                        }
-                                                        LoginManager.getInstance().getUser().setStatus(status);
-                                                    }
-                                                }
-                                            });
-                                            LoginManager.getInstance().getUser().getListFriend();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        Log.i("error", e.getMessage());
-                                    }
-                                }
-                            });
-                    Bundle parameters = new Bundle();
-                    parameters.putString("fields", PARAMETERS);
-                    request.setParameters(parameters);
-                    request.executeAsync();
-                }
+                    LoginManager.getInstance().setUser(null);}
+//                else {
+//                    Log.d("login", "Danh2");
+//                    GraphRequest request = GraphRequest.newMeRequest(LoginManager.getInstance().getUserToken(),
+//                            new GraphRequest.GraphJSONObjectCallback() {
+//                                @Override
+//                                public void onCompleted(JSONObject object, GraphResponse response) {
+//                                    Log.d("loginActivity", object.toString());
+//                                    try {
+//                                        //TODO: VULAM Change this using GSON
+//                                        if (object != null) {
+//                                            // set permission to get picture
+//                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll()
+//                                                    .build();
+//                                            StrictMode.setThreadPolicy(policy);
+//
+//                                            String name = "", picture ="", cover="",  user_fb_id = "", first_name = "", last_name = "", birthday = "",
+//                                                    email = "", updated_time = "", gender = "", local = "", verified = "",
+//                                                    timezone = "", link = "", imei = "";
+//
+//                                            if (!object.isNull("name")) {
+//                                                name = object.getString("name");
+//                                            }
+//                                            if (!object.isNull("id")) {
+//                                                user_fb_id = object.getString("id");
+//                                            }
+//                                            if (!object.isNull("first_name")) {
+//                                                first_name = object.getString("first_name");
+//                                            }
+//                                            if (!object.isNull("last_name")) {
+//                                                last_name = object.getString("last_name");
+//                                            }
+//                                            if (!object.isNull("birthday")) {
+//                                                birthday = object.getString("birthday");
+//                                            }
+//                                            if (!object.isNull("email")) {
+//                                                email = object.getString("email");
+//                                            }
+//                                            if (!object.isNull("updated_time")) {
+//                                                updated_time = object.getString("updated_time");
+//                                            }
+//                                            if (!object.isNull("gender")) {
+//                                                gender = object.getString("gender");
+//                                            }
+//                                            if (!object.isNull("local")) {
+//                                                local = object.getString("local");
+//                                            }
+//                                            if (!object.isNull("verified")) {
+//                                                verified = object.getString("verified");
+//                                            }
+//                                            if (!object.isNull("timezone")) {
+//                                                timezone = object.getString("timezone");
+//                                            }
+//                                            if (!object.isNull("link")) {
+//                                                link = object.getString("link");
+//                                            }
+//                                            if (!object.isNull("imei")) {
+//                                                imei = object.getString("imei");
+//                                            }
+//                                            if (!object.isNull("cover")) {
+//                                                cover = response.getJSONObject().getJSONObject("cover").getString("source");
+//                                            }
+//                                            if (!object.isNull("picture")) {
+//                                                picture = response.getJSONObject().getJSONObject("picture").getJSONObject("data").getString("url");
+//                                            }
+//                                            LoginManager.getInstance().setUser(new User("", user_fb_id, name, first_name, last_name, cover,picture,
+//                                                    birthday, email, updated_time, gender, local, verified, timezone, link,
+//                                                    imei, false));
+//                                            HttpManager.login(MainActivity.this, new ICallback<JSONObject>(){
+//
+//                                                @Override
+//                                                public void onCompleted(JSONObject data, Object tag, Exception e) {
+//                                                    if (e != null || data == null){
+//                                                        Log.e("Main Activity","Error when login",e);
+//                                                    }
+//                                                    if (!data.isNull("tokenId")) {
+//                                                        String tokenId = null;
+//                                                        try {
+//                                                            tokenId = data.get("tokenId").toString();
+//                                                        } catch (JSONException e1) {
+//                                                            e1.printStackTrace();
+//                                                        }
+//                                                        LoginManager.getInstance().getUser().setTokenId(tokenId);
+//                                                    }
+//                                                    if (!data.isNull("status")) {
+//                                                        boolean status = false;
+//                                                        try {
+//                                                            status = data.getBoolean("status");
+//                                                        } catch (JSONException e1) {
+//                                                            e1.printStackTrace();
+//                                                        }
+//                                                        LoginManager.getInstance().getUser().setStatus(status);
+//                                                    }
+//                                                }
+//                                            });
+//                                            LoginManager.getInstance().getUser().getListFriend();
+//                                        }
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                        Log.i("error", e.getMessage());
+//                                    }
+//                                }
+//                            });
+//                    Bundle parameters = new Bundle();
+//                    parameters.putString("fields", PARAMETERS);
+//                    request.setParameters(parameters);
+//                    request.executeAsync();
+//                }
             }
         };
 

@@ -7,6 +7,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author BienDoan
@@ -32,7 +33,7 @@ public class Trip implements Serializable {
     private String dateTime;
     private String userIdOwner;
     private ArrayList<GeoPoint> lstWayPoints = new ArrayList<>();
-    public ArrayList<String> lstUserIdLike = new ArrayList<>();
+    public List<String> lstUserIdLike = new ArrayList<>();
 
     public int getAvaUserCreateTrip() {
         return avaUserCreateTrip;
@@ -181,12 +182,13 @@ public class Trip implements Serializable {
         this.lstUserIdLike = lstUserIdLike;
     }
     public boolean isUserLikeTrip(String userId){
-        for (int i=0; i< this.lstUserIdLike.size(); i++){
-            if(this.lstUserIdLike.get(i) == userId){
-                return true;
-            }
-        }
-        return false;
+//        for (int i=0; i< this.lstUserIdLike.size(); i++){
+//            if(this.lstUserIdLike.get(i) == userId){
+//                return true;
+//            }
+//        }
+//        return false;
+        return this.lstUserIdLike.contains(userId);
     }
 }
 

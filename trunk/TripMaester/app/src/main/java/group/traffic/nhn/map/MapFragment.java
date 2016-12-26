@@ -1630,10 +1630,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                                         HttpManager.uploadFile(path, pointId);
                                                                                                         PG.setMessage("Create media at point " + finalJ);
                                                                                                     }
-                                                                                                    count[0] = count[0] +1;
-                                                                                                    if(count[0] == viaPoints.size()){
-                                                                                                        PG.dismiss();
-                                                                                                    }
+
                                                                                                 }
                                                                                                 catch(JSONException ex){
                                                                                                     ex.printStackTrace();
@@ -1641,6 +1638,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                             }
                                                                                         }
                                                                                     });
+                                                                    count[0] = count[0] +1;
+
+                                                                }
+                                                                if(count[0] >= viaPoints.size()){
+                                                                    PG.dismiss();
                                                                 }
 
                                                             }

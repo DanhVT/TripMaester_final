@@ -124,10 +124,10 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
 
             if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
-                viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
+                viewHolder.likeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_light_blue_a700_24dp,0,0,0);
             }
             else{
-                viewHolder.likeButton.setBackgroundResource(R.drawable.ic_like);
+                viewHolder.likeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,0,0,0);
             }
 
 
@@ -260,11 +260,11 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
                         if(getTrips().get(pos).isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
                             trip--;
-                            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_like);
+                            viewHolder.likeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like,0,0,0);
                         }
                         else{
                             trip++;
-                            viewHolder.likeButton.setBackgroundResource(R.drawable.ic_thumb_up_light_blue_a700_24dp);
+                            viewHolder.likeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_light_blue_a700_24dp,0,0,0);
                         }
 
                         String tmpStr10 = String.valueOf(trip);

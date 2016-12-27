@@ -44,7 +44,7 @@ public class Trip implements Serializable {
     }
 
     public String getDateTime() {
-        return dateTime;
+        return this.dateTime;
     }
 
     public GeoPoint getEndPoint() {

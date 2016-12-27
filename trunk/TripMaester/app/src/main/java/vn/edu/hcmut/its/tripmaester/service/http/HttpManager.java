@@ -35,6 +35,7 @@ import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 
+import static group.traffic.nhn.map.MapFragment.TYPE_TEXT;
 import static group.traffic.nhn.map.MapFragment.mMapView;
 import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
 
@@ -340,7 +341,7 @@ public class HttpManager {
                                 try {
                                     jsonObj = new JSONObject(str_response);
                                     if (!jsonObj.isNull("listTrip")) {
-                                        Log.d("listPrivate", jsonObj.getString("listTrip"));
+
                                         callback.onCompleted(new JSONArray(jsonObj.getString("listTrip")), null, null);
                                     }
                                 } catch (JSONException e1) {
@@ -835,7 +836,7 @@ public class HttpManager {
         return responseJson;
     }
 
-    public static void uploadFile(final String filePath, final String pointId) {
+    public static void uploadFile(final String filePath, final int type, final String pointId) {
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
         Thread t = new Thread(new Runnable() {
             @Override
@@ -849,6 +850,7 @@ public class HttpManager {
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("filename", filePath)
                         .addFormDataPart("pointId", pointId)
+                        .addFormDataPart("type", String.valueOf(type))
                         .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
                         .addFormDataPart("dataImage",file_path.substring(file_path.lastIndexOf("/")+1), file_body)
                         .build();
@@ -866,6 +868,34 @@ public class HttpManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+    public static void uploadTextRate( final Context context, final String data, final String pointId, final ICallback<JSONObject> callback ){
+        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadTextRateToPoint";
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Ion.with(context).load(URL_UPLOAD)
+                        .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                        .setBodyParameter("pointId", pointId)
+                        .setBodyParameter("type", String.valueOf(TYPE_TEXT))
+                        .setBodyParameter("data", data)
+                        .asString()
+                        .setCallback(new FutureCallback<String>() {
+                            @Override
+                            public void onCompleted(Exception e, String str_response) {
+                                if (e == null) {
+                                    try {
+                                        callback.onCompleted(new JSONObject(str_response), null, null);
+                                    } catch (JSONException e1) {
+                                        callback.onCompleted(null, null, e1);
+                                    }
+                                } else {
+                                    callback.onCompleted(null, null, e);
+                                }
+                            }
+                        });
             }
         });
     }

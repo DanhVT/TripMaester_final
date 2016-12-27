@@ -124,7 +124,7 @@ public class TripManager {
                                 trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                             }
                             if (!jsonobject.isNull("dateTime")) {
-                                trip1.setDateOpenTrip(jsonobject.getString("dateTime"));
+                                trip1.setDateTime(jsonobject.getString("dateTime"));
                             }
                             if (!jsonobject.isNull("emotion")) {
                                 trip1.setEmotion(jsonobject.getString("emotion"));

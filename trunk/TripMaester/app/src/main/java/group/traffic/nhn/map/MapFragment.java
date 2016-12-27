@@ -150,6 +150,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int TYPE_TEXT = 3;
 
     // directory name to store captured images and videos
 
@@ -1557,7 +1558,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     sb.append("about ").append(sec).append(" seconds");
                                                 }
                                             }
-                                            Log.d("DateTime", sb.toString());
+
                                             trip1.setDateTime(sb.toString());
 
                                             String intMonth = (String) android.text.format.DateFormat
@@ -1578,6 +1579,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             trip1.setNumberCommentTrip(mainActivity.getString(R.string.default_comment));
                                             trip1.setPrivacy(spinner_trip_privacy.getSelectedItem().toString());
                                             trip1.setEmotion(spinner_trip_emotion.getSelectedItem().toString());
+                                            Log.d("trip1", trip1.getDateTime());
                                             //send trip to server
                                             final ProgressDialog PG = new ProgressDialog(mContext);
                                             PG.setTitle("Create Trip");
@@ -1608,36 +1610,50 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                     .getLongitudeE6());
                                                                     // FIXME: set trip
                                                                     // id
-                                                                    PG.setMessage("Create point "+ geoPoint.getLatitudeE6()+", "+geoPoint
+                                                                    PG.setMessage("Creating point "+ geoPoint.getLatitudeE6()+", "+geoPoint
                                                                             .getLongitudeE6());
                                                                     final int finalJ = j;
                                                                     HttpManager.createPointOnTrip(
-                                                                                    trip1.getTripId(),
-                                                                                    pointItem, getActivity(), new ICallback<JSONObject>() {
-                                                                                        @Override
-                                                                                        public void onCompleted(JSONObject data, Object tag, Exception e) {
-                                                                                            if (e != null || data == null){
-                                                                                                Log.e(TAG,"Error when create trip",e);
-                                                                                            }
-                                                                                            Toast.makeText(getActivity(), "Create point success, " + pointItem, Toast.LENGTH_SHORT).show();
-                                                                                            if (!data.isNull("pointId")) {
-                                                                                                try{
-                                                                                                    String pointId = data.getString("pointId");
-                                                                                                    for(int k=0; k <lst_markers.size(); k++){
-                                                                                                        if(lst_markers.get(k).pointIndex > finalJ) break;
-                                                                                                        if(lst_markers.get(k).pointIndex < finalJ) continue;
-                                                                                                        String path = lst_markers.get(k).getData();
-                                                                                                        HttpManager.uploadFile(path, pointId);
-                                                                                                        PG.setMessage("Create media at point " + finalJ);
-                                                                                                    }
+                                                                            trip1.getTripId(),
+                                                                            pointItem, getActivity(), new ICallback<JSONObject>() {
+                                                                                @Override
+                                                                                public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                                                                    if (e != null || data == null){
+                                                                                        Log.e(TAG,"Error when create trip",e);
+                                                                                    }
+                                                                                    Toast.makeText(getActivity(), "Create point success, " + pointItem, Toast.LENGTH_SHORT).show();
+                                                                                    if (!data.isNull("pointId")) {
+                                                                                        try{
+                                                                                            String pointId = data.getString("pointId");
+                                                                                            for(int k=0; k <lst_markers.size(); k++){
+                                                                                                if(lst_markers.get(k).pointIndex > finalJ) break;
+                                                                                                if(lst_markers.get(k).pointIndex < finalJ) continue;
 
+                                                                                                String dataOfMarker = lst_markers.get(k).getData();
+                                                                                                int type  = lst_markers.get(k).getType();
+                                                                                                if(type == TYPE_TEXT ){
+                                                                                                    HttpManager.uploadTextRate(getContext(), dataOfMarker, pointId, new ICallback<JSONObject>() {
+
+                                                                                                        @Override
+                                                                                                        public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                                                                                            if (e != null || data == null){
+                                                                                                                Log.e(TAG,"Error when create  text type",e);
+                                                                                                            }
+                                                                                                        }
+                                                                                                    });
+                                                                                                } else{
+                                                                                                    HttpManager.uploadFile(dataOfMarker, type, pointId);
                                                                                                 }
-                                                                                                catch(JSONException ex){
-                                                                                                    ex.printStackTrace();
-                                                                                                }
+                                                                                                PG.setMessage("Create media at point " + finalJ);
+
                                                                                             }
                                                                                         }
-                                                                                    });
+                                                                                        catch(JSONException ex){
+                                                                                            ex.printStackTrace();
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            });
                                                                     count[0] = count[0] +1;
 
                                                                 }
@@ -1719,11 +1735,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         MainActivity.fab_camera = (FloatingActionButton) mainActivity.findViewById(R.id.fab_camera);
         MainActivity.fab_video = (FloatingActionButton) mainActivity.findViewById(R.id.fab_video);
         MainActivity.fab_current = (FloatingActionButton) mainActivity.findViewById(R.id.fab_current);
-        MainActivity.fab_search = (FloatingActionButton) mainActivity.findViewById(R.id.fab_search);
         MainActivity.fab_rate = (FloatingActionButton) mainActivity.findViewById(R.id.fab_rate);
 
         MainActivity.fab_btn_capture.setVisibility(View.INVISIBLE);
-        MainActivity.fab_search.setVisibility(View.INVISIBLE);
+
         MainActivity.fab_current.setVisibility(View.VISIBLE);
         MainActivity.fab_rate.setVisibility(View.INVISIBLE);
 
@@ -1731,7 +1746,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         Move_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.move_tren);
         Back_Duoi = AnimationUtils.loadAnimation(getActivity(), R.anim.back_duoi);
         Back_Tren = AnimationUtils.loadAnimation(getActivity(), R.anim.back_tren);
-
 
         MainActivity.fab_btn_capture.setOnClickListener(new OnClickListener() {
             @Override
@@ -2172,7 +2186,16 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 });
         startMarker.setIndex(lst_markers.size());
         startMarker.setPointIndex(viaPoints.size());
-        startMarker.setType(3);
+        startMarker.setType(TYPE_TEXT);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("rating", rate );
+            json.put("desciption", message );
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        startMarker.setData(json.toString());
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();

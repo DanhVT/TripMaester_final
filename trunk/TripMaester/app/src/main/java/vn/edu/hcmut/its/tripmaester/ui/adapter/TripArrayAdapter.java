@@ -113,7 +113,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             Trip mTrip = getTrips().get(position);
             viewHolder.txtTripName.setText(mTrip.getTripName());
             viewHolder.txtUserNameCreateTrip.setText(mTrip.getUserName());
-            viewHolder.txtDateCreateTrip.setText(mTrip.getDateOpenTrip());
+            viewHolder.txtDateCreateTrip.setText(mTrip.getDateTime());
             viewHolder.txtTimeStartTrip.setText(mTrip.getTimeStartTrip());
             viewHolder.txtTimeEndTrip.setText(mTrip.getTimeEndTrip());
             viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
@@ -121,7 +121,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
             viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
 
-            viewHolder.txt_emotion.setText(mTrip.getEmotion().substring(2));
+            viewHolder.txt_emotion.setText(mTrip.getEmotion());
 
             if(mTrip.isUserLikeTrip(LoginManager.getInstance().getUser().getId())){
                 viewHolder.likeButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumb_up_light_blue_a700_24dp,0,0,0);

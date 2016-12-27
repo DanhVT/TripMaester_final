@@ -1639,10 +1639,19 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                                             if (e != null || data == null){
                                                                                                                 Log.e(TAG,"Error when create  text type",e);
                                                                                                             }
+                                                                                                            PG.setMessage("Create type text rate " + finalJ);
                                                                                                         }
                                                                                                     });
                                                                                                 } else{
-                                                                                                    HttpManager.uploadFile(dataOfMarker, type, pointId);
+                                                                                                    HttpManager.uploadFile(getContext(), dataOfMarker, type, pointId, new ICallback<JSONObject>() {
+                                                                                                        @Override
+                                                                                                        public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                                                                                            if (e != null || data == null){
+                                                                                                                Log.e(TAG,"Error when create  video/image type",e);
+                                                                                                            }
+                                                                                                            PG.setMessage("Create video/image at point " + finalJ);
+                                                                                                        }
+                                                                                                    });
                                                                                                 }
                                                                                                 PG.setMessage("Create media at point " + finalJ);
 
@@ -2060,7 +2069,23 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
     //set marker for image capture
     public void setMarkerForTrip(Trip trip) {
+
         for(int i = 0 ; i < listMarkerTrip.size(); i++){
+            int type = listMarkerTrip.get(i).getType();
+            if(type == TYPE_TEXT){
+                try {
+                    JSONObject json = new JSONObject(listMarkerTrip.get(i).getData());
+
+                    setMarkerForRate(json.getString("desciption"), Float.parseFloat(json.getString("rate")),listMarkerTrip.get(i).getMarker().getPosition());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else{
+
+            }
             //start marker
             String str_lat_long = "Lattitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLatitude()
                     + "\r\nLongtitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLongitude();
@@ -2084,7 +2109,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             };
             listMarkerTrip.get(i).getMarker().setInfoWindow(viaPOIInfoWindow);
             listMarkerTrip.get(i).getMarker().setDraggable(false);
+
             final int finalI = i;
+
             listMarkerTrip.get(i).getMarker()
                     .setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                         @Override
@@ -2113,6 +2140,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 previewMedia(lst_markers.get(listMarkerTrip.get(finalI).getIndex()).getType(), lst_markers.get(listMarkerTrip.get(finalI).getIndex()));
 
                             }
+                            lst_around_markers = null;
                             return false;
                         }
                     });

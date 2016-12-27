@@ -308,10 +308,14 @@ public class HttpManager {
 
                                         for (int j =0; j< lstImg.length(); j++){
                                             JSONObject imgJSon = new JSONObject(lstImg.getString(i));
+
                                             MapFragment.MyMarker startMarker = new MapFragment.MyMarker(mMapView);
+
                                             startMarker.getMarker().setPosition(geoPoint);
                                             startMarker.setData(imgJSon.getString("url"));
+                                            startMarker.setType(Integer.parseInt(imgJSon.getString("type")));
                                             startMarker.setIndex(j);
+
                                             MapFragment.listMarkerTrip.add(startMarker);
                                         }
 
@@ -838,7 +842,7 @@ public class HttpManager {
         return responseJson;
     }
 
-    public static void uploadFile(final String filePath, final int type, final String pointId) {
+    public static void uploadFile(final Context context,final String filePath, final int type, final String pointId, final ICallback<JSONObject> callback) {
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
         Thread t = new Thread(new Runnable() {
             @Override
@@ -846,7 +850,6 @@ public class HttpManager {
                 File f  = new File(filePath);
 //                String content_type  = getMimeType(f.getPath());
                 String file_path = f.getAbsolutePath();
-                OkHttpClient client = new OkHttpClient();
 
                 String encryptFile = null;
                 if(type == MEDIA_TYPE_IMAGE)
@@ -854,28 +857,28 @@ public class HttpManager {
                 else{
                     encryptFile = GraphicUtils.convertVideo2Base64(file_path);
                 }
-                RequestBody request_body = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("filename", filePath)
-                        .addFormDataPart("pointId", pointId)
-                        .addFormDataPart("type", String.valueOf(type))
-                        .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                        .addFormDataPart("dataImage", encryptFile)
-                        .build();
-                Request request = new Request.Builder()
-                        .url(URL_UPLOAD)
-                        .post(request_body)
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
+                Ion.with(context).load(URL_UPLOAD)
+                        .setBodyParameter("filename", filePath)
+                        .setBodyParameter("pointId", pointId)
+                        .setBodyParameter("type", String.valueOf(type))
+                        .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                        .setBodyParameter("dataImage", encryptFile)
+                        .asString()
+                        .setCallback(new FutureCallback<String>() {
+                            @Override
+                            public void onCompleted(Exception e, String str_response) {
+                                if (e == null) {
+                                    try {
+                                        callback.onCompleted(new JSONObject(str_response), null, null);
+                                    } catch (JSONException e1) {
+                                        callback.onCompleted(null, null, e1);
+                                    }
+                                } else {
+                                    callback.onCompleted(null, null, e);
+                                }
+                            }
+                        });
 
-                    if(!response.isSuccessful()){
-                        throw new IOException("Error : "+response);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }

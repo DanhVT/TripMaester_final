@@ -128,7 +128,7 @@ public class TripsFragment extends Fragment {
                     public void run() {
                         loadTrips(tripAdapter);
                     }
-                }, 30000);
+                }, 10000);
             }
         });
     }

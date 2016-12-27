@@ -1581,7 +1581,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             trip1.setEmotion(spinner_trip_emotion.getSelectedItem().toString());
                                             Log.d("trip1", trip1.getDateTime());
                                             //send trip to server
-                                            final ProgressDialog PG = new ProgressDialog(mContext);
+                                            final ProgressDialog PG = new ProgressDialog(getContext());
                                             PG.setTitle("Create Trip");
                                             PG.setMessage("Please wait...");
                                             PG.setCancelable(false);
@@ -1594,7 +1594,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     if (ex != null || jsonobject == null){
                                                         Log.e(TAG,"Error when create trip",ex);
                                                     }
-                                                    Toast.makeText(getActivity(), "Create trip success", Toast.LENGTH_SHORT).show();
+//                                                    Toast.makeText(getActivity(), "Create trip success", Toast.LENGTH_SHORT).show();
                                                     //save list passed point==================================
                                                     if (!jsonobject.isNull("tripId")) {
                                                         try {
@@ -1621,7 +1621,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                     if (e != null || data == null){
                                                                                         Log.e(TAG,"Error when create trip",e);
                                                                                     }
-                                                                                    Toast.makeText(getActivity(), "Create point success, " + pointItem, Toast.LENGTH_SHORT).show();
+//                                                                                    Toast.makeText(getActivity(), "Create point success, " + pointItem.getX_Lat()+":"+pointItem.getY_Long(), Toast.LENGTH_SHORT).show();
                                                                                     if (!data.isNull("pointId")) {
                                                                                         try{
                                                                                             String pointId = data.getString("pointId");

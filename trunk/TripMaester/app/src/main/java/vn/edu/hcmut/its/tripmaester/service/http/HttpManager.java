@@ -34,9 +34,11 @@ import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
+import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
 
 import static group.traffic.nhn.map.MapFragment.TYPE_TEXT;
 import static group.traffic.nhn.map.MapFragment.mMapView;
+import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.MEDIA_TYPE_IMAGE;
 import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
 
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
@@ -842,17 +844,23 @@ public class HttpManager {
             @Override
             public void run() {
                 File f  = new File(filePath);
-                String content_type  = getMimeType(f.getPath());
+//                String content_type  = getMimeType(f.getPath());
                 String file_path = f.getAbsolutePath();
                 OkHttpClient client = new OkHttpClient();
-                RequestBody file_body = RequestBody.create(MediaType.parse(content_type),f);
+
+                String encryptFile = null;
+                if(type == MEDIA_TYPE_IMAGE)
+                    encryptFile= GraphicUtils.convertImage2Base64(file_path);
+                else{
+                    encryptFile = GraphicUtils.convertVideo2Base64(file_path);
+                }
                 RequestBody request_body = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("filename", filePath)
                         .addFormDataPart("pointId", pointId)
                         .addFormDataPart("type", String.valueOf(type))
                         .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                        .addFormDataPart("dataImage",file_path.substring(file_path.lastIndexOf("/")+1), file_body)
+                        .addFormDataPart("dataImage", encryptFile)
                         .build();
                 Request request = new Request.Builder()
                         .url(URL_UPLOAD)

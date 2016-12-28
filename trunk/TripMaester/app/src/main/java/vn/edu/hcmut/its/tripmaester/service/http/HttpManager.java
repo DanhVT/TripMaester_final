@@ -7,6 +7,15 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +23,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +33,7 @@ import group.traffic.nhn.message.MessageItem;
 import group.traffic.nhn.trip.PointItem;
 import group.traffic.nhn.user.FriendItem;
 import group.traffic.nhn.user.User;
+import group.traffice.nhn.common.Utilities;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -844,18 +855,17 @@ public class HttpManager {
 
     public static void uploadFile(final Context context,final String filePath, final int type, final String pointId, final ICallback<JSONObject> callback) {
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
+
                 File f  = new File(filePath);
 //                String content_type  = getMimeType(f.getPath());
                 String file_path = f.getAbsolutePath();
 
                 String encryptFile = null;
+
                 if(type == MEDIA_TYPE_IMAGE)
-                    encryptFile= GraphicUtils.convertImage2Base64(file_path);
+                    encryptFile= GraphicUtils.convertImage2Base64(filePath);
                 else{
-                    encryptFile = GraphicUtils.convertVideo2Base64(file_path);
+                    encryptFile = GraphicUtils.convertVideo2Base64(filePath);
                 }
                 Ion.with(context).load(URL_UPLOAD)
                         .setBodyParameter("filename", filePath)
@@ -879,8 +889,8 @@ public class HttpManager {
                             }
                         });
 
-            }
-        });
+
+
     }
     public static void uploadTextRate( final Context context, final String data, final String pointId, final ICallback<JSONObject> callback ){
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadTextRateToPoint";
@@ -911,5 +921,65 @@ public class HttpManager {
         });
     }
 
+    @Deprecated
+    public static InputStream sendJson_HttpPost(List<BasicNameValuePair> nameValuePairs, String URL) {
+        // Thread t = new Thread() {
+        InputStream in = null;
+        // public void run() {
+        // Looper.prepare(); //For Preparing Message Pool for the child Thread
+        HttpClient client = new DefaultHttpClient();
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
+        // Limit
+        HttpResponse response;
+
+        try {
+            HttpPost post = new HttpPost(URL);
+
+            post.setHeader(new BasicHeader(HTTP.CONTENT_TYPE,
+                    "application/x-www-form-urlencoded"));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            response = client.execute(post);
+
+			/* Checking response */
+            if (response != null) {
+                in = response.getEntity().getContent(); // Get the data in the
+                // entity
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.i("Error_HttpPost", e.getMessage());
+        }
+
+        // Looper.loop(); //Loop in the message queue
+        // }
+        // };
+
+        // t.start();
+        return in;
+    }
+
+    public static JSONObject uploadImage(String filePath) {
+        String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
+        String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
+
+        JSONObject responseJson = new JSONObject();
+
+        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("filename", filePath));
+        nameValuePairs.add(new BasicNameValuePair("pointId", POINT_ID));
+        nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
+        nameValuePairs.add(new BasicNameValuePair("dataImage", GraphicUtils.convertImage2Base64(filePath)));
+
+        Log.e("base64", GraphicUtils.convertImage2Base64(filePath));
+
+        InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_UPLOAD);
+        String str_response = Utilities.readStringFromInputStream(response_stream);
+        try {
+            responseJson = new JSONObject(str_response);
+        } catch (JSONException e) {
+            Log.i(TAG, e.getMessage());
+        }
+        return responseJson;
+    }
 
 }

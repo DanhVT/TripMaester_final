@@ -106,6 +106,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.UUID;
+
 import cse.its.adapter.ContextMenuAdapter;
 import cse.its.adapter.StreetListAdapter;
 import cse.its.dbhelper.NodeDrawable;
@@ -151,6 +153,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int TYPE_TEXT = 3;
+    private final static int REQUEST_TAKE_PHOTO = 100;
 
     // directory name to store captured images and videos
 
@@ -269,6 +272,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     private boolean isCapturing;
     private ReceiverLocationChange mReceiverLocationChange = new ReceiverLocationChange();
     public static Uri fileUri;
+    private File mTempCameraPhotoFile;
+    private final static String FOLDER_NAME = "TempFolder";
 
     public MapFragment() {
 
@@ -731,25 +736,27 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try{
-            if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
+            if (requestCode == REQUEST_TAKE_PHOTO) {
                 if (resultCode == Activity.RESULT_OK) {
                     long minRunningMemory = (12024 * 12024);
                     Runtime runtime = Runtime.getRuntime();
                     if (runtime.freeMemory() < minRunningMemory)
                         System.gc();
 
-                    String filePath = fileUri.getPath();
+                    String filePath = mTempCameraPhotoFile.getPath();
                     Bitmap imageBitmap = decodeSampledBitmapFromFile(filePath, 400, 600);// BitmapFactory.decodeFile(filePath,
                     // options);
                     if (lastLocation == null) {
                         lastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 //					updateCurrentLocation();
                     }
-
+                    Log.d("Upload Image", "Prepare");
+                    HttpManager.uploadImage(filePath);
                     // if user want to capture more image or not
                     if (!isCapturing) {
                         GeoPoint geoPoint = new GeoPoint(lastLocation);
                         setMarker(geoPoint, imageBitmap, MEDIA_TYPE_IMAGE);
+
 
                     } else {
                         // save to list image of marker
@@ -798,6 +805,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                             .show();
                 }
 
+
             }
             else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
                 if (resultCode == Activity.RESULT_OK) {
@@ -811,6 +819,15 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     Bitmap bmThumbnail;
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
                             MediaStore.Video.Thumbnails.MICRO_KIND);
+
+                    Log.d("Upload Video", "Prepare");
+                    HttpManager.uploadFile(getContext(), filePath, MEDIA_TYPE_VIDEO, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<JSONObject>() {
+                        @Override
+                        public void onCompleted(JSONObject data, Object tag, Exception e) {
+                            Log.d("Upload Image", String.valueOf(data)+ "::" + e.getMessage());
+                        }
+                    });
+
                     GeoPoint geoPoint = new GeoPoint(lastLocation);
                     setMarker(geoPoint, bmThumbnail, MEDIA_TYPE_VIDEO);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -2045,7 +2062,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 });
         startMarker.setIndex(lst_markers.size());
         startMarker.setPointIndex(viaPoints.size());
-        startMarker.setData(fileUri.getPath());
+        startMarker.setData(mTempCameraPhotoFile.getPath());
         lst_markers.add(startMarker);
         mMapView.getOverlays().add(startMarker.getMarker());
         mMapView.invalidate();
@@ -2071,12 +2088,40 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public void setMarkerForTrip(Trip trip) {
 
         for(int i = 0 ; i < listMarkerTrip.size(); i++){
+            listMarkerTrip.get(i).getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             int type = listMarkerTrip.get(i).getType();
             if(type == TYPE_TEXT){
                 try {
                     JSONObject json = new JSONObject(listMarkerTrip.get(i).getData());
+                    String message = json.getString("message");
+                    Float rate = Float.valueOf(json.getString("rate"));
 
-                    setMarkerForRate(json.getString("desciption"), Float.parseFloat(json.getString("rate")),listMarkerTrip.get(i).getMarker().getPosition());
+                    String timeStamp = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy",
+                            Locale.getDefault()).format(new Date());
+
+
+                    listMarkerTrip.get(i).getMarker().setSubDescription(message);
+                    listMarkerTrip.get(i).getMarker().setTitle(timeStamp);
+                    ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
+                            R.layout.itinerary_bubble_white, mMapView, null, mainActivity) {
+                        @Override
+                        public void onClickRemovePoint(int p) {
+
+                        }
+                    };
+                    listMarkerTrip.get(i).getMarker().setInfoWindow(viaPOIInfoWindow);
+                    listMarkerTrip.get(i).getMarker().setDraggable(false);
+                    if(rate > 4){
+                        listMarkerTrip.get(i).getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_yellow_700_24dp));
+                    }else if(rate >=3){
+                        listMarkerTrip.get(i).getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_yellow_400_24dp));
+                    }
+                    else if(rate >=1 ){
+                        listMarkerTrip.get(i).getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_yellow_200_24dp));
+                    }
+                    else{
+                        listMarkerTrip.get(i).getMarker().setIcon(getResources().getDrawable(R.drawable.ic_star_amber_50_24dp));
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -2084,31 +2129,31 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
             }
             else{
+                //start marker
+                String str_lat_long = "Lattitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLatitude()
+                        + "\r\nLongtitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLongitude();
 
-            }
-            //start marker
-            String str_lat_long = "Lattitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLatitude()
-                    + "\r\nLongtitude: " + listMarkerTrip.get(i).getMarker().getPosition().getLongitude();
-
-            if(i==0 || (i== listMarkerTrip.size() -1)){
-                str_lat_long = "Start Place: " + trip.getPlaceStartTrip()
-                        + "\r\nStart Time: " + trip.getTimeStartTrip()
-                        + "\r\nDuration: " + trip.getDateOpenTrip()
-                        + "\r\nDistance: " + Utilities.distanceInKm(trip.getLstWayPoints()) + " km";
-            }
-
-            listMarkerTrip.get(i).getMarker().setTitle(str_lat_long);
-
-            ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
-                    R.layout.itinerary_bubble, mMapView, null, mainActivity) {
-
-                @Override
-                public void onClickRemovePoint(int p) {
-
+                if(i==0 || (i== listMarkerTrip.size() -1)){
+                    str_lat_long = "Start Place: " + trip.getPlaceStartTrip()
+                            + "\r\nStart Time: " + trip.getTimeStartTrip()
+                            + "\r\nDuration: " + trip.getDateOpenTrip()
+                            + "\r\nDistance: " + Utilities.distanceInKm(trip.getLstWayPoints()) + " km";
                 }
-            };
-            listMarkerTrip.get(i).getMarker().setInfoWindow(viaPOIInfoWindow);
-            listMarkerTrip.get(i).getMarker().setDraggable(false);
+
+                listMarkerTrip.get(i).getMarker().setTitle(str_lat_long);
+
+                ViaPointInfoWindow viaPOIInfoWindow = new ViaPointInfoWindow(
+                        R.layout.itinerary_bubble, mMapView, null, mainActivity) {
+
+                    @Override
+                    public void onClickRemovePoint(int p) {
+
+                    }
+                };
+                listMarkerTrip.get(i).getMarker().setInfoWindow(viaPOIInfoWindow);
+                listMarkerTrip.get(i).getMarker().setDraggable(false);
+            }
+
 
             final int finalI = i;
 
@@ -2217,8 +2262,8 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         startMarker.setType(TYPE_TEXT);
         JSONObject json = new JSONObject();
         try {
-            json.put("rating", rate );
-            json.put("desciption", message );
+            json.put("rate", rate );
+            json.put("message", message );
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -2342,11 +2387,25 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
     }
     public void showCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        // start the image capture Intent
-        startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent
+                .resolveActivity(getActivity().getPackageManager()) != null) {
+            //KenK11 create folder for saving new image
+            File exportDir = new File(
+                    Environment.getExternalStorageDirectory(), FOLDER_NAME);
+            if (!exportDir.exists()) {
+                exportDir.mkdirs();
+            } else {
+                exportDir.delete();
+            }
+            mTempCameraPhotoFile = new File(exportDir, "/"
+                    + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg");
+            // Log.d(LOG_TAG, "/" + UUID.randomUUID().toString().replaceAll("-",
+            // "") + ".jpg");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(mTempCameraPhotoFile));
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        }
     }
 
     public Uri getOutputMediaFileUri(int type) {

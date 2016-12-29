@@ -1,8 +1,14 @@
 package vn.edu.hcmut.its.tripmaester.service.http;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -34,9 +40,11 @@ import vn.edu.hcmut.its.tripmaester.helper.ApiCall;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
 
+import static group.traffic.nhn.map.MapFragment.MEDIA_TYPE_VIDEO;
 import static group.traffic.nhn.map.MapFragment.TYPE_TEXT;
 import static group.traffic.nhn.map.MapFragment.mMapView;
 import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.MEDIA_TYPE_IMAGE;
+import static vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity.storageRef;
 
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
@@ -312,10 +320,10 @@ public class HttpManager {
 
                                         lstGeoPoints.add(geoPoint);
 
-                                        JSONArray lstImg = new JSONArray(pointJson.getString("listImage"));
+                                        JSONArray listMedia = new JSONArray(pointJson.getString("listMedia"));
 
-                                        for (int j =0; j< lstImg.length(); j++){
-                                            JSONObject imgJSon = new JSONObject(lstImg.getString(i));
+                                        for (int j =0; j< listMedia.length(); j++){
+                                            JSONObject imgJSon = new JSONObject(listMedia.getString(i));
 
                                             MapFragment.MyMarker startMarker = new MapFragment.MyMarker(mMapView);
 
@@ -850,40 +858,95 @@ public class HttpManager {
         return responseJson;
     }
 
-    public static void uploadFile(final Context context,final String filePath, final int type, final String pointId, final ICallback<JSONObject> callback) {
-        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
+    public static void uploadImageToServer(final Context context,final String filePath, final String pointId, final ICallback<JSONObject> callback) {
+        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageStringToPoint";
             File f  = new File(filePath);
 //                String content_type  = getMimeType(f.getPath());
-            String encryptFile = null;
+        String encryptFile = null;
 
-            if(type == MEDIA_TYPE_IMAGE) {
-                encryptFile = GraphicUtils.convertImage2Base64(filePath);
-                Log.e("base64", String.valueOf(encryptFile.length()));
-            }
-            else{
-                encryptFile = GraphicUtils.convertVideo2Base64(filePath);
-            }
-            Ion.with(context).load(URL_UPLOAD)
-                    .setBodyParameter("filename", filePath)
-                    .setBodyParameter("pointId", pointId)
-                    .setBodyParameter("type", String.valueOf(type))
-                    .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                    .setBodyParameter("dataImage", encryptFile)
-                    .asString()
-                    .setCallback(new FutureCallback<String>() {
-                        @Override
-                        public void onCompleted(Exception e, String str_response) {
-                            if (e == null) {
-                                try {
-                                    callback.onCompleted(new JSONObject(str_response), null, null);
-                                } catch (JSONException e1) {
-                                    callback.onCompleted(null, null, e1);
-                                }
-                            } else {
-                                callback.onCompleted(null, null, e);
+        encryptFile = GraphicUtils.convertImage2Base64(filePath);
+        Log.e("base64", String.valueOf(encryptFile.length()));
+
+        int idx = filePath.replaceAll("\\\\", "/").lastIndexOf("/");
+        String fileName = idx >= 0 ? filePath.substring(idx + 1) : filePath;
+
+        Ion.with(context).load(URL_UPLOAD)
+                .setBodyParameter("filename", fileName)
+                .setBodyParameter("pointId", pointId)
+                .setBodyParameter("type", String.valueOf(MEDIA_TYPE_IMAGE))
+                .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .setBodyParameter("dataImage", encryptFile)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String str_response) {
+                        if (e == null) {
+                            try {
+                                callback.onCompleted(new JSONObject(str_response), null, null);
+                            } catch (JSONException e1) {
+                                callback.onCompleted(null, null, e1);
                             }
+                        } else {
+                            callback.onCompleted(null, null, e);
                         }
-                    });
+                    }
+                });
+    }
+
+    public static void uploadVideoToServer(final Context context,final String linkDownload, final String pointId, final ICallback<JSONObject> callback){
+        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadVideoLinkToPoint";
+
+        Ion.with(context).load(URL_UPLOAD)
+                .setBodyParameter("pointId", pointId)
+                .setBodyParameter("type", String.valueOf(MEDIA_TYPE_VIDEO))
+                .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .setBodyParameter("downloadLink", linkDownload)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String str_response) {
+                        if (e == null) {
+                            try {
+                                callback.onCompleted(new JSONObject(str_response), null, null);
+                            } catch (JSONException e1) {
+                                callback.onCompleted(null, null, e1);
+                            }
+                        } else {
+                            callback.onCompleted(null, null, e);
+                        }
+                    }
+                });
+    }
+
+    public static void uploadVideoToFireBag(String filePath, final String pointId, final Context context){
+        Log.d("RunApp", "At Httpmain");
+        Uri file = Uri.fromFile(new File(filePath));
+        StorageReference riversRef = storageRef.child("video/"+file.getLastPathSegment());
+        riversRef.putFile(file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        Log.d("Firebase", downloadUrl.getPath());
+                        uploadVideoToServer(context, downloadUrl.getPath(), pointId, new ICallback<JSONObject>() {
+                            @Override
+                            public void onCompleted(JSONObject data, Object tag, Exception e) {
+                                if (e != null || data == null){
+                                    Log.e(TAG,"Error when create trip",e);
+                                }
+                                Log.d("uploadLink","Upload Video Link to Server");
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
     }
     public static void uploadTextRate( final Context context, final String data, final String pointId, final ICallback<JSONObject> callback ){
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadTextRateToPoint";

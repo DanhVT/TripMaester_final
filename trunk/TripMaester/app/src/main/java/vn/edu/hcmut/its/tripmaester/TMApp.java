@@ -44,6 +44,7 @@ public class TMApp extends Application {
 
         //initial Facebook
         FacebookSdk.sdkInitialize(this);
+
         AppEventsLogger.activateApp(this);
 
         ImageLoaderHelper.init(this);

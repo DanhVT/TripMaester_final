@@ -27,6 +27,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,7 +90,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     private ProfileTracker profileTracker;
     private Fragment mapFragment;
     private Fragment fragment = null;
-
+    public static StorageReference storageRef;
     @Override
     public void changeToMapFragments(Trip trip) {
         boolean isNew = false;
@@ -497,6 +499,8 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
         ButterKnife.bind(this);
 
         initFB();
+        Log.d("RunApp", "At Main activity");
+        storageRef = FirebaseStorage.getInstance().getReference();
 
         // create share preference
         mSharedPreferences = getSharedPreferences(Constant.PREFERENCES_NAME, Context.MODE_PRIVATE);

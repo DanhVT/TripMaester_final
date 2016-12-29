@@ -147,8 +147,6 @@ import vn.edu.hcmut.its.tripmaester.ui.activity.VideoPlayer;
 public class MapFragment extends Fragment implements MapEventsReceiver,
         SensorEventListener {
     private static final String TAG = MapFragment.class.getSimpleName();
-    // Storage for camera image URI components
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
@@ -752,12 +750,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                     }
                     Log.d("Upload Image", "Prepare");
 //                    HttpManager.uploadImage(filePath);
-                    HttpManager.uploadFile(getContext(), filePath, MEDIA_TYPE_IMAGE, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<JSONObject>() {
-                        @Override
-                        public void onCompleted(JSONObject data, Object tag, Exception e) {
-                            Log.d("Upload Image", String.valueOf(data)+ "::" + e.getMessage());
-                        }
-                    });
+//                    HttpManager.uploadFile(getContext(), filePath, MEDIA_TYPE_IMAGE, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<JSONObject>() {
+//                        @Override
+//                        public void onCompleted(JSONObject data, Object tag, Exception e) {
+//                            Log.d("Upload Image", String.valueOf(data)+ "::" + e.getMessage());
+//                        }
+//                    });
                     // if user want to capture more image or not
                     if (!isCapturing) {
                         GeoPoint geoPoint = new GeoPoint(lastLocation);
@@ -815,24 +813,28 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             }
             else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
                 if (resultCode == Activity.RESULT_OK) {
-//                    long minRunningMemory = (12024 * 12024);
-//                    Runtime runtime = Runtime.getRuntime();
-//                    if (runtime.freeMemory() < minRunningMemory)
-//                        System.gc();
-
                     Log.d("cature", "video");
-                    String filePath = fileUri.getPath();
+                    String filePath = mTempCameraPhotoFile.getPath();
                     Bitmap bmThumbnail;
                     bmThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
                             MediaStore.Video.Thumbnails.MICRO_KIND);
 
                     Log.d("Upload Video", "Prepare");
-                    HttpManager.uploadFile(getContext(), filePath, MEDIA_TYPE_VIDEO, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<JSONObject>() {
-                        @Override
-                        public void onCompleted(JSONObject data, Object tag, Exception e) {
-                            Log.d("Upload Image", String.valueOf(data)+ "::" + e.getMessage());
-                        }
-                    });
+                    if (lastLocation == null) {
+                        lastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    }
+//                    HttpManager.uploadFile(getContext(), filePath, MEDIA_TYPE_VIDEO, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<JSONObject>() {
+//                        @Override
+//                        public void onCompleted(JSONObject data, Object tag, Exception e) {
+//                            Log.d("Upload Video", String.valueOf(data)+ "::" + e.getMessage());
+//                        }
+//                    });
+//                    HttpManager.uploadToFireBag(filePath, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<Uri>() {
+//                        @Override
+//                        public void onCompleted(Uri data, Object tag, Exception e) {
+//
+//                        }
+//                    });
 
                     GeoPoint geoPoint = new GeoPoint(lastLocation);
                     setMarker(geoPoint, bmThumbnail, MEDIA_TYPE_VIDEO);
@@ -1649,6 +1651,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                         try{
                                                                                             String pointId = data.getString("pointId");
                                                                                             for(int k=0; k <lst_markers.size(); k++){
+                                                                                                Log.d("pontIndex:", lst_markers.get(k).pointIndex+ ">>>" +finalJ);
                                                                                                 if(lst_markers.get(k).pointIndex > finalJ) break;
                                                                                                 if(lst_markers.get(k).pointIndex < finalJ) continue;
 
@@ -1665,16 +1668,20 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                                             PG.setMessage("Create type text rate " + finalJ);
                                                                                                         }
                                                                                                     });
-                                                                                                } else{
-                                                                                                    HttpManager.uploadFile(getContext(), dataOfMarker, type, pointId, new ICallback<JSONObject>() {
+                                                                                                } else if(type == MEDIA_TYPE_IMAGE){
+                                                                                                    HttpManager.uploadImageToServer(getContext(), dataOfMarker,  pointId, new ICallback<JSONObject>() {
                                                                                                         @Override
                                                                                                         public void onCompleted(JSONObject data, Object tag, Exception e) {
                                                                                                             if (e != null || data == null){
                                                                                                                 Log.e(TAG,"Error when create  video/image type",e);
                                                                                                             }
-                                                                                                            PG.setMessage("Create video/image at point " + finalJ);
+                                                                                                            PG.setMessage("Upload image at point " + finalJ);
                                                                                                         }
                                                                                                     });
+                                                                                                }
+                                                                                                else{
+                                                                                                    HttpManager.uploadVideoToFireBag(dataOfMarker, pointId, getContext());
+                                                                                                    PG.setMessage("Upload link video to point " + finalJ);
                                                                                                 }
                                                                                                 PG.setMessage("Create media at point " + finalJ);
 
@@ -2092,7 +2099,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
     //set marker for image capture
     public void setMarkerForTrip(Trip trip) {
-
+        Log.d("listMarkerTrip", String.valueOf(listMarkerTrip.size()));
         for(int i = 0 ; i < listMarkerTrip.size(); i++){
             listMarkerTrip.get(i).getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             int type = listMarkerTrip.get(i).getType();
@@ -2380,17 +2387,24 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
     public void showCameraVideo() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+        if (intent
+                .resolveActivity(getActivity().getPackageManager()) != null) {
+            File exportDir = new File(
+                    Environment.getExternalStorageDirectory(), FOLDER_NAME);
+            if (!exportDir.exists()) {
+                exportDir.mkdirs();
+            } else {
+                exportDir.delete();
+            }
 
-        // set video quality
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            mTempCameraPhotoFile = new File(exportDir, "/"
+                    + UUID.randomUUID().toString().replaceAll("-", "") + ".mp4");
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
-        // name
-
-        // start the video capture Intent
-        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
-
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(mTempCameraPhotoFile));
+            intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+        }
     }
     public void showCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

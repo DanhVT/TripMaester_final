@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "262917844186",
+    "firebase_url": "https://tripvideo-30ee9.firebaseio.com",
+    "project_id": "tripvideo-30ee9",
+    "storage_bucket": "tripvideo-30ee9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262917844186:android:9957eb5d8d2674ce",
+        "android_client_info": {
+          "package_name": "vn.edu.hcmut.its.tripmaester"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262917844186-td71ke25qb1l1aeh59abcp5crle2untv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.edu.hcmut.its.tripmaester",
+            "certificate_hash": "10B1C3A60D17391A9E033024507EC7DA01CC39BB"
+          }
+        },
+        {
+          "client_id": "262917844186-d20h8p1kbfk366ct1dcnmbe1f9mb2pm0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc1bgz6CAKVpeQQy3_CVNKie6YbHtPw_Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262917844186-d20h8p1kbfk366ct1dcnmbe1f9mb2pm0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

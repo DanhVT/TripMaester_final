@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,10 +68,15 @@ public class TripsFragment extends Fragment {
         }
 
         protected ArrayList<MessageItem> doInBackground(String... params) {
-            ArrayList<MessageItem> lstMessageTemp = HttpManager
-                    .getListCommentTrip(TripManager.lst_user_trip
-                            .get(pos)
-                            .getTripId());
+            ArrayList<MessageItem> lstMessageTemp = new ArrayList<>();
+            HttpManager
+                    .getListCommentTrip(getActivity(), TripManager.lst_user_trip.get(pos).getTripId(), new ICallback<ArrayList<MessageItem>>() {
+                        @Override
+                        public void onCompleted(ArrayList<MessageItem> data, Object tag, Exception e) {
+
+                        }
+                    });
+
 
             return lstMessageTemp;
         }
@@ -144,5 +150,14 @@ public class TripsFragment extends Fragment {
         updateCommentAsync.execute();
     }
 
+    public void loadListMessage(final MessageListAdapter lstMessageAdapter, int pos){
+        HttpManager
+            .getListCommentTrip(getActivity(), TripManager.lst_user_trip.get(pos).getTripId(), new ICallback<ArrayList<MessageItem>>() {
+                @Override
+                public void onCompleted(ArrayList<MessageItem> data, Object tag, Exception e) {
+                    lstMessageAdapter.setmFriends(data);
+                }
+            });
+    }
 
 }

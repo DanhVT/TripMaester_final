@@ -7,15 +7,6 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +14,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,13 +23,10 @@ import group.traffic.nhn.message.MessageItem;
 import group.traffic.nhn.trip.PointItem;
 import group.traffic.nhn.user.FriendItem;
 import group.traffic.nhn.user.User;
-import group.traffice.nhn.common.Utilities;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
@@ -50,7 +37,6 @@ import vn.edu.hcmut.its.tripmaester.utility.GraphicUtils;
 import static group.traffic.nhn.map.MapFragment.TYPE_TEXT;
 import static group.traffic.nhn.map.MapFragment.mMapView;
 import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.MEDIA_TYPE_IMAGE;
-import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.getMimeType;
 
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
@@ -202,53 +188,64 @@ public class HttpManager {
                 });
     }
 
-    public static ArrayList<MessageItem> getListCommentTrip(String tripId) {
-        ArrayList<MessageItem> lstMessages = new ArrayList<MessageItem>();
-        try {
-            JSONArray response_json = new JSONArray();
-            // http://traffic.hcmut.edu.vn/ITS/rest/user/login
+    public static void getListCommentTrip(Context context, String tripId, final ICallback<ArrayList<MessageItem>> callback ) {        // http://traffic.hcmut.edu.vn/ITS/rest/user/login
 
-            MultipartBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                    .addFormDataPart("tripId", tripId)
-                    .build();
-            String str_response = null;
+        Ion.with(context).load(URL_GET_COMMENTS_TRIP)
+                .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .setBodyParameter("tripId", tripId)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                                 @Override
+                                 public void onCompleted(Exception e, String str_response) {
+                                     JSONObject jsonObj = null;
+                                     ArrayList<MessageItem> lstMessages = new ArrayList<MessageItem>();
+                                     try {
+                                         jsonObj = new JSONObject(str_response);
+                                         JSONArray response_json;
 
-            str_response = ApiCall.POST(client, URL_GET_COMMENTS_TRIP, requestBody);
-            JSONObject jsonObj = new JSONObject(str_response);
+                                         if (!jsonObj.isNull("listComment")) {
+                                             response_json = new JSONArray(jsonObj.getString("listComment"));
+                                             for (int i = 0; i < response_json.length(); i++) {
+                                                 JSONObject jObj = new JSONObject(response_json.getString(i));
+                                                 if (null != jObj) {
+                                                     MessageItem item = new MessageItem(jObj.getString("content"), R.drawable.user1, true, 10, jObj.getString("userId"), jObj.getString("dateTime"));
+                                                     lstMessages.add(item);
+                                                 }
+                                             }
+                                         }
+                                         for (int i = 0; i < lstMessages.size() - 1; i++) {
+                                             Date d1 = cse.its.helper.Utilities.convertStringToDateTime(lstMessages.get(i).getDate());
+                                             if (d1 != null) {
+                                                 for (int j = i + 1; j < lstMessages.size(); j++) {
+                                                     Date d2 = cse.its.helper.Utilities.convertStringToDateTime(lstMessages.get(j).getDate());
+                                                     if (d2.after(d1)) {
+                                                         MessageItem tempMessegeItem = lstMessages.get(i);
+                                                         lstMessages.set(i, lstMessages.get(j));
+                                                         lstMessages.set(j, tempMessegeItem);
+                                                     }
+                                                 }
+                                             }
+                                         }
 
-            if (!jsonObj.isNull("listComment")) {
-                response_json = new JSONArray(jsonObj.getString("listComment"));
-            }
+                                     } catch (JSONException e1) {
+                                         e1.printStackTrace();
+                                     }
+                                     callback.onCompleted(lstMessages, null, e);
+                                 }
+                             });
+
+
+
+
+
 
             // && !jsonObj.isNull("shareList")){
-            for (int i = 0; i < response_json.length(); i++) {
-                JSONObject jObj = new JSONObject(response_json.getString(i));
-                if (null != jObj) {
-                    MessageItem item = new MessageItem(jObj.getString("content"), R.drawable.user1, true, 10, jObj.getString("userId"), jObj.getString("dateTime"));
-                    lstMessages.add(item);
-                }
-            }
+
 
             //arrange the list according to dateTime
-            for (int i = 0; i < lstMessages.size() - 1; i++) {
-                Date d1 = cse.its.helper.Utilities.convertStringToDateTime(lstMessages.get(i).getDate());
-                if (d1 != null) {
-                    for (int j = i + 1; j < lstMessages.size(); j++) {
-                        Date d2 = cse.its.helper.Utilities.convertStringToDateTime(lstMessages.get(j).getDate());
-                        if (d2.after(d1)) {
-                            MessageItem tempMessegeItem = lstMessages.get(i);
-                            lstMessages.set(i, lstMessages.get(j));
-                            lstMessages.set(j, tempMessegeItem);
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            Log.i(TAG, ex.getMessage());
-        }
-        return lstMessages;
+
+
+
     }
 
     //get list friend
@@ -721,7 +718,7 @@ public class HttpManager {
             // }
         } catch (Exception ex) {
             Log.d("loginTest", "Login fail");
-            Log.i(TAG, ex.getMessage());
+            Log.i(TAG+"/Login", ex.getMessage());
         }
 
     }
@@ -855,131 +852,122 @@ public class HttpManager {
 
     public static void uploadFile(final Context context,final String filePath, final int type, final String pointId, final ICallback<JSONObject> callback) {
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
-
-                File f  = new File(filePath);
+            File f  = new File(filePath);
 //                String content_type  = getMimeType(f.getPath());
-                String file_path = f.getAbsolutePath();
+            String encryptFile = null;
 
-                String encryptFile = null;
-
-                if(type == MEDIA_TYPE_IMAGE)
-                    encryptFile= GraphicUtils.convertImage2Base64(filePath);
-                else{
-                    encryptFile = GraphicUtils.convertVideo2Base64(filePath);
-                }
-                Ion.with(context).load(URL_UPLOAD)
-                        .setBodyParameter("filename", filePath)
-                        .setBodyParameter("pointId", pointId)
-                        .setBodyParameter("type", String.valueOf(type))
-                        .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                        .setBodyParameter("dataImage", encryptFile)
-                        .asString()
-                        .setCallback(new FutureCallback<String>() {
-                            @Override
-                            public void onCompleted(Exception e, String str_response) {
-                                if (e == null) {
-                                    try {
-                                        callback.onCompleted(new JSONObject(str_response), null, null);
-                                    } catch (JSONException e1) {
-                                        callback.onCompleted(null, null, e1);
-                                    }
-                                } else {
-                                    callback.onCompleted(null, null, e);
+            if(type == MEDIA_TYPE_IMAGE) {
+                encryptFile = GraphicUtils.convertImage2Base64(filePath);
+                Log.e("base64", String.valueOf(encryptFile.length()));
+            }
+            else{
+                encryptFile = GraphicUtils.convertVideo2Base64(filePath);
+            }
+            Ion.with(context).load(URL_UPLOAD)
+                    .setBodyParameter("filename", filePath)
+                    .setBodyParameter("pointId", pointId)
+                    .setBodyParameter("type", String.valueOf(type))
+                    .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                    .setBodyParameter("dataImage", encryptFile)
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
+                        @Override
+                        public void onCompleted(Exception e, String str_response) {
+                            if (e == null) {
+                                try {
+                                    callback.onCompleted(new JSONObject(str_response), null, null);
+                                } catch (JSONException e1) {
+                                    callback.onCompleted(null, null, e1);
                                 }
+                            } else {
+                                callback.onCompleted(null, null, e);
                             }
-                        });
-
-
-
+                        }
+                    });
     }
     public static void uploadTextRate( final Context context, final String data, final String pointId, final ICallback<JSONObject> callback ){
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadTextRateToPoint";
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ion.with(context).load(URL_UPLOAD)
-                        .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                        .setBodyParameter("pointId", pointId)
-                        .setBodyParameter("type", String.valueOf(TYPE_TEXT))
-                        .setBodyParameter("data", data)
-                        .asString()
-                        .setCallback(new FutureCallback<String>() {
-                            @Override
-                            public void onCompleted(Exception e, String str_response) {
-                                if (e == null) {
-                                    try {
-                                        callback.onCompleted(new JSONObject(str_response), null, null);
-                                    } catch (JSONException e1) {
-                                        callback.onCompleted(null, null, e1);
-                                    }
-                                } else {
-                                    callback.onCompleted(null, null, e);
-                                }
-                            }
-                        });
-            }
-        });
+            Ion.with(context).load(URL_UPLOAD)
+                .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
+                .setBodyParameter("pointId", pointId)
+                .setBodyParameter("type", String.valueOf(TYPE_TEXT))
+                .setBodyParameter("data", data)
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String str_response) {
+                    if (e == null) {
+                        try {
+                            callback.onCompleted(new JSONObject(str_response), null, null);
+                        } catch (JSONException e1) {
+                            callback.onCompleted(null, null, e1);
+                        }
+                    } else {
+                        callback.onCompleted(null, null, e);
+                    }
+                    }
+                });
     }
 
-    @Deprecated
-    public static InputStream sendJson_HttpPost(List<BasicNameValuePair> nameValuePairs, String URL) {
-        // Thread t = new Thread() {
-        InputStream in = null;
-        // public void run() {
-        // Looper.prepare(); //For Preparing Message Pool for the child Thread
-        HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
-        // Limit
-        HttpResponse response;
-
-        try {
-            HttpPost post = new HttpPost(URL);
-
-            post.setHeader(new BasicHeader(HTTP.CONTENT_TYPE,
-                    "application/x-www-form-urlencoded"));
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            response = client.execute(post);
-
-			/* Checking response */
-            if (response != null) {
-                in = response.getEntity().getContent(); // Get the data in the
-                // entity
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error_HttpPost", e.getMessage());
-        }
-
-        // Looper.loop(); //Loop in the message queue
-        // }
-        // };
-
-        // t.start();
-        return in;
-    }
-
-    public static JSONObject uploadImage(String filePath) {
-        String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
-        String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
-
-        JSONObject responseJson = new JSONObject();
-
-        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("filename", filePath));
-        nameValuePairs.add(new BasicNameValuePair("pointId", POINT_ID));
-        nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
-        nameValuePairs.add(new BasicNameValuePair("dataImage", GraphicUtils.convertImage2Base64(filePath)));
-
-        Log.e("base64", GraphicUtils.convertImage2Base64(filePath));
-
-        InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_UPLOAD);
-        String str_response = Utilities.readStringFromInputStream(response_stream);
-        try {
-            responseJson = new JSONObject(str_response);
-        } catch (JSONException e) {
-            Log.i(TAG, e.getMessage());
-        }
-        return responseJson;
-    }
+//    @Deprecated
+//    public static InputStream sendJson_HttpPost(List<BasicNameValuePair> nameValuePairs, String URL) {
+//        // Thread t = new Thread() {
+//        InputStream in = null;
+//        // public void run() {
+//        // Looper.prepare(); //For Preparing Message Pool for the child Thread
+//        HttpClient client = new DefaultHttpClient();
+//        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); // Timeout
+//        // Limit
+//        HttpResponse response;
+//
+//        try {
+//            HttpPost post = new HttpPost(URL);
+//
+//            post.setHeader(new BasicHeader(HTTP.CONTENT_TYPE,
+//                    "application/x-www-form-urlencoded"));
+//            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//            response = client.execute(post);
+//
+//			/* Checking response */
+//            if (response != null) {
+//                in = response.getEntity().getContent(); // Get the data in the
+//                // entity
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Log.i("Error_HttpPost", e.getMessage());
+//        }
+//
+//        // Looper.loop(); //Loop in the message queue
+//        // }
+//        // };
+//
+//        // t.start();
+//        return in;
+//    }
+//
+//    public static JSONObject uploadImage(String filePath) {
+//        String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageToPoint";
+//        String POINT_ID = "726ea016-128c-4f97-873d-2db0dcc275d7";
+//
+//        JSONObject responseJson = new JSONObject();
+//
+//        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
+//        nameValuePairs.add(new BasicNameValuePair("filename", filePath));
+//        nameValuePairs.add(new BasicNameValuePair("pointId", POINT_ID));
+//        nameValuePairs.add(new BasicNameValuePair("tokenId", LoginManager.getInstance().getUser().getTokenId()));
+//        nameValuePairs.add(new BasicNameValuePair("dataImage", GraphicUtils.convertImage2Base64(filePath)));
+//
+//        Log.e("base64", GraphicUtils.convertImage2Base64(filePath));
+//
+//        InputStream response_stream = sendJson_HttpPost(nameValuePairs, URL_UPLOAD);
+//        String str_response = Utilities.readStringFromInputStream(response_stream);
+//        try {
+//            responseJson = new JSONObject(str_response);
+//        } catch (JSONException e) {
+//            Log.i(TAG, e.getMessage());
+//        }
+//        return responseJson;
+//    }
 
 }

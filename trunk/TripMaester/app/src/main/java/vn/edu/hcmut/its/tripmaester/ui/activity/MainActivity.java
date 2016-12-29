@@ -31,6 +31,7 @@ import com.facebook.ProfileTracker;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
@@ -62,6 +63,7 @@ import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 
 import static group.traffic.nhn.map.MapFragment.fileUri;
 import static group.traffic.nhn.map.MapFragment.isStart;
+import static group.traffic.nhn.map.MapFragment.mMapView;
 import static vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment.PARAMETERS;
 
 // TODO: 12/16/15 Not review yet
@@ -122,6 +124,8 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
             }
             getSupportFragmentManager().beginTransaction().show(mapFragment).commit();
         }
+        mMapView.getController().animateTo(
+                trip.getLstWayPoints().get(0));
     }
 
     /**

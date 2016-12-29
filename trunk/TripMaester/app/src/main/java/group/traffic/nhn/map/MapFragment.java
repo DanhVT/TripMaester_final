@@ -751,7 +751,13 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 //					updateCurrentLocation();
                     }
                     Log.d("Upload Image", "Prepare");
-                    HttpManager.uploadImage(filePath);
+//                    HttpManager.uploadImage(filePath);
+                    HttpManager.uploadFile(getContext(), filePath, MEDIA_TYPE_IMAGE, "726ea016-128c-4f97-873d-2db0dcc275d7", new ICallback<JSONObject>() {
+                        @Override
+                        public void onCompleted(JSONObject data, Object tag, Exception e) {
+                            Log.d("Upload Image", String.valueOf(data)+ "::" + e.getMessage());
+                        }
+                    });
                     // if user want to capture more image or not
                     if (!isCapturing) {
                         GeoPoint geoPoint = new GeoPoint(lastLocation);
@@ -809,10 +815,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
             }
             else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
                 if (resultCode == Activity.RESULT_OK) {
-                    long minRunningMemory = (12024 * 12024);
-                    Runtime runtime = Runtime.getRuntime();
-                    if (runtime.freeMemory() < minRunningMemory)
-                        System.gc();
+//                    long minRunningMemory = (12024 * 12024);
+//                    Runtime runtime = Runtime.getRuntime();
+//                    if (runtime.freeMemory() < minRunningMemory)
+//                        System.gc();
 
                     Log.d("cature", "video");
                     String filePath = fileUri.getPath();

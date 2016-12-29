@@ -289,7 +289,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(mContext, lstMessage);
 
                     mViewDialogContent.setAdapter(mMessageDetailAdapter);
-                    tripsFragment.runAsyncTask(mMessageDetailAdapter, pos);
+                    tripsFragment.loadListMessage(mMessageDetailAdapter, pos);
                     Button btn_comment = (Button) comment_dialog.findViewById(R.id.btn_comment);
 
                     final EditText txt_comment = (EditText) comment_dialog
@@ -326,7 +326,12 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
                     // FIXME: Load trip message
 //				loadMessageOfOneUser(pos, lstMessage);
-                    lstMessage = HttpManager.getListCommentTrip(getTrips().get(pos).getTripId());
+                    HttpManager.getListCommentTrip(mContext, getTrips().get(pos).getTripId(), new ICallback<ArrayList<MessageItem>>() {
+                        @Override
+                        public void onCompleted(ArrayList<MessageItem> data, Object tag, Exception e) {
+                            mMessageDetailAdapter.setmFriends(data);
+                        }
+                    });
 
                     // comment_dialog = mInflater.inflate(
                     // R.layout.comment_dialog, null);

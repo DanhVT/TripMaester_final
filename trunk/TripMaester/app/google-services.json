@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "262917844186-44pnng2vmglvov3vt6iedev1d8skno3h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.edu.hcmut.its.tripmaester",
+            "certificate_hash": "6F2FB6971EBF077C56127C64A4996D1C6D5BC57D"
+          }
+        },
+        {
           "client_id": "262917844186-td71ke25qb1l1aeh59abcp5crle2untv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

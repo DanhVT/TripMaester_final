@@ -92,7 +92,7 @@ public class TripsFragment extends Fragment {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    runAsyncTask(lstMessageAdapter, pos);
+                    loadListMessage(lstMessageAdapter, pos);
                 }
             }, 2000);
         }

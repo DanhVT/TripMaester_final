@@ -66,6 +66,7 @@ import vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment;
 import static group.traffic.nhn.map.MapFragment.fileUri;
 import static group.traffic.nhn.map.MapFragment.isStart;
 import static group.traffic.nhn.map.MapFragment.mMapView;
+import static group.traffic.nhn.trip.TripManager.lst_user_trip;
 import static vn.edu.hcmut.its.tripmaester.ui.fragment.LoginFragment.PARAMETERS;
 
 // TODO: 12/16/15 Not review yet
@@ -267,7 +268,9 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                     final TextView name = (TextView) findViewById(R.id.txt_select_account);
                     if (name != null) {
                         name.setText(R.string.login_prompt_select_account);
+
                     }
+                    lst_user_trip = new ArrayList<>();
                     LoginManager.getInstance().setUser(null);}
 //                else {
 //                    Log.d("login", "Danh2");

@@ -32,7 +32,9 @@ import group.traffic.nhn.user.User;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
@@ -71,7 +73,8 @@ public class HttpManager {
     static final String URL_SAVE_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/share/SaveShareOnTrip";
     private static final String TAG = HttpManager.class.getName();
     private static OkHttpClient client = new OkHttpClient();
-
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
     //TripComment trip
     /*
         + url: /ITS/rest/comment/SaveTripComment
@@ -242,18 +245,8 @@ public class HttpManager {
                                  }
                              });
 
-
-
-
-
-
             // && !jsonObj.isNull("shareList")){
-
-
             //arrange the list according to dateTime
-
-
-
     }
 
     //get list friend
@@ -696,7 +689,7 @@ public class HttpManager {
                     .setBodyParameter("gender", LoginManager.getInstance().getUser().getGender())
                     .setBodyParameter("local", LoginManager.getInstance().getUser().getLocal())
                     .setBodyParameter("verified", LoginManager.getInstance().getUser().getVerified())
-                    .setBodyParameter("link", "DANH")
+                    .setBodyParameter("link", LoginManager.getInstance().getUser().getPicture())
                     .setBodyParameter("timezone", LoginManager.getInstance().getUser().getTimezone())
                     .setBodyParameter("imei", LoginManager.getInstance().getUser().getImei())
                     .asString()
@@ -765,16 +758,18 @@ public class HttpManager {
         JSONObject response_json = new JSONObject();
         try {
             // http://traffic.hcmut.edu.vn/ITS/rest/user/login
-            MultipartBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                    .addFormDataPart("fromSocialNetwork", LoginManager.getInstance().getUser().getTokenId())
-                    .addFormDataPart("listFriend", lstFriendId.toString())
+            String json = "{'tokenId':'"+LoginManager.getInstance().getUser().getTokenId()+"',"
+                    +"'fromSocialNetwork':'"+LoginManager.getInstance().getUser().getTokenId()+"'"
+                    +"'listFriend':'"+lstFriendId+"'}";
+            RequestBody body = RequestBody.create(JSON, json);
+
+            Request request = new Request.Builder()
+                    .url(URL_SAVE_FRIENDS)
+                    .post(body)
                     .build();
+            Response response = client.newCall(request).execute();
 
-            String str_response = ApiCall.POST(client, URL_SAVE_FRIENDS, requestBody);
-
-            response_json = new JSONObject(str_response);
+            response_json = new JSONObject( response.body().string());
             // if (response_json.isNull("tokenID")) {
             // String tokenId = response_json.get("tokenID").toString();
             // StaticVariable.user.setTokenId(tokenId);

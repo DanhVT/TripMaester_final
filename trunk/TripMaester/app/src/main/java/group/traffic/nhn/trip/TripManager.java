@@ -188,11 +188,11 @@ public class TripManager {
                                     if (!jsonobject.isNull("endTime")) {
                                         trip1.setTimeEndTrip(jsonobject.getString("endTime"));
                                     }
-                                    if (!jsonobject.isNull("fromDescription")) {
-                                        trip1.setPlaceStartTrip(jsonobject.getString("fromDescription"));
+                                    if (!jsonobject.isNull("fromLocationName")) {
+                                        trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
                                     }
-                                    if (!jsonobject.isNull("toDescription")) {
-                                        trip1.setPlaceEndTrip(jsonobject.getString("toDescription"));
+                                    if (!jsonobject.isNull("toLocationName")) {
+                                        trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                                     }
                                     if (!jsonobject.isNull("dateTime")) {
                                         trip1.setDateOpenTrip(jsonobject.getString("dateTime"));

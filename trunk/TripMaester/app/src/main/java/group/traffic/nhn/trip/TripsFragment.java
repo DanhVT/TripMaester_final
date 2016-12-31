@@ -1,27 +1,16 @@
 package group.traffic.nhn.trip;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,9 +18,7 @@ import group.traffic.nhn.message.MessageItem;
 import group.traffic.nhn.message.MessageListAdapter;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
-import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
-import vn.edu.hcmut.its.tripmaester.service.http.HttpConstants;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity;
 import vn.edu.hcmut.its.tripmaester.ui.adapter.TripArrayAdapter;

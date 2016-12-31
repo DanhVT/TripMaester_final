@@ -33,6 +33,7 @@ import group.traffic.nhn.user.FriendItem;
 import vn.edu.hcmut.its.tripmaester.R;
 import vn.edu.hcmut.its.tripmaester.controller.ICallback;
 import vn.edu.hcmut.its.tripmaester.controller.manager.LoginManager;
+import vn.edu.hcmut.its.tripmaester.helper.ImageLoaderHelper;
 import vn.edu.hcmut.its.tripmaester.model.Trip;
 import vn.edu.hcmut.its.tripmaester.service.http.HttpManager;
 import vn.edu.hcmut.its.tripmaester.ui.IMainScreen;
@@ -117,7 +118,10 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             viewHolder.txtTimeStartTrip.setText(mTrip.getTimeStartTrip());
             viewHolder.txtTimeEndTrip.setText(mTrip.getTimeEndTrip());
             viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
+            Log.d("getPlaceStartTrip", mTrip.getPlaceStartTrip() );
+
             viewHolder.txtPlaceEndTrip.setText(mTrip.getPlaceEndTrip());
+
             viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
             viewHolder.txtNumberCommentsTrip.setText(mTrip.getNumberCommentTrip());
 
@@ -131,9 +135,8 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             }
 
 
-            viewHolder.imgAvaUserCreateTrip.setImageResource(mTrip
-                    .getAvaUserCreateTrip());
-
+//            viewHolder.imgAvaUserCreateTrip.setImageResource(mTrip.getLinkImage());
+            ImageLoaderHelper.displayImage(mTrip.getLinkImage(), viewHolder.imgAvaUserCreateTrip );
             //share trip to friends
             LinearLayout share_button = (LinearLayout) rowView
                     .findViewById(R.id.item_list_trip_button_share);
@@ -151,7 +154,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                         @Override
                         public void onCompleted(ArrayList<FriendItem> lstFriendShared, Object tag, Exception e) {
                             if (e == null) {
-                                final ArrayList<FriendItem> mListFriendsNotShare = new ArrayList<FriendItem>();
+                                final ArrayList<FriendItem> mListFriendsNotShare = new ArrayList<>();
                                 for (int i = 0; i < mFriends.size(); i++) {
                                     if (lstFriendShared.size() > 0) {
                                         boolean isAddShareList = true;

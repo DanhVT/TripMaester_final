@@ -117,6 +117,7 @@ public class Trip implements Serializable {
     public String getLinkImage(){
         return this.linkImage;
     }
+
     public void setDateOpenTrip(String dateOpenTrip) {
         this.dateOpenTrip = dateOpenTrip;
     }

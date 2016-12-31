@@ -146,10 +146,13 @@ public class User {
 		return link;
 	}
 
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
 	public String getPicture() {
 		return picture;
 	}
-
 	public void setListFriend() {
 		GraphRequest request = GraphRequest.newMyFriendsRequest(LoginManager.getInstance().getUserToken(), new GraphJSONArrayCallback() {
 

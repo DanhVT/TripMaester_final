@@ -300,10 +300,11 @@ public class HttpManager {
                                 if (!jsonObj.isNull("listPoint")) {
                                     listPoint = new JSONArray(jsonObj.getString("listPoint"));
                                 }
-
+                                Log.d("listPoint", String.valueOf(listPoint.length()));
                                 MapFragment.listMarkerTrip = new ArrayList<MapFragment.MyMarker>();
 
                                 for (int i = 0; i < listPoint.length(); i++) {
+                                    Log.d("listPoint", String.valueOf(i));
                                     JSONObject pointJson = new JSONObject(listPoint.getString(i));
                                     if (!pointJson.isNull("x") && !pointJson.isNull("y")) {
                                         double x = Double.valueOf(pointJson.getString("x"));
@@ -313,26 +314,29 @@ public class HttpManager {
 
                                         lstGeoPoints.add(geoPoint);
 
-                                        JSONArray listMedia = new JSONArray(pointJson.getString("listMedia"));
+                                        if (!jsonObj.isNull("listMedia")) {
+                                            JSONArray listMedia = new JSONArray(pointJson.getString("listMedia"));
+                                            for (int j = 0; j < listMedia.length(); j++) {
+                                                JSONObject imgJSon = new JSONObject(listMedia.getString(i));
 
-                                        for (int j =0; j< listMedia.length(); j++){
-                                            JSONObject imgJSon = new JSONObject(listMedia.getString(i));
+                                                MapFragment.MyMarker startMarker = new MapFragment.MyMarker(mMapView);
 
-                                            MapFragment.MyMarker startMarker = new MapFragment.MyMarker(mMapView);
+                                                startMarker.getMarker().setPosition(geoPoint);
+                                                startMarker.setData(imgJSon.getString("url"));
+                                                startMarker.setType(Integer.parseInt(imgJSon.getString("type")));
+                                                startMarker.setIndex(j);
 
-                                            startMarker.getMarker().setPosition(geoPoint);
-                                            startMarker.setData(imgJSon.getString("url"));
-                                            startMarker.setType(Integer.parseInt(imgJSon.getString("type")));
-                                            startMarker.setIndex(j);
-
-                                            MapFragment.listMarkerTrip.add(startMarker);
+                                                MapFragment.listMarkerTrip.add(startMarker);
+                                            }
                                         }
 
                                     }
+
                                 }
                             } catch (Exception ex) {
                                 Log.e(TAG, ex.getMessage());
                             }
+
                             callback.onCompleted(lstGeoPoints, null, e);
                         }
                     });
@@ -355,9 +359,9 @@ public class HttpManager {
                                 JSONObject jsonObj = null;
                                 try {
                                     jsonObj = new JSONObject(str_response);
-                                    if (!jsonObj.isNull("listTrip")) {
+                                    if (!jsonObj.isNull("listPrivateTrip")) {
 
-                                        callback.onCompleted(new JSONArray(jsonObj.getString("listTrip")), null, null);
+                                        callback.onCompleted(new JSONArray(jsonObj.getString("listPrivateTrip")), null, null);
                                     }
                                 } catch (JSONException e1) {
                                     callback.onCompleted(null, null, e1);
@@ -447,14 +451,6 @@ public class HttpManager {
 
                                         callback.onCompleted(response_json, null, null);
                                     }
-                                    // if (response_json.isNull("tokenID")) {
-                                    // String tokenId = response_json.get("tokenID").toString();
-                                    // StaticVariable.user.setTokenId(tokenId);
-                                    // }
-                                    // if (response_json.isNull("status")) {
-                                    // boolean status = response_json.getBoolean("status");
-                                    // StaticVariable.user.setStatus(status);
-                                    // }
                                 } catch (Exception ex) {
                                     Log.i(TAG, ex.getMessage());
                                     callback.onCompleted(null, null, ex);
@@ -659,26 +655,8 @@ public class HttpManager {
     public static void login(Context context, final ICallback<JSONObject> callback) {
         JSONObject response_json = new JSONObject();
         try {
-//            MultipartBody requestBody = new MultipartBody.Builder()
-//                    .setType(MultipartBody.FORM)
-//                    .addFormDataPart("name", LoginManager.getInstance().getUser().getName())
-//                    .addFormDataPart("userId", LoginManager.getInstance().getUser().getId())
-//                    .addFormDataPart("firstName", LoginManager.getInstance().getUser().getFirst_name())
-//                    .addFormDataPart("lastName", LoginManager.getInstance().getUser().getLast_name())
-//                    .addFormDataPart("birthday", LoginManager.getInstance().getUser().getBirthday())
-//                    .addFormDataPart("email", LoginManager.getInstance().getUser().getEmail())
-//                    .addFormDataPart("updatedime", LoginManager.getInstance().getUser().getUpdated_time())
-//                    .addFormDataPart("gender", LoginManager.getInstance().getUser().getGender())
-//                    .addFormDataPart("local", LoginManager.getInstance().getUser().getLocal())
-//                    .addFormDataPart("verified", LoginManager.getInstance().getUser().getVerified())
-//                    .addFormDataPart("link", LoginManager.getInstance().getUser().getLink())
-//                    .addFormDataPart("timezone", LoginManager.getInstance().getUser().getTimezone())
-//                    .addFormDataPart("imei", LoginManager.getInstance().getUser().getImei())
-//                    .build();
-//            String str_response = null;
-//
-//            str_response = ApiCall.POST(client, URL_LOGIN, requestBody);
             Ion.with(context).load(URL_LOGIN)
+<<<<<<< Updated upstream
                     .setBodyParameter("name", LoginManager.getInstance().getUser().getName())
                     .setBodyParameter("userId", LoginManager.getInstance().getUser().getId())
                     .setBodyParameter("firstName", LoginManager.getInstance().getUser().getFirst_name())
@@ -705,18 +683,36 @@ public class HttpManager {
                                 }
                             } else {
                                 callback.onCompleted(null, null, e);
+=======
+                .setBodyParameter("name", LoginManager.getInstance().getUser().getName())
+                .setBodyParameter("userId", LoginManager.getInstance().getUser().getId())
+                .setBodyParameter("firstName", LoginManager.getInstance().getUser().getFirst_name())
+                .setBodyParameter("lastName", LoginManager.getInstance().getUser().getLast_name())
+                .setBodyParameter("birthday", LoginManager.getInstance().getUser().getBirthday())
+                .setBodyParameter("email", LoginManager.getInstance().getUser().getEmail())
+                .setBodyParameter("updatedime", LoginManager.getInstance().getUser().getUpdated_time())
+                .setBodyParameter("gender", LoginManager.getInstance().getUser().getGender())
+                .setBodyParameter("local", LoginManager.getInstance().getUser().getLocal())
+                .setBodyParameter("verified", LoginManager.getInstance().getUser().getVerified())
+                .setBodyParameter("link", LoginManager.getInstance().getUser().getPicture())
+                .setBodyParameter("timezone", LoginManager.getInstance().getUser().getTimezone())
+                .setBodyParameter("imei", LoginManager.getInstance().getUser().getImei())
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String str_response) {
+                        if (e == null) {
+                            try {
+                                callback.onCompleted(new JSONObject(str_response), null, e);
+                            } catch (Exception ex) {
+                                callback.onCompleted(null, null, ex);
+>>>>>>> Stashed changes
                             }
+                        } else {
+                            callback.onCompleted(null, null, e);
                         }
-                    });
-
-            // if (response_json.isNull("tokenID")) {
-            // String tokenId = response_json.get("tokenID").toString();
-            // StaticVariable.user.setTokenId(tokenId);
-            // }
-            // if (response_json.isNull("status")) {
-            // boolean status = response_json.getBoolean("status");
-            // StaticVariable.user.setStatus(status);
-            // }
+                    }
+                });
         } catch (Exception ex) {
             Log.d("loginTest", "Login fail");
             Log.i(TAG+"/Login", ex.getMessage());

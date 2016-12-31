@@ -101,6 +101,7 @@ public class TripManager {
             @Override
             public void onCompleted(JSONArray jsonarray,  Object tag,Exception e) {
                 try {
+
                     for (int i = 0; i < jsonarray.length(); i++) {
                         JSONObject jsonobject = jsonarray.getJSONObject(i);
                         final Trip trip1 = new Trip();
@@ -120,6 +121,8 @@ public class TripManager {
                             if (!jsonobject.isNull("fromLocationName")) {
                                 trip1.setPlaceStartTrip(jsonobject.getString("fromLocationName"));
                             }
+//                            Log.d("Trip1: ", jsonobject.getString("fromLocationName"));
+
                             if (!jsonobject.isNull("toLocationName")) {
                                 trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                             }
@@ -141,7 +144,13 @@ public class TripManager {
                             if(!jsonobject.isNull("numComments")){
                                 trip1.setNumberCommentTrip(jsonobject.getInt("numComments") + " comments");
                             }
+//                          Log.d("LoginManager.getInstance().getUser().getLink()")
 
+                            trip1.setLinkImage(LoginManager.getInstance().getUser().getPicture());
+
+//                          if (!jsonobject.isNull("link")) {
+//                               trip1.setLinkImage(jsonobject.getString("link"));
+//                          }
                             addTrip(trip1);
 //					lst_user_trip.addTrip(trip1);
                         }

@@ -125,10 +125,6 @@ public class LoginFragment extends Fragment {
                                         verified, timezone, link, imei, false));
                                 updateNameAndImage();
 
-//								InputStream response_stream = Utilities.sendJson_H
-//								//http://traffic.hcmut.edu.vn/ITS/rest/user/login
-//								String str_response = Utilities
-//										.readStringFromInputStream(response_stream);
                                 HttpManager.login(getActivity(), new ICallback<JSONObject>(){
 
                                     @Override

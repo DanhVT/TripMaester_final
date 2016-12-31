@@ -71,10 +71,10 @@ public class DetectLocationService extends Service implements LocationListener {
     private long mLastTime = 0; // milliseconds
     private double mSpeed = 0.0; // km/h
     private float mAzimuthAngleSpeed = 0.0f;
-    private double TIMER_DETECT_LOCATION = 1 * 10 * 1000; // 10s
+    private double TIMER_DETECT_LOCATION = 1 * 4 * 1000; // 4s
 
     private GeoPoint mDeparture, mDestination;
-    private ArrayList<GeoPoint> mViaPoint = new ArrayList<GeoPoint>();
+    private ArrayList<GeoPoint> mViaPoint = new ArrayList<>();
 
     @Override
     public void onLocationChanged(Location location) {

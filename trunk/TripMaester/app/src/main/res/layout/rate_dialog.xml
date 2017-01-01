@@ -32,7 +32,6 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editText"
-        android:layout_weight="0.14"
-        android:allowUndo="true" />
+        android:layout_weight="0.14"/>
 
 </LinearLayout>

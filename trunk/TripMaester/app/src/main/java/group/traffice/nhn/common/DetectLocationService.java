@@ -119,6 +119,25 @@ public class DetectLocationService extends Service implements LocationListener {
             return;
         }
 
+        if(null == mDestination){
+            mDestination = newLocation;
+
+            //  Save departure
+            String defineStrLoction = mDestination.getLatitude() +":"+ mDestination.getLongitude();
+            CommonFunction.saveString(this, SharedPreferencesKeys.KEY_DESTINATION, defineStrLoction);
+
+            //  Sent broadcast to main to update departure point - first
+            //  TODO
+            Intent intent = new Intent();
+            intent.putExtra(FlagUpdates.FlagUpdate_AZIMUTHANGLE, mAzimuthAngleSpeed);
+            intent.putExtra(FlagUpdates.FlagUpdate, FlagUpdates.FlagUpdate_DESTINATION);
+            intent.putExtra(FlagUpdates.FlagUpdate_DESTINATION, location);
+            sendActionUpdate(intent);
+
+
+            return;
+        }
+
         if (null != location.getProvider() && location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
 			/*
 			double d = prevLocation.distanceTo(newLocation);

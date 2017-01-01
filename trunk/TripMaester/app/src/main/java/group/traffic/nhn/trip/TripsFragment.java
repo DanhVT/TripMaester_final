@@ -44,7 +44,8 @@ public class TripsFragment extends Fragment {
     UpdateCommentAsync updateCommentAsync;
 
     // Async task to update comment
-    class UpdateCommentAsync extends AsyncTask<String, Void, ArrayList<MessageItem>> {
+    class UpdateCommentAsync extends
+            AsyncTask<String, Void, ArrayList<MessageItem>> {
 
         private MessageListAdapter lstMessageAdapter;
         private int pos;
@@ -55,15 +56,12 @@ public class TripsFragment extends Fragment {
         }
 
         protected ArrayList<MessageItem> doInBackground(String... params) {
-            ArrayList<MessageItem> lstMessageTemp = new ArrayList<>();
-            HttpManager
-                    .getListCommentTrip(getActivity(), TripManager.lst_user_trip.get(pos).getTripId(), new ICallback<ArrayList<MessageItem>>() {
-                        @Override
-                        public void onCompleted(ArrayList<MessageItem> data, Object tag, Exception e) {
 
-                        }
-                    });
 
+            ArrayList<MessageItem> lstMessageTemp = HttpManager
+                    .getListCommentTrip(TripManager.lst_user_trip
+                            .get(pos)
+                            .getTripId());
 
             return lstMessageTemp;
         }
@@ -79,9 +77,9 @@ public class TripsFragment extends Fragment {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    loadListMessage(lstMessageAdapter, pos);
+                    runAsyncTask(lstMessageAdapter, pos);
                 }
-            }, 2000);
+            }, 1000);
         }
     }
 
@@ -135,16 +133,6 @@ public class TripsFragment extends Fragment {
         updateCommentAsync = new UpdateCommentAsync();
         updateCommentAsync.setMessageAdapter(lstMessageAdapter, pos);
         updateCommentAsync.execute();
-    }
-
-    public void loadListMessage(final MessageListAdapter lstMessageAdapter, int pos){
-        HttpManager
-            .getListCommentTrip(getActivity(), TripManager.lst_user_trip.get(pos).getTripId(), new ICallback<ArrayList<MessageItem>>() {
-                @Override
-                public void onCompleted(ArrayList<MessageItem> data, Object tag, Exception e) {
-                    lstMessageAdapter.setmFriends(data);
-                }
-            });
     }
 
 }

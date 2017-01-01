@@ -118,8 +118,6 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             viewHolder.txtTimeStartTrip.setText(mTrip.getTimeStartTrip());
             viewHolder.txtTimeEndTrip.setText(mTrip.getTimeEndTrip());
             viewHolder.txtPlaceStartTrip.setText(mTrip.getPlaceStartTrip());
-            Log.d("getPlaceStartTrip", mTrip.getPlaceStartTrip() );
-
             viewHolder.txtPlaceEndTrip.setText(mTrip.getPlaceEndTrip());
 
             viewHolder.txtNumberLikesTrip.setText(mTrip.getNumberLikeTrip());
@@ -285,15 +283,19 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
             comment_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    View comment_dialog = mInflater.inflate(R.layout.comment_dialog, null);
-                    final ListView mViewDialogContent = (ListView) comment_dialog.findViewById(R.id.context_menu_comment);
+                    View comment_dialog = mInflater.inflate(
+                            R.layout.comment_dialog, null);
+                    final ListView mViewDialogContent = (ListView) comment_dialog
+                            .findViewById(R.id.context_menu_comment);
 
                     ArrayList<MessageItem> lstMessage = new ArrayList<MessageItem>();
-                    final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(mContext, lstMessage);
+                    final MessageListAdapter mMessageDetailAdapter = new MessageListAdapter(
+                            mContext, lstMessage);
 
                     mViewDialogContent.setAdapter(mMessageDetailAdapter);
-                    tripsFragment.loadListMessage(mMessageDetailAdapter, pos);
-                    Button btn_comment = (Button) comment_dialog.findViewById(R.id.btn_comment);
+                    tripsFragment.runAsyncTask(mMessageDetailAdapter, pos);
+                    Button btn_comment = (Button) comment_dialog
+                            .findViewById(R.id.btn_comment);
 
                     final EditText txt_comment = (EditText) comment_dialog
                             .findViewById(R.id.txt_comment);
@@ -314,7 +316,10 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                                     }
                                 }
                             });
-//
+                            int oldValue = Integer.parseInt(viewHolder.txtNumberCommentsTrip.getText().toString().split(" ")[0]);
+                            oldValue = oldValue +1;
+                            viewHolder.txtNumberCommentsTrip.setText(oldValue+ " comments");
+                            //
 //						ArrayList<MessageItem> lstMessage = HttpManager
 //								.getListCommentTrip(getTrips().get(pos)
 //										.getTripId());
@@ -329,12 +334,8 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
 
                     // FIXME: Load trip message
 //				loadMessageOfOneUser(pos, lstMessage);
-                    HttpManager.getListCommentTrip(mContext, getTrips().get(pos).getTripId(), new ICallback<ArrayList<MessageItem>>() {
-                        @Override
-                        public void onCompleted(ArrayList<MessageItem> data, Object tag, Exception e) {
-                            mMessageDetailAdapter.setmFriends(data);
-                        }
-                    });
+                    lstMessage = HttpManager
+                            .getListCommentTrip(getTrips().get(pos).getTripId());
 
                     // comment_dialog = mInflater.inflate(
                     // R.layout.comment_dialog, null);
@@ -351,7 +352,7 @@ public class TripArrayAdapter extends ArrayAdapter<Trip> {
                     AlertDialog mDialog = alter.create();
                     mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-                    mViewDialogContent.setAdapter(mMessageDetailAdapter); //Change DANH_VO
+//				mViewDialogContent.setAdapter(mMessageDetailAdapter);
 
                     mMessageDetailAdapter.notifyDataSetChanged();
 

@@ -287,7 +287,7 @@ public class HttpManager {
                     .setCallback(new FutureCallback<String>() {
                         @Override
                         public void onCompleted(Exception e, String str_response) {
-                            final ArrayList<GeoPoint> lstGeoPoints = new ArrayList<GeoPoint>();
+                            final ArrayList<GeoPoint> lstGeoPoints = new ArrayList<>();
                             try {
                                 JSONArray listPoint = new JSONArray();
                                 JSONObject jsonObj = new JSONObject(str_response);
@@ -298,18 +298,17 @@ public class HttpManager {
                                 MapFragment.listMarkerTrip = new ArrayList<MapFragment.MyMarker>();
 
                                 for (int i = 0; i < listPoint.length(); i++) {
-                                    Log.d("listPoint", String.valueOf(i));
                                     JSONObject pointJson = new JSONObject(listPoint.getString(i));
                                     if (!pointJson.isNull("x") && !pointJson.isNull("y")) {
                                         double x = Double.valueOf(pointJson.getString("x"));
                                         double y = Double.valueOf(pointJson.getString("y"));
-
                                         GeoPoint geoPoint = new GeoPoint(x, y);
-
+                                        Log.d("pointAt", String.valueOf(pointJson));
                                         lstGeoPoints.add(geoPoint);
 
                                         if (!jsonObj.isNull("listMedia")) {
                                             JSONArray listMedia = new JSONArray(pointJson.getString("listMedia"));
+                                            Log.d("listMedia", String.valueOf(listMedia));
                                             for (int j = 0; j < listMedia.length(); j++) {
                                                 JSONObject imgJSon = new JSONObject(listMedia.getString(i));
 
@@ -787,12 +786,10 @@ public class HttpManager {
 
     public static void uploadImageToServer(final Context context,final String filePath, final String pointId, final ICallback<JSONObject> callback) {
         final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageStringToPoint";
-            File f  = new File(filePath);
-//                String content_type  = getMimeType(f.getPath());
+
         String encryptFile = null;
 
         encryptFile = GraphicUtils.convertImage2Base64(filePath);
-        Log.e("base64", String.valueOf(encryptFile.length()));
 
         int idx = filePath.replaceAll("\\\\", "/").lastIndexOf("/");
         String fileName = idx >= 0 ? filePath.substring(idx + 1) : filePath;
@@ -809,6 +806,8 @@ public class HttpManager {
                     public void onCompleted(Exception e, String str_response) {
                         if (e == null) {
                             try {
+
+                                Log.d("str_response", str_response);
                                 callback.onCompleted(new JSONObject(str_response), null, null);
                             } catch (JSONException e1) {
                                 callback.onCompleted(null, null, e1);

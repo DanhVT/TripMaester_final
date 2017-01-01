@@ -938,6 +938,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         return false;
     }
     public void uploadmarkerPoint(String pointId, int type, String  dataOfMarker){
+        Log.d("pointIdAt", pointId );
         if(type == TYPE_TEXT ){
             HttpManager.uploadTextRate(getContext(), dataOfMarker, pointId, new ICallback<JSONObject>() {
 
@@ -961,7 +962,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         }
         else{
             HttpManager.uploadVideoToFireBag(dataOfMarker, pointId, getContext());
-
         }
     }
     @Override
@@ -1618,6 +1618,16 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                             final int[] sizeMarker = {lst_markers.size()};
                                             final int[] sizeViaPoint = {viaPoints.size()};
 
+                                            if(mDeparture == null){
+                                                if (lastLocation != null) {
+                                                    mDeparture = new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude());
+                                                }
+                                            }
+                                            if(mDestination == null){
+                                                if (lastLocation != null) {
+                                                    mDestination = new GeoPoint(lastLocation.getLatitude(), lastLocation.getLongitude());
+                                                }
+                                            }
                                             HttpManager.createTrip(trip1, mDeparture, mDestination, getActivity(), new ICallback<JSONObject>() {
                                                 @Override
                                                 public void onCompleted(JSONObject jsonobject, Object tag, Exception ex) {
@@ -1631,25 +1641,27 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                     if (!jsonobject.isNull("tripId")) {
                                                         try {
                                                             trip1.setTripId(jsonobject.getString("tripId"));
-
+                                                            Log.d("jsonobject", String.valueOf(jsonobject));
                                                             if (Utilities.hasConnection(mContext)) {
                                                                 //get Point Id at depart and desti when create Trip
                                                                 String departPointId = "";
-                                                                if(jsonobject.isNull("departPointId")){
+                                                                if(!jsonobject.isNull("departPointId")){
                                                                     departPointId = jsonobject.getString("departPointId");
+                                                                    Log.d("departPointId_1", departPointId);
                                                                 }
 
                                                                 String destinationPointId = "";
-                                                                if(jsonobject.isNull("destinationPointId")){
+                                                                if(!jsonobject.isNull("destinationPointId")){
                                                                     destinationPointId = jsonobject.getString("destinationPointId");
                                                                 }
                                                                 Log.d("sizemarker", String.valueOf(sizeMarker[0]));
+
                                                                 for(int k=0; k <lst_markers.size(); k++){
                                                                     if(lst_markers.get(k).getPointIndex() == 0 && !lst_markers.get(k).getPuplish()){
+                                                                        Log.d("departPointId_2", departPointId);
                                                                         uploadmarkerPoint(departPointId, lst_markers.get(k).getType(), lst_markers.get(k).getData() );
                                                                         lst_markers.get(k).setPublish(true);
                                                                         sizeMarker[0] = sizeMarker[0] -1;
-                                                                        Log.d("sizemarker_1", String.valueOf(sizeMarker[0]));
                                                                     }
                                                                 }
                                                                 for (int j = 0; j < viaPoints.size(); j++) {

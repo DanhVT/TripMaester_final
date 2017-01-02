@@ -2160,7 +2160,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                 if(i==0 || (i== listMarkerTrip.size() -1)){
                     str_lat_long = "Start Place: " + trip.getPlaceStartTrip()
                             + "\r\nStart Time: " + trip.getTimeStartTrip()
-                            + "\r\nDuration: " + trip.getDateOpenTrip()
+                            + "\r\nDuration: " + trip.getDateTime()
                             + "\r\nDistance: " + Utilities.distanceInKm(trip.getLstWayPoints()) + " km";
                 }
 
@@ -2204,9 +2204,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 // return false;
                             } else if(lst_around_markers.size() <= 1
                                     && !isShowDialogMarker) {
-                                lst_markers.get(listMarkerTrip.get(finalI).getIndex()).getMarker()
+                                listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()).getMarker()
                                         .showInfoWindow();
-                                previewMedia(lst_markers.get(listMarkerTrip.get(finalI).getIndex()).getType(), lst_markers.get(listMarkerTrip.get(finalI).getIndex()));
+                                previewMedia(listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()).getType(), listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()));
 
                             }
                             lst_around_markers = null;

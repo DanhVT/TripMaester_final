@@ -49,7 +49,7 @@ public class WarningInfoParser extends
 	int color;
 	int segment_count = 0;
 	
-	public static ArrayList<Overlay> listWarning = new ArrayList<Overlay>();
+	public static ArrayList<Overlay> listWarning = new ArrayList<>();
 	public static boolean finish_get_warning_info = true;
 
 	public WarningInfoParser() {
@@ -66,14 +66,14 @@ public class WarningInfoParser extends
 		finish_get_warning_info = false;
 		Log.wtf("TRAFFIC INFO REQUEST", "start: " + System.currentTimeMillis()% 10000);
 		dataSource = new DBTrafficSource(context);
-		mWarning = new ArrayList<WarningDrawable>();
+		mWarning = new ArrayList<>();
 	}
 
 	@Override
 	protected ArrayList<Overlay> doInBackground(String... arg0) {
 		Log.i("ON DOINBACKFROUND", " ");
 		boolean flag = false;
-		ArrayList<Overlay> templistWarning = new ArrayList<Overlay>();
+		ArrayList<Overlay> templistWarning = new ArrayList<>();
 		try {
 			String url = arg0[0];
 			Log.i("Url: ", url);

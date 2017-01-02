@@ -306,26 +306,34 @@ public class HttpManager {
                                         Log.d("pointAt", String.valueOf(pointJson));
                                         lstGeoPoints.add(geoPoint);
 
-                                        if (!jsonObj.isNull("listMedia")) {
+                                        if (!pointJson.isNull("listMedia")) {
                                             JSONArray listMedia = new JSONArray(pointJson.getString("listMedia"));
                                             Log.d("listMedia", String.valueOf(listMedia));
                                             for (int j = 0; j < listMedia.length(); j++) {
                                                 JSONObject imgJSon = new JSONObject(listMedia.getString(i));
-
+                                                int type = Integer.parseInt(imgJSon.getString("type"));
                                                 MapFragment.MyMarker startMarker = new MapFragment.MyMarker(mMapView);
 
                                                 startMarker.getMarker().setPosition(geoPoint);
-                                                startMarker.setData(imgJSon.getString("url"));
-                                                startMarker.setType(Integer.parseInt(imgJSon.getString("type")));
-                                                startMarker.setIndex(j);
+                                                startMarker.setType(type);
+                                                if(type == MEDIA_TYPE_IMAGE){
+                                                    startMarker.setData(HttpConstants.HOST_NAME + imgJSon.getString("url"));
+                                                }
+                                                else if(type == MEDIA_TYPE_VIDEO){
+                                                    startMarker.setData("https://firebasestorage.googleapis.com"+ imgJSon.getString("url"));
+                                                }
+                                                Log.d("url_marker",HttpConstants.HOST_NAME + imgJSon.getString("url"));
+                                                startMarker.setIndex(MapFragment.listMarkerTrip.size());
 
                                                 MapFragment.listMarkerTrip.add(startMarker);
                                             }
+
                                         }
 
                                     }
 
                                 }
+
                             } catch (Exception ex) {
                                 Log.e(TAG, ex.getMessage());
                             }

@@ -1446,7 +1446,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
 
                 if (!isStart) {
+//                    mMapView.getOverlays().clear();
+//                    mMapView.invalidate();
                     // create new trip
+                    removePreviousMakingPoints(true);
+
                     isStart = true;
                     lstUserPassRoad = new ArrayList<Road>();
                     viaPoints = new ArrayList<GeoPoint>();
@@ -1671,6 +1675,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                                     .getLatitudeE6());
                                                                     pointItem.setY_Long(geoPoint
                                                                                     .getLongitudeE6());
+                                                                    pointItem.setOrder(String.valueOf(j));
                                                                     // FIXME: set trip
                                                                     // id
                                                                     PG.setMessage("Creating point "+ geoPoint.getLatitudeE6()+", "+geoPoint
@@ -1707,7 +1712,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                                                             });
 
                                                                 }
-                                                                if(sizeViaPoint[0] == 0 && sizeMarker[0] == 0){
+                                                                if(sizeViaPoint[0] <= 0 && sizeMarker[0] <= 0){
                                                                     PG.dismiss();
                                                                     Toast.makeText(getActivity(), "Create trip successful", Toast.LENGTH_SHORT).show();
                                                                 }
@@ -2097,9 +2102,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         if (type == MEDIA_TYPE_IMAGE) {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.activity_image_preview);
-            dialog.setTitle("Image");
+            dialog.setTitle("Image Capture");
             ImageView myImage = (ImageView) dialog.findViewById(R.id.imageview);
-            ImageLoaderHelper.displayImage(Uri.parse(url).toString(), myImage);
+            ImageLoaderHelper.displayImage(Uri.fromFile(new File(url)).toString(), myImage);
             dialog.show();
 
         } else if(type == MEDIA_TYPE_VIDEO){
@@ -2111,7 +2116,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
 
     //set marker for image capture
     public void setMarkerForTrip(Trip trip) {
-        Log.d("listMarkerTrip", String.valueOf(listMarkerTrip.size()));
+
         for(int i = 0 ; i < listMarkerTrip.size(); i++){
             listMarkerTrip.get(i).getMarker().setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             int type = listMarkerTrip.get(i).getType();
@@ -2912,6 +2917,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 "mDeparture: Lat = " + mDeparture.getLatitude()
                                         + " - Lon = "
                                         + mDeparture.getLongitude());
+                        Toast.makeText(getActivity(), "Tracking depart point", Toast.LENGTH_SHORT).show();
 
                     } else if (flagUpdate
                             .equals(FlagUpdates.FlagUpdate_DESTINATION)) {
@@ -2926,7 +2932,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                         + mDestination.getLatitude()
                                         + " - Lon = "
                                         + mDestination.getLongitude());
-
+                        Toast.makeText(getActivity(), "Tracking destination point", Toast.LENGTH_SHORT).show();
                         // markerDestination = updateItineraryMarker(null,
                         // mDestination, DEST_INDEX,
                         // R.string.destination, R.drawable.marker_destination,
@@ -2959,6 +2965,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                         }
 
                         getRoadAsync();
+                        Toast.makeText(getActivity(), "Tracking viaPoint " + viaPoints.size(), Toast.LENGTH_SHORT).show();
                     }
 
                     GeoPoint newLocation = new GeoPoint(mDetectLocation);

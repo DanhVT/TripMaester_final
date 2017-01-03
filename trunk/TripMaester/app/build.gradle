@@ -34,6 +34,9 @@ android {
         versionName VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_BUILD
         multiDexEnabled true
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     signingConfigs {
         release {
             storeFile file("android.jks")

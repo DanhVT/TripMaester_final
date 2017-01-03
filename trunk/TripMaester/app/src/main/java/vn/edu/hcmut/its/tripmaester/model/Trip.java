@@ -32,6 +32,7 @@ public class Trip implements Serializable {
     private String tripId;
     private String dateTime;
     private String userIdOwner;
+    private boolean isUserLike = false;
     private ArrayList<GeoPoint> lstWayPoints = new ArrayList<>();
     public List<String> lstUserIdLike = new ArrayList<>();
 

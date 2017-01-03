@@ -91,8 +91,7 @@ public class EditTripActivity extends Activity{
 									}
 									//======
 //					lst_user_trip.addTrip(trip1);
-									mListTripEdit.add(trip1);
-									Log.d("trip1", String.valueOf(trip1));
+									mListTripEdit.add(trip1);									
 								}
 							}
 

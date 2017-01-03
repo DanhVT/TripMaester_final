@@ -108,8 +108,7 @@ public class TripsFragment extends Fragment {
 
     // load trips
     private void loadTrips(final TripArrayAdapter tripAdapter) {
-        //LOAD TRIPS FROM API
-        Log.d("LoadTrip", "Load trip");
+        //LOAD TRIPS FROM API       
         TripManager.addDataTrip(getActivity(), new TripManager.ITripCallback() {
             @Override
             public void onDataUpdated() {

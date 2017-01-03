@@ -72,7 +72,7 @@ public class TripManager {
                             trip1.setAvaUserCreateTrip(R.drawable.icon_friend);
 
                             if(!jsonobject.isNull("listLiker")){
-                                trip1.setLsitUserIdLike(new ArrayList<>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
+                                trip1.setLsitUserIdLike(new ArrayList<>(Arrays.asList(jsonobject.getString("listLiker").split("\t"))));  //TODO: CHECK;
                                 trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
                             }
 
@@ -136,7 +136,8 @@ public class TripManager {
                             trip1.setAvaUserCreateTrip(R.drawable.ic_user_profile);
 
                             if(!jsonobject.isNull("listLiker")){
-                                trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
+                                Log.d("listLiker", jsonobject.getString("tripName")+":"+jsonobject.getString("listLiker"));
+                                trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split("\t"))));  //TODO: CHECK;
 
                                 trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
                             }
@@ -205,14 +206,14 @@ public class TripManager {
                                         trip1.setPlaceEndTrip(jsonobject.getString("toLocationName"));
                                     }
                                     if (!jsonobject.isNull("dateTime")) {
-                                        trip1.setDateOpenTrip(jsonobject.getString("dateTime"));
+                                        trip1.setDateTime(jsonobject.getString("dateTime"));
                                     }
                                     if (!jsonobject.isNull("emotion")) {
                                         trip1.setEmotion(jsonobject.getString("emotion"));
                                     }
 
                                     if(!jsonobject.isNull("listLiker")){
-                                        trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split(","))));  //TODO: CHECK;
+                                        trip1.setLsitUserIdLike(new ArrayList<String>(Arrays.asList(jsonobject.getString("listLiker").split("\t"))));  //TODO: CHECK;
                                         trip1.setNumberLikeTrip(trip1.lstUserIdLike.size() + " likes");
                                     }
 

@@ -170,8 +170,7 @@ public class User {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-				}
-				Log.d("friend", String.valueOf(mFriends));
+				}		
 
 				if (objects.length() > 0) {
 					// TODO: 12/26/15 thuanle fix this

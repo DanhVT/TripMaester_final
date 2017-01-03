@@ -254,8 +254,6 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
     }
 
     private void initFB() {
-
-        Log.d("login", "Danh");
         // FB tracker
         accessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -264,7 +262,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
                 // if users logout
                 LoginManager.getInstance().setUserToken(currentAccessToken);
                 if (currentAccessToken == null) {
-                    Log.d("login", "Danh1");
+                  
                     final TextView name = (TextView) findViewById(R.id.txt_select_account);
                     if (name != null) {
                         name.setText(R.string.login_prompt_select_account);
@@ -501,8 +499,7 @@ public class MainActivity extends FragmentActivity implements IMainScreen {
 
         ButterKnife.bind(this);
 
-        initFB();
-        Log.d("RunApp", "At Main activity");
+        initFB();      
         storageRef = FirebaseStorage.getInstance().getReference();
 
         // create share preference

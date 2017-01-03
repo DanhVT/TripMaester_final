@@ -296,21 +296,33 @@ public class HttpManager {
                                 if (!jsonObj.isNull("listPoint")) {
                                     listPoint = new JSONArray(jsonObj.getString("listPoint"));
                                 }
-                                Log.d("listPoint", String.valueOf(listPoint.length()));
+                                Log.d("listPoint", String.valueOf(listPoint));
                                 MapFragment.listMarkerTrip = new ArrayList<MapFragment.MyMarker>();
-
+                                GeoPoint beginNode = null, endNode = null;
                                 for (int i = 0; i < listPoint.length(); i++) {
                                     JSONObject pointJson = new JSONObject(listPoint.getString(i));
                                     if (!pointJson.isNull("x") && !pointJson.isNull("y")) {
                                         double x = Double.valueOf(pointJson.getString("x"));
                                         double y = Double.valueOf(pointJson.getString("y"));
-                                        GeoPoint geoPoint = new GeoPoint(x, y);
-                                        Log.d("pointAt", String.valueOf(pointJson));
-                                        lstGeoPoints.add(geoPoint);
+                                        GeoPoint geoPoint = new GeoPoint(x, y);                                
+
+                                        if(pointJson.getString("order") =="END" ){
+                                            endNode = geoPoint;
+                                            
+                                        }
+                                        else{
+                                            lstGeoPoints.add(geoPoint);
+                                        }
+//                                        else if(pointJson.getString("order") == "BEGIN" || pointJson.getString("order") == "START"){
+//                                            beginNode = geoPoint;
+//                                        }
+//                                        else{
+//                                            lstGeoPoints.add(geoPoint);
+//                                        }
+//                                        lstGeoPoints.add(geoPoint);
 
                                         if (!pointJson.isNull("listMedia")) {
                                             JSONArray listMedia = new JSONArray(pointJson.getString("listMedia"));
-                                            Log.d("listMedia", String.valueOf(listMedia));
                                             for (int j = 0; j < listMedia.length(); j++) {
                                                 JSONObject imgJSon = new JSONObject(listMedia.getString(i));
                                                 int type = Integer.parseInt(imgJSon.getString("type"));
@@ -335,6 +347,11 @@ public class HttpManager {
                                     }
 
                                 }
+//                                lstGeoPoints.add(0, beginNode);
+                                lstGeoPoints.add(endNode);
+//                                for (int i =0 ; i<lstGeoPoints.size(); i++){
+//
+//                                }
 
                             } catch (Exception ex) {
                                 Log.e(TAG, ex.getMessage());
@@ -522,11 +539,14 @@ public class HttpManager {
                             try {
                                 ArrayList<FriendItem> lstShareTrip = new ArrayList<>();
                                 JSONArray jsonObjArray = new JSONArray(str_response);  //TODO: Danhbkit
+                                Log.d("getShareOnTrip", String.valueOf(jsonObjArray.length()));
                                 for (int i = 0; i < jsonObjArray.length(); i++) {
                                     JSONObject jObj = new JSONObject(jsonObjArray.getString(i));
 
                                     lstShareTrip.add(new FriendItem(null, jObj.getString("userId"), false, ""));
+
                                 }
+
                                 callback.onCompleted(lstShareTrip, null, null);
                             } catch (JSONException e1) {
                                 callback.onCompleted(null, null, e1);

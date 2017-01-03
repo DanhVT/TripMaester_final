@@ -60,7 +60,7 @@ public class LoginFragment extends Fragment {
                 LoginManager.getInstance().getUserToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.d("LoginFragment", response.toString());
+                 
                         try {
                             if (object != null) {
                                 // set permission to get picture
@@ -81,8 +81,7 @@ public class LoginFragment extends Fragment {
 
                                 }
                                 if (!object.isNull("id")) {
-                                    user_fb_id = object.getString("id");
-                                    Log.d("userId", user_fb_id);
+                                    user_fb_id = object.getString("id");                               
                                 }
                                 if (!object.isNull("first_name")) {
                                     first_name = object.getString("first_name");
@@ -183,7 +182,7 @@ public class LoginFragment extends Fragment {
 
          FacebookSdk.sdkInitialize(this.getActivity().getApplicationContext());
         mCallbackManager = CallbackManager.Factory.create();
-        Log.d("loginFragment", "danh4");
+        
         if(AccessToken.getCurrentAccessToken()==null){
             com.facebook.login.LoginManager.getInstance().logOut();
         }
@@ -236,8 +235,7 @@ public class LoginFragment extends Fragment {
         LoginButton authButton = (LoginButton) rootView.findViewById(R.id.authButton);
         authButton.setReadPermissions(PERMISSIONS);
 
-        authButton.setFragment(this);
-        Log.d("loginFragment", "danh3");
+        authButton.setFragment(this);       
         // Callback registration
         authButton.registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.JsonObject;
@@ -49,31 +50,32 @@ import static group.traffic.nhn.map.MapFragment.MEDIA_TYPE_VIDEO;
 import static group.traffic.nhn.map.MapFragment.TYPE_TEXT;
 import static group.traffic.nhn.map.MapFragment.mMapView;
 import static vn.edu.hcmut.its.tripmaester.helper.CameraHelper.MEDIA_TYPE_IMAGE;
+import static vn.edu.hcmut.its.tripmaester.service.http.HttpConstants.HOST_NAME;
 import static vn.edu.hcmut.its.tripmaester.ui.activity.MainActivity.storageRef;
 
 // TODO: 12/18/15 THUANLE: TO BE REMOVED
 @Deprecated
 public class HttpManager {
-    static final String URL_GET_LIKE_INFO_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/like/GetListLikerOnTrip";
-    static final String URL_CREATE_POINT_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/tripdetails/CreatePointOnTrip";
-    static final String URL_CREATE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/CreateTrip";// tokenID/[list
-    static final String URL_GET_COMMENTS_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/comment/GetListCommentOnTrip";
-    static final String URL_GET_FRIENDS = HttpConstants.HOST_NAME + "/ITS/rest/friend/GetListFriend";
-    static final String URL_GET_LIST_POINT_ON_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/tripdetails/GetListPointOnTrip";
-    static final String URL_GET_LIST_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListShareTrip";
-    static final String URL_GET_LIST_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListTrip";
-    static final String URL_GET_LIST_PRIVATE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListPrivateTrip";
-    static final String URL_GET_LIST_PUBLIC_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListPublicTrip";
-    static final String URL_GET_LIST_TRP_SEARCH = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetListTripSearch";
-    static final String URL_GET_LOGIN = HttpConstants.HOST_NAME + "/ITS/rest/user/GETlogin/";
-    static final String URL_GET_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/share/GetShareOnTrip";
-    static final String URL_GET_TRIP_INFO = HttpConstants.HOST_NAME + "/ITS/rest/trip/GetTripInfo";
-    static final String URL_GET_USER_INFO = HttpConstants.HOST_NAME + "/ITS/rest/user/GetUserInfo";
-    static final String URL_LIKE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/like/LikeTrip";
-    static final String URL_LOGIN = HttpConstants.HOST_NAME + "/ITS/rest/user/Login";
-    static final String URL_LOGOUT = HttpConstants.HOST_NAME + "/ITS/rest/user/Logout";
-    static final String URL_SAVE_FRIENDS = HttpConstants.HOST_NAME + "/ITS/rest/friend/SaveListFriend";
-    static final String URL_SAVE_SHARE_TRIP = HttpConstants.HOST_NAME + "/ITS/rest/share/SaveShareOnTrip";
+    static final String URL_GET_LIKE_INFO_TRIP = HOST_NAME + "/ITS/rest/like/GetListLikerOnTrip";
+    static final String URL_CREATE_POINT_TRIP = HOST_NAME + "/ITS/rest/tripdetails/CreatePointOnTrip";
+    static final String URL_CREATE_TRIP = HOST_NAME + "/ITS/rest/trip/CreateTrip";// tokenID/[list
+    static final String URL_GET_COMMENTS_TRIP = HOST_NAME + "/ITS/rest/comment/GetListCommentOnTrip";
+    static final String URL_GET_FRIENDS = HOST_NAME + "/ITS/rest/friend/GetListFriend";
+    static final String URL_GET_LIST_POINT_ON_TRIP = HOST_NAME + "/ITS/rest/tripdetails/GetListPointOnTrip";
+    static final String URL_GET_LIST_SHARE_TRIP = HOST_NAME + "/ITS/rest/trip/GetListShareTrip";
+    static final String URL_GET_LIST_TRIP = HOST_NAME + "/ITS/rest/trip/GetListTrip";
+    static final String URL_GET_LIST_PRIVATE_TRIP = HOST_NAME + "/ITS/rest/trip/GetListPrivateTrip";
+    static final String URL_GET_LIST_PUBLIC_TRIP = HOST_NAME + "/ITS/rest/trip/GetListPublicTrip";
+    static final String URL_GET_LIST_TRP_SEARCH = HOST_NAME + "/ITS/rest/trip/GetListTripSearch";
+    static final String URL_GET_LOGIN = HOST_NAME + "/ITS/rest/user/GETlogin/";
+    static final String URL_GET_SHARE_TRIP = HOST_NAME + "/ITS/rest/share/GetShareOnTrip";
+    static final String URL_GET_TRIP_INFO = HOST_NAME + "/ITS/rest/trip/GetTripInfo";
+    static final String URL_GET_USER_INFO = HOST_NAME + "/ITS/rest/user/GetUserInfo";
+    static final String URL_LIKE_TRIP = HOST_NAME + "/ITS/rest/like/LikeTrip";
+    static final String URL_LOGIN = HOST_NAME + "/ITS/rest/user/Login";
+    static final String URL_LOGOUT = HOST_NAME + "/ITS/rest/user/Logout";
+    static final String URL_SAVE_FRIENDS = HOST_NAME + "/ITS/rest/friend/SaveListFriend";
+    static final String URL_SAVE_SHARE_TRIP = HOST_NAME + "/ITS/rest/share/SaveShareOnTrip";
     private static final String TAG = HttpManager.class.getName();
 
     /*
@@ -317,12 +319,12 @@ public class HttpManager {
                                                 startMarker.getMarker().setPosition(geoPoint);
                                                 startMarker.setType(type);
                                                 if(type == MEDIA_TYPE_IMAGE){
-                                                    startMarker.setData(HttpConstants.HOST_NAME + imgJSon.getString("url"));
+                                                    startMarker.setData(HOST_NAME + imgJSon.getString("url"));
                                                 }
                                                 else if(type == MEDIA_TYPE_VIDEO){
-                                                    startMarker.setData("https://firebasestorage.googleapis.com"+ imgJSon.getString("url"));
+                                                    startMarker.setData(imgJSon.getString("url"));
                                                 }
-                                                Log.d("url_marker",HttpConstants.HOST_NAME + imgJSon.getString("url"));
+                                                Log.d("url_marker", HOST_NAME + imgJSon.getString("url"));
                                                 startMarker.setIndex(MapFragment.listMarkerTrip.size());
 
                                                 MapFragment.listMarkerTrip.add(startMarker);
@@ -793,7 +795,7 @@ public class HttpManager {
     }
 
     public static void uploadImageToServer(final Context context,final String filePath, final String pointId, final ICallback<JSONObject> callback) {
-        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadImageStringToPoint";
+        final String URL_UPLOAD = HOST_NAME+"/ITS/rest/upload/UploadImageStringToPoint";
 
         String encryptFile = null;
 
@@ -827,14 +829,14 @@ public class HttpManager {
                 });
     }
 
-    public static void uploadVideoToServer(final Context context,final String linkDownload, final String pointId, final ICallback<JSONObject> callback){
-        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadVideoLinkToPoint";
+    public static void uploadVideoToServer(final Context context, final Uri linkDownload, final String pointId, final ICallback<JSONObject> callback){
+        final String URL_UPLOAD = HOST_NAME+"/ITS/rest/upload/UploadVideoLinkToPoint";
 
         Ion.with(context).load(URL_UPLOAD)
                 .setBodyParameter("pointId", pointId)
                 .setBodyParameter("type", String.valueOf(MEDIA_TYPE_VIDEO))
                 .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
-                .setBodyParameter("downloadLink", linkDownload)
+                .setBodyParameter("downloadLink", String.valueOf(linkDownload))
                 .asString()
                 .setCallback(new FutureCallback<String>() {
                     @Override
@@ -862,8 +864,8 @@ public class HttpManager {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        Log.d("Firebase", downloadUrl.getPath());
-                        uploadVideoToServer(context, downloadUrl.getPath(), pointId, new ICallback<JSONObject>() {
+                        Log.d("Firebase", String.valueOf(downloadUrl));
+                        uploadVideoToServer(context, downloadUrl, pointId, new ICallback<JSONObject>() {
                             @Override
                             public void onCompleted(JSONObject data, Object tag, Exception e) {
                                 if (e != null || data == null){
@@ -872,6 +874,13 @@ public class HttpManager {
                                 Log.d("uploadLink","Upload Video Link to Server");
                             }
                         });
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        System.out.println("Upload is " + progress + "% done");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -883,7 +892,7 @@ public class HttpManager {
                 });
     }
     public static void uploadTextRate( final Context context, final String data, final String pointId, final ICallback<JSONObject> callback ){
-        final String URL_UPLOAD = "http://traffic.hcmut.edu.vn/ITS/rest/upload/UploadTextRateToPoint";
+        final String URL_UPLOAD = HOST_NAME+"/ITS/rest/upload/UploadTextRateToPoint";
             Ion.with(context).load(URL_UPLOAD)
                 .setBodyParameter("tokenId", LoginManager.getInstance().getUser().getTokenId())
                 .setBodyParameter("pointId", pointId)

@@ -2078,7 +2078,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 && !isShowDialogMarker) {
                             lst_markers.get(startMarker.getIndex()).getMarker()
                                     .showInfoWindow();
-                            previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()));
+                            previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()).getData());
 
                         }
                         return false;
@@ -2092,18 +2092,19 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
         mMapView.invalidate();
     }
 
-    public void previewMedia(int type, MyMarker startMarker) {
+    public void previewMedia(int type, String url) {
+        Log.d("urlPreview", url);
         if (type == MEDIA_TYPE_IMAGE) {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.activity_image_preview);
             dialog.setTitle("Image");
             ImageView myImage = (ImageView) dialog.findViewById(R.id.imageview);
-            ImageLoaderHelper.displayImage(Uri.fromFile(new File(startMarker.getData())).toString(), myImage);
+            ImageLoaderHelper.displayImage(Uri.parse(url).toString(), myImage);
             dialog.show();
 
         } else if(type == MEDIA_TYPE_VIDEO){
             Intent intent = new Intent(getActivity(), VideoPlayer.class);
-            intent.putExtra("URL", startMarker.getData());
+            intent.putExtra("URL", url);
             startActivity(intent);
         }
     }
@@ -2206,7 +2207,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                     && !isShowDialogMarker) {
                                 listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()).getMarker()
                                         .showInfoWindow();
-                                previewMedia(listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()).getType(), listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()));
+                                previewMedia(listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()).getType(), listMarkerTrip.get(listMarkerTrip.get(finalI).getIndex()).getData());
 
                             }
                             lst_around_markers = null;
@@ -2275,7 +2276,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 && !isShowDialogMarker) {
                             lst_markers.get(startMarker.getIndex()).getMarker()
                                     .showInfoWindow();
-                            previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()));
+                            previewMedia(lst_markers.get(startMarker.getIndex()).getType(), lst_markers.get(startMarker.getIndex()).getData());
 
                         }
                         return false;
@@ -2370,7 +2371,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver,
                                 lstMarker.get(selectMarkerChoice).getMarker()
                                         .showInfoWindow();
 //                                Intent intent = new Intent(getActivity(), VideoPlayer.class);
-                              previewMedia(lstMarker.get(selectMarkerChoice).getType(), lstMarker.get(selectMarkerChoice));
+                              previewMedia(lstMarker.get(selectMarkerChoice).getType(), lstMarker.get(selectMarkerChoice).getData());
                                     /* User clicked Yes so do some stuff */
                             }
                         })
